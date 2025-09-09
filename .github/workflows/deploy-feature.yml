@@ -1,37 +1,51 @@
-name: Deploy Feature Branch
+name: Deploy previews per branch
 
 on:
   push:
     branches:
-      - "feature/*"
+      - "feature/**"
+      - "kop-*"
+      - "develop"
+      - "staging"
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install
         run: npm ci
 
-      - name: Build project
+      - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
+      # Згенерувати безпечний slug з назви гілки (без слешів та дивних символів)
+      - name: Make safe branch slug
+        id: slug
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          SLUG="$(echo "$BRANCH" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed -E 's#[^a-z0-9]+#-#g' \
+            | sed -E 's#-+#-#g; s#^-##; s#-$##')"
+          echo "SLUG=$SLUG" >> $GITHUB_ENV
+          echo "Preview folder: $SLUG"
+
+      - name: Deploy to gh-pages (into previews/<slug>)
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          destination_dir: ${{ github.ref_name }}
-          cname: kop-${{ github.ref_name }}.roman-savitskyi.github.io
+          publish_dir: ./build
+          destination_dir: previews/${{ env.SLUG }}   # <- ключова відмінність
+          # УВАГА: НЕ ставимо 'cname', бо CNAME може бути тільки один на репозиторій
