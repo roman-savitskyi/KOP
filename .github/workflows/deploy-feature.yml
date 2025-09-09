@@ -1,4 +1,4 @@
-name: Deploy previews per branch
+name: Deploy Feature Branch Previews
 
 on:
   push:
@@ -24,13 +24,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install
+      - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build project
         run: npm run build
 
-      # Згенерувати безпечний slug з назви гілки (без слешів та дивних символів)
       - name: Make safe branch slug
         id: slug
         run: |
@@ -42,10 +41,10 @@ jobs:
           echo "SLUG=$SLUG" >> $GITHUB_ENV
           echo "Preview folder: $SLUG"
 
-      - name: Deploy to gh-pages (into previews/<slug>)
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          destination_dir: previews/${{ env.SLUG }}   # <- ключова відмінність
-          # УВАГА: НЕ ставимо 'cname', бо CNAME може бути тільки один на репозиторій
+          publish_dir: ./dist       # <-- твоя правильна папка
+          destination_dir: previews/${{ env.SLUG }}
+          enable_jekyll: true      # <-- ключове, щоб уникнути копіювання .*
