@@ -274,12 +274,15 @@ gulp.task('test', gulp.series( 'eslint', 'qunit' ))
 gulp.task('default', gulp.series(gulp.parallel('js', 'css', 'plugins'), 'test'))
 
 gulp.task('html', () => gulp.src(['index.html'])
-    .pipe(through.obj(function(file, enc, cb) {
+    .pipe(through.obj(function(file, _, cb) {
         if (file.isBuffer()) {
             let content = file.contents.toString();
             // Update paths for dist build
             content = content.replace(/href="dist\//g, 'href="');
             content = content.replace(/src="dist\//g, 'src="');
+            content = content.replace(/href="plugin\//g, 'href="../plugin/');
+            content = content.replace(/src="plugin\//g, 'src="../plugin/');
+            content = content.replace(/src="examples\//g, 'src="../examples/');
             file.contents = Buffer.from(content);
         }
         cb(null, file);
