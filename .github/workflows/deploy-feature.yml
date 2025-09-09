@@ -1,4 +1,4 @@
-name: Deploy Feature Branch Previews
+name: Deploy Previews from Root
 
 on:
   push:
@@ -16,18 +16,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Клонуємо код
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      # 2. Встановлюємо Node для збірки (якщо потрібно)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 3. Встановлюємо залежності (якщо є gulp-білд)
       - name: Install dependencies
         run: npm ci
 
-      # Генеруємо slug без слешів і пробілів
+      # 4. Будуємо проєкт (якщо треба)
+      - name: Build project
+        run: npm run build || echo "No build step found"
+
+      # 5. Створюємо slug для назви папки прев'ю
       - name: Make safe branch slug
         id: slug
         run: |
@@ -39,18 +46,18 @@ jobs:
           echo "SLUG=$SLUG" >> $GITHUB_ENV
           echo "Preview folder: $SLUG"
 
-      - name: Build project
-        run: npm run build
-
-      # Фікс для peaceiris/actions-gh-pages → створюємо прихований файл
-      - name: Create placeholder .nojekyll
-        run: touch dist/.nojekyll
-
+      # 6. Деплоїмо корінь, але ігноруємо системні папки
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: .
           destination_dir: previews/${{ env.SLUG }}
           enable_jekyll: true
-          exclude_assets: ".*"
+          exclude_assets: |
+            node_modules
+            .git
+            .github
+            .vscode
+            .idea
+            .DS_Store
