@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - "feature/**"
-      - "kop-*"
       - "develop"
       - "staging"
+      - "main"
 
 permissions:
   contents: write
@@ -27,9 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
-        run: npm run build
-
+      # Генеруємо slug без слешів і пробілів
       - name: Make safe branch slug
         id: slug
         run: |
@@ -41,11 +39,18 @@ jobs:
           echo "SLUG=$SLUG" >> $GITHUB_ENV
           echo "Preview folder: $SLUG"
 
+      - name: Build project
+        run: npm run build
+
+      # Фікс для peaceiris/actions-gh-pages → створюємо прихований файл
+      - name: Create placeholder .nojekyll
+        run: touch dist/.nojekyll
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist       # <-- твоя правильна папка
+          publish_dir: ./dist
           destination_dir: previews/${{ env.SLUG }}
+          enable_jekyll: true
           exclude_assets: ".*"
-          enable_jekyll: true      # <-- ключове, щоб уникнути копіювання .*
