@@ -1,12 +1,9 @@
-name: Deploy Previews from Root
+name: Deploy Feature Previews
 
 on:
   push:
     branches:
       - "feature/**"
-      - "develop"
-      - "staging"
-      - "main"
 
 permissions:
   contents: write
@@ -16,25 +13,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Клонуємо код
+      # 1. Клонуємо репозиторій
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Встановлюємо Node для збірки (якщо потрібно)
+      # 2. Встановлюємо Node.js (якщо потрібен gulp чи збірка)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3. Встановлюємо залежності (якщо є gulp-білд)
+      # 3. Встановлюємо залежності (якщо є)
       - name: Install dependencies
         run: npm ci
 
-      # 4. Будуємо проєкт (якщо треба)
+      # 4. Будуємо проєкт (якщо потрібен білд)
       - name: Build project
         run: npm run build || echo "No build step found"
 
-      # 5. Створюємо slug для назви папки прев'ю
+      # 5. Генеруємо slug з назви гілки для папки прев’ю
       - name: Make safe branch slug
         id: slug
         run: |
@@ -46,18 +43,23 @@ jobs:
           echo "SLUG=$SLUG" >> $GITHUB_ENV
           echo "Preview folder: $SLUG"
 
-      # 6. Деплоїмо корінь, але ігноруємо системні папки
+      # 6. Готуємо папку для деплою (без node_modules та системних файлів)
+      - name: Prepare publish folder
+        run: |
+          mkdir publish
+          rsync -av --progress ./ ./publish \
+            --exclude node_modules \
+            --exclude .git \
+            --exclude .github \
+            --exclude .vscode \
+            --exclude .idea \
+            --exclude .DS_Store
+
+      # 7. Деплоїмо у gh-pages/previews/<branch>
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./publish
           destination_dir: previews/${{ env.SLUG }}
           enable_jekyll: true
-          exclude_assets: |
-            node_modules
-            .git
-            .github
-            .vscode
-            .idea
-            .DS_Store
