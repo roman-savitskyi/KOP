@@ -47,4 +47,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist       # <-- твоя правильна папка
           destination_dir: previews/${{ env.SLUG }}
+          exclude_assets: ".*"
           enable_jekyll: true      # <-- ключове, щоб уникнути копіювання .*
