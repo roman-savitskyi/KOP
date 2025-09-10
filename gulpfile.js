@@ -187,6 +187,16 @@ function compileSass() {
 
 gulp.task('css-themes', () => gulp.src(['./css/theme/source/*.{sass,scss}'])
         .pipe(compileSass())
+        .pipe(through.obj(function(file, _, cb) {
+            if (file.isBuffer()) {
+                let content = file.contents.toString();
+                // Fix paths for assets in CSS when in dist/theme/
+                // Convert ../../../examples/ to ../examples/ 
+                content = content.replace(/url\(['"](\.\.\/){3}examples\//g, 'url(\'../examples/');
+                file.contents = Buffer.from(content);
+            }
+            cb(null, file);
+        }))
         .pipe(gulp.dest('./dist/theme')))
 
 gulp.task('css-core', () => gulp.src(['css/reveal.scss'])
@@ -273,16 +283,23 @@ gulp.task('test', gulp.series( 'eslint', 'qunit' ))
 
 gulp.task('default', gulp.series(gulp.parallel('js', 'css', 'plugins'), 'test'))
 
+// Copy all assets (plugins, examples, etc.) to dist
+gulp.task('copy-assets', () => {
+    return gulp.src([
+        'plugin/**/*',
+        'examples/**/*'
+    ], { base: '.' })
+    .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('html', () => gulp.src(['index.html'])
     .pipe(through.obj(function(file, _, cb) {
         if (file.isBuffer()) {
             let content = file.contents.toString();
-            // Update paths for dist build
+            // Update paths for dist build - make all paths relative
             content = content.replace(/href="dist\//g, 'href="');
             content = content.replace(/src="dist\//g, 'src="');
-            content = content.replace(/href="plugin\//g, 'href="../plugin/');
-            content = content.replace(/src="plugin\//g, 'src="../plugin/');
-            content = content.replace(/src="examples\//g, 'src="../examples/');
+            // plugin/ and examples/ stay as relative paths since they're copied to dist/
             file.contents = Buffer.from(content);
         }
         cb(null, file);
@@ -290,6 +307,12 @@ gulp.task('html', () => gulp.src(['index.html'])
     .pipe(gulp.dest('./dist')))
 
 gulp.task('build', gulp.parallel('js', 'css', 'plugins', 'html'))
+
+// Production build with all assets
+gulp.task('build-production', gulp.series(
+    gulp.parallel('js', 'css', 'plugins', 'copy-assets'), 
+    'html'
+))
 
 gulp.task('package', gulp.series(async () => {
 

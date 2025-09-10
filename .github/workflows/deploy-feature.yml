@@ -27,9 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4. Будуємо проєкт (якщо потрібен білд)
-      - name: Build project
-        run: npm run build || echo "No build step found"
+      # 4. Будуємо проєкт для production з усіма assets
+      - name: Build project for production
+        run: npm run build-production
 
       # 5. Генеруємо slug з назви гілки для папки прев’ю
       - name: Make safe branch slug
@@ -43,23 +43,11 @@ jobs:
           echo "SLUG=$SLUG" >> $GITHUB_ENV
           echo "Preview folder: $SLUG"
 
-      # 6. Готуємо папку для деплою (без node_modules та системних файлів)
-      - name: Prepare publish folder
-        run: |
-          mkdir publish
-          rsync -av --progress ./ ./publish \
-            --exclude node_modules \
-            --exclude .git \
-            --exclude .github \
-            --exclude .vscode \
-            --exclude .idea \
-            --exclude .DS_Store
-
-      # 7. Деплоїмо у gh-pages/previews/<branch>
+      # 6. Деплоїмо dist папку у gh-pages/previews/<branch>
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./publish
+          publish_dir: ./dist
           destination_dir: previews/${{ env.SLUG }}
           enable_jekyll: true
