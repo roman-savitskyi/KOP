@@ -187,6 +187,10 @@ function compileSass() {
 
 gulp.task('css-themes', () => gulp.src(['./css/theme/source/*.{sass,scss}'])
         .pipe(compileSass())
+        .pipe(gulp.dest('./dist/theme')))
+
+gulp.task('css-themes-production', () => gulp.src(['./css/theme/source/*.{sass,scss}'])
+        .pipe(compileSass())
         .pipe(through.obj(function(file, _, cb) {
             if (file.isBuffer()) {
                 let content = file.contents.toString();
@@ -311,7 +315,7 @@ gulp.task('build', gulp.parallel('js', 'css', 'plugins', 'html'))
 
 // Production build with all assets
 gulp.task('build-production', gulp.series(
-    gulp.parallel('js', 'css', 'plugins', 'copy-assets'), 
+    gulp.parallel('js', 'css-core', 'css-themes-production', 'plugins', 'copy-assets'), 
     'html'
 ))
 

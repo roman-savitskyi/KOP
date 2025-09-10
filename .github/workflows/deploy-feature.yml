@@ -41,7 +41,7 @@ jobs:
             | sed -E 's#[^a-z0-9]+#-#g' \
             | sed -E 's#-+#-#g; s#^-##; s#-$##')"
           echo "SLUG=$SLUG" >> $GITHUB_ENV
-          echo "Preview folder: $SLUG"
+          echo "Preview folder: $SLUG"footer-ztu-logo
 
       # 6. Деплоїмо dist папку у gh-pages/previews/<branch>
       - name: Deploy to GitHub Pages
