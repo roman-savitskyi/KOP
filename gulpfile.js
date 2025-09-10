@@ -191,8 +191,9 @@ gulp.task('css-themes', () => gulp.src(['./css/theme/source/*.{sass,scss}'])
             if (file.isBuffer()) {
                 let content = file.contents.toString();
                 // Fix paths for assets in CSS when in dist/theme/
-                // Convert ../../../examples/ to ../examples/ 
-                content = content.replace(/url\(['"](\.\.\/){3}examples\//g, 'url(\'../examples/');
+                // Convert ../../../examples/ to ../examples/ while preserving quote style
+                content = content.replace(/url\('\.\.\/\.\.\/\.\.\//g, 'url(\'../');
+                content = content.replace(/url\("\.\.\/\.\.\/\.\.\//g, 'url("../');
                 file.contents = Buffer.from(content);
             }
             cb(null, file);
