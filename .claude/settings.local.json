@@ -12,7 +12,10 @@
       "Bash(npx gulp:*)",
       "Bash(git checkout:*)",
       "WebFetch(domain:roman-savitskyi.github.io)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm run build-production:*)",
+      "Bash(md5:*)"
     ],
     "deny": []
   }

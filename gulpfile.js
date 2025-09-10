@@ -293,7 +293,7 @@ gulp.task('copy-assets', () => {
     return gulp.src([
         'plugin/**/*',
         'examples/**/*'
-    ], { base: '.' })
+    ], { base: '.', encoding: false })
     .pipe(gulp.dest('./dist'));
 });
 
