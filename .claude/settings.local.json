@@ -15,7 +15,8 @@
       "Bash(grep:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm run build-production:*)",
-      "Bash(md5:*)"
+      "Bash(md5:*)",
+      "Bash(git merge:*)"
     ],
     "deny": []
   }
