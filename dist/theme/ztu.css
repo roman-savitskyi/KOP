@@ -5,19 +5,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap");
 @font-face {
   font-family: "OpenDyslexic";
-  src: url("../examples/fonts/OpenDyslexic-Regular.woff2") format("woff2"), url("../examples/fonts/OpenDyslexic-Regular.woff") format("woff"), url("../examples/fonts/OpenDyslexic-Regular.otf") format("opentype");
+  src: url("../../../examples/fonts/OpenDyslexic-Regular.woff2") format("woff2"), url("../../../examples/fonts/OpenDyslexic-Regular.woff") format("woff"), url("../../../examples/fonts/OpenDyslexic-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "OpenDyslexic";
-  src: url("../examples/fonts/OpenDyslexic-Bold.woff2") format("woff2"), url("../examples/fonts/OpenDyslexic-Bold.woff") format("woff"), url("../examples/fonts/OpenDyslexic-Bold.otf") format("opentype");
+  src: url("../../../examples/fonts/OpenDyslexic-Bold.woff2") format("woff2"), url("../../../examples/fonts/OpenDyslexic-Bold.woff") format("woff"), url("../../../examples/fonts/OpenDyslexic-Bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: "OpenDyslexic";
-  src: url("../examples/fonts/OpenDyslexic-Italic.woff2") format("woff2"), url("../examples/fonts/OpenDyslexic-Italic.woff") format("woff"), url("../examples/fonts/OpenDyslexic-Italic.otf") format("opentype");
+  src: url("../../../examples/fonts/OpenDyslexic-Italic.woff2") format("woff2"), url("../../../examples/fonts/OpenDyslexic-Italic.woff") format("woff"), url("../../../examples/fonts/OpenDyslexic-Italic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
 }
@@ -81,7 +81,6 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   opacity: 0.8;
   top: 20px;
   right: 20px;
-  background-image: url("../examples/assets/photo_5435867797486957681_x.jpg");
 }
 
 /* Footer background */
@@ -105,7 +104,7 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   height: 62px;
   width: auto;
   z-index: 55;
-  background-image: url("../examples/assets/ztu-logo-white.png");
+  background-image: url("../../../examples/assets/ztu-logo-white.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -147,7 +146,7 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   height: 72px;
   width: auto;
   z-index: 55;
-  background-image: url("../examples/assets/TIETO.HE_BIG.D.png");
+  background-image: url("../../../examples/assets/TIETO.HE_BIG.D.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -162,7 +161,7 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   height: 72px;
   width: auto;
   z-index: 55;
-  background-image: url("../examples/assets/beerjs.jpg");
+  background-image: url("../../../examples/assets/beerjs.jpg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

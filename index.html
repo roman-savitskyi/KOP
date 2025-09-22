@@ -6,12 +6,11 @@
 
 		<title>КОП</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/ztu.css">
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
 	</head>
 	<body>
 		<div class="reveal">
@@ -19,188 +18,517 @@
 			<div class="footer-conference-logo"></div>
 			<div class="footer-beerjs-logo"></div>
 			<div class="slides">
+				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">Компонентно-орієнтоване програмування</h1>
-					<p class="ztu-orange">Загальні запитання </p>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
+					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
 				</section>
-				
+
+				<!-- Roadmap -->
 				<section>
-					<h1>Савіцький Роман</h1>
-					<div class="flex">
-						<ul>
-							<li>Викладач Житомирської політехніки, аспірант</li>
-							<li>TietoEvry Create Ukraine</li>
-							<li>BeerJS Zhytomyr</li>
-							<li>FWDays дебати</li>
-							<li>DEV Challenge</li>
-							<li>Спікер</li>
-						</ul>
-            			<img src="examples/assets/46178221_1191136437704838_560924841981509632_n.jpg" width="300" style="padding-left: 20px" alt="">
+					<h2 class="ztu-blue">ROADMAP</h2>
+					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
+						<iframe data-src="https://miro.com/app/board/o9J_lVQm6fI=" data-preload width="800" height="600"></iframe>
+				</section>
+
+				<!-- useEffect -->
+				<section>
+					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
+					<p class="ztu-orange fragment fade-in-then-semi-out">useEffect</p>
+					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
+				</section>
+
+				<!-- Умовний рендеринг -->
+				<section>
+					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
+				</section>
+
+				<!-- Зберігання в змінну -->
+				<section>
+					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
+					<p class="ztu-orange">Зберігання в змінну</p>
+					<pre><code class="javascript">export function IdNumber(props) {
+  const { id } = props;
+  let message;
+
+  if (id) {
+    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
+  } else {
+    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
+  }
+
+  return (
+    &lt;&gt;
+      {message}
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- JS like. If-else or ternary -->
+				<section>
+					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
+					<p class="ztu-orange">JS like. If-else or ternary</p>
+					<pre><code class="javascript">export function Title(props) {
+  const { tag } = props;
+
+  return (
+    &lt;&gt;
+      {(tag === 'h1')
+        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
+        : &lt;p&gt;{props.children}&lt;/p&gt;
+      }
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- return null -->
+				<section>
+					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
+					<p class="ztu-orange">return null</p>
+					<pre><code class="javascript">export function Title(props) {
+  const { tag } = props;
+
+  return (
+    &lt;&gt;
+      {(tag === 'h1')
+        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
+        : null
+      }
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Списки та ключі -->
+				<section>
+					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
+				</section>
+
+				<!-- Списки -->
+				<section>
+					<h2 class="ztu-blue">СПИСКИ</h2>
+					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  &lt;li&gt;{number}&lt;/li&gt;
+);
+&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
+				</section>
+
+				<!-- Списки - з підсвіткою рядків -->
+				<section>
+					<h2 class="ztu-blue">СПИСКИ</h2>
+					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  &lt;li&gt;{number}&lt;/li&gt;
+);
+&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
+					<div class="fragment">
+						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
+							<ul class="ztu-list">
+								<li>1</li>
+								<li>2</li>
+								<li>3</li>
+								<li>4</li>
+								<li>5</li>
+							</ul>
+						</div>
 					</div>
 				</section>
-				<section>
-					<h2>Телеграм</h2>
-            		<img src="examples/assets/qrcode_telegram.png" width="500" style="padding-left: 20px" alt="">
-				</section>
 
+				<!-- Ключ є обов'язковим -->
 				<section>
-					<h2>Академічна доброчесність</h2>
+					<h2 class="ztu-blue">СПИСКИ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Де знайти?</li>
-						<li class="fragment fade-in-then-semi-out">Окремий блок на порталі. </li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Чи дотримуватись?</li>
-						<li class="fragment fade-in-then-semi-out">Так, на 100%.</li>
+						<li class="fragment fade-in-then-semi-out">На вхід може бути масив елементів</li>
+						<li class="fragment fade-in-then-semi-out">Ключ є обов'язковим</li>
 					</ul>
 				</section>
 
+				<!-- Ключі - з підсвіткою рядків -->
 				<section>
-					<h2>Про що курс?</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Фронтенд. Компонентно-орієнтоване програмування</li>
-						<li class="fragment fade-in-then-semi-out">AI, vibe code, frontend</li>
-						<li class="fragment fade-in-then-semi-out">Components, props, state</li>
-						<li class="fragment fade-in-then-semi-out">Експорт, імпорт, списки, ключі</li>
-						<li class="fragment fade-in-then-semi-out">Хуки, кастомні хуки</li>
-						<li class="fragment fade-in-then-semi-out">Форми, валідація</li>
-						<li class="fragment fade-in-then-semi-out">Портали, фрагменти, CSS</li>
-						<li class="fragment fade-in-then-semi-out">Роутинг, ліниве завантаження, suspense</li>
-						<li class="fragment fade-in-then-semi-out">Best practices, організація коду</li>
-						<li class="fragment fade-in-then-semi-out">State management (Redux toolkit, Zustand), persistance-store</li>
-						<li class="fragment fade-in-then-semi-out">* React query (rtk)</li>
-						<li class="fragment fade-in-then-semi-out">* Playwright, Storybook</li>
-					</ul>
+					<h2 class="ztu-blue">КЛЮЧІ</h2>
+					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
+);
+&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
+					<div class="fragment">
+						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
+							<ul class="ztu-list">
+								<li>1</li>
+								<li>2</li>
+								<li>3</li>
+								<li>4</li>
+								<li>5</li>
+							</ul>
+						</div>
+					</div>
 				</section>
-				<section>
-					<h2>Q&A спілкування</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Як звертатись?</li>
-						<li class="fragment fade-in-then-semi-out">Як вам зручно.</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Коли задавати запитання?</li>
-						<li class="fragment fade-in-then-semi-out">В будь-який момент часу. Можна під час лекції, практики, в чаті</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Де онлайн можна задати запитання?</li>
-						<li class="fragment fade-in-then-semi-out">На практиці, онлайн телеграм канал, особисті телеграм</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Q&A організація лекцій</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Чи потрібно відвідувати пари?</li>
-						<li class="fragment fade-in-then-semi-out">Частина практик буде із захистом, тому так. Лекції - за потреби. Контроль за університетом</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Чи буде запис лекцій?</li>
-						<li class="fragment fade-in-then-semi-out">Частково. Я буду завантажувати минулорічні лекції в більшій мірі</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Чи будуть доступні поезентації?</li>
-						<li class="fragment fade-in-then-semi-out">Так, онлайн та на порталі</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Q&A організація практичних</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Чи будуть захисти практичних?</li>
-						<li class="fragment fade-in-then-semi-out">Так, 2 лабораторні будуть із захистом.</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Що потрібно на 60 балів?</li>
-						<li class="fragment fade-in-then-semi-out">Здати лабораторні роботи. Щонайменше одна із захистом</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Як будуть проходити модулі?</li>
-						<li class="fragment fade-in-then-semi-out">1) Тест онлайн. 2) Практичне завдання.</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Q&A практичні</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Один проєкт на групу. Один репо</li>
-						<li class="fragment fade-in-then-semi-out">30 варіантів. У кожного свій</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Спільний проєкт</li>
 
-					</ul>
-				</section>
 				<section>
-					<h2>Q&A організація модулів</h2>
+					<h2 class="ztu-blue">КЛЮЧІ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">1. Тест</li>
-						<li class="fragment fade-in-then-semi-out">Буде відкритий постійно. Можете здавати коли і де хочете. 20 балів</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">2. Практичне завдання</li>
-						<li class="fragment fade-in-then-semi-out">Здача протягом пари - 20 балів</li>
-						<li class="fragment fade-in-then-semi-out">Здача протягом дня - 16 балів</li>
-						<li class="fragment fade-in-then-semi-out">Здача протягом семестру - 14 балів</li>
-						<li class="fragment fade-in-then-semi-out">Здача після екзамену - 12 балів</li>
+						<li class="fragment fade-in-then-semi-out">Стабільна ідентичність</li>
+						<li class="fragment fade-in-then-semi-out">Ключ унікальний в межах списку</li>
+						<li class="fragment fade-in-then-semi-out">Ключі є рядковими</li>
+						<li class="fragment fade-in-then-semi-out">Ключ застосовується для елементів масиву, а не до тегів</li>
 					</ul>
 				</section>
+
+				<!-- Index as key article -->
 				<section>
-					<h2>Q&A додаткові активності</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Є можливість додатково здати сертифікат на Udemy </li>
-						<li class="fragment fade-in-then-semi-out">4 бали</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Можливі додаткові мітапи або відкриті лекції</li>
-						<li class="fragment fade-in-then-semi-out">4 бали за кожну</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Чи можливо здати через окремий проєкт?</li>
-						<li class="fragment fade-in-then-semi-out">Ні</li>
-					</ul>
+					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
+					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
+				<iframe data-src="https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318" data-preload width="800" height="600"></iframe>
 				</section>
+				<!-- Віртуалізований список -->
 				<section>
-					<h2>Q&A Бонуси</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Практичні до 1 жовтня</li>
-						<li class="fragment fade-in-then-semi-out">15 балів бонусу</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Практичні до 15 жовтня</li>
-						<li class="fragment fade-in-then-semi-out">10 балів бонусу</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Практичні до 1 листопада</li>
-						<li class="fragment fade-in-then-semi-out">5 балів бонусу</li>
-					</ul>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Здача практичної</li>
-						<li class="fragment fade-in-then-semi-out">Поточний день + 1 місяць (якщо екзамен не раніше)</li>
-						<li class="fragment fade-in-then-semi-out">Далі -2 бали за несвоєчасність</li>
-						<li class="fragment fade-in-then-semi-out">Після екзамену -4 бали за несвоєчасність</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Q&A оцінювання</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">1. Модуль тест 20 балів</li>
-						<li class="fragment fade-in-then-semi-out">2. Модуль практика 20 балів</li>
-						<li class="fragment fade-in-then-semi-out">1-6 Практична 9 балів </li>
-						<li class="fragment fade-in-then-semi-out">Відвідування 6 бали</li>
-						<li class="fragment fade-in-then-semi-out">Сертифікат 2 по 4=8</li>
-						<li class="fragment fade-in-then-semi-out">Відкриті лекції по 4 бали</li>
-						<li class="fragment fade-in-then-semi-out">Перші 5 варіантів зроблені вчасно +5 балів</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Всього 40+54+6+8=108+відкриті лекції і варіанти</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Q&A ШІ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Дозволено</li>
-						<li class="fragment fade-in-then-semi-out">За будь-яку генерацію ви несете відповідальність</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Заборона використання</h2>
-					<p>З 1.03.2023 року розпочинає дію заборона на використання російських та російськомовних, а також білоруських джерел в освіті</p>
-				</section>
+					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
+					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
+					<iframe data-src="https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper" data-preload width="800" height="600"></iframe>
 				
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">MutationObserver</li>
+						<li class="fragment fade-in-then-semi-out">Активна робота з VirtualDOM</li>
+						<li class="fragment fade-in-then-semi-out">Велике покращення швидкодії продукту</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">БАНДЛІНГ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Webpack</li>
+						<li class="fragment fade-in-then-semi-out">Rollup</li>
+						<li class="fragment fade-in-then-semi-out">Parcel</li>
+						<li class="fragment fade-in-then-semi-out">Vite</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">WEBPACK</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Створення єдиної точки входу</li>
+						<li class="fragment fade-in-then-semi-out">Процес мініфікації, агліфікації та об'єднання</li>
+						<li class="fragment fade-in-then-semi-out">Webpack-bundle-analyzer</li>
+					</ul>
+				</section>
+
+				<!-- Webpack Bundle Analyzer -->
+				<section>
+					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
+					<iframe data-src="https://blog.bitsrc.io/6-tools-and-techniques-to-analyze-webpack-bundle-size-817337f8cf91" data-preload width="800" height="600"></iframe>
+				
+					
+				</section>
+
+				<!-- Vite -->
+				<section>
+					<h2 class="ztu-blue">VITE</h2>
+				</section>
+
+				<!-- Vite vs Webpack -->
+				<section>
+					<h2 class="ztu-blue">VITE vs WEBPACK</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+						<div>
+							<h3 class="ztu-orange">Webpack</h3>
+							<ul class="ztu-list" style="font-size: 0.8em;">
+								<li class="">Повільний старт (bundling)</li>
+								<li class="">Конфігурація складна</li>
+								<li class="">HMR повільний</li>
+								<li class="">Великий ecosystem</li>
+							</ul>
+						</div>
+						<div>
+							<h3 class="ztu-orange">Vite</h3>
+							<ul class="ztu-list" style="font-size: 0.8em;">
+								<li class="">Швидкий старт (ESM)</li>
+								<li class="">Zero-config</li>
+								<li class="">Миттєвий HMR</li>
+								<li class="">Rollup під капотом</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<!-- Vite особливості -->
+				<section>
+					<h2 class="ztu-blue">VITE</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">ESM в Dev режимі</li>
+						<li class="fragment fade-in-then-semi-out">esbuild для TypeScript</li>
+						<li class="fragment fade-in-then-semi-out">Rollup для Production</li>
+						<li class="fragment fade-in-then-semi-out">Плагіни сумісні з Rollup</li>
+					</ul>
+				</section>
+
+				<!-- Vite команди -->
+				<section>
+					<h2 class="ztu-blue">VITE</h2>
+					<h3 class="ztu-orange">Команди</h3>
+					<pre><code class="bash"># Створити проект
+npm create vite@latest my-react-app
+# Запустити dev сервер
+npm run dev
+# Збірка для продакшну
+npm run build</code></pre>
+				</section>
+
+				<!-- Import -->
+				<section>
+					<h2 class="ztu-blue">IMPORT</h2>
+				</section>
+
+				<!-- Статичний імпорт -->
+				<section>
+					<h2 class="ztu-blue">IMPORT</h2>
+					<h3 class="ztu-orange">Статичний імпорт</h3>
+					<pre><code class="javascript" data-line-numbers="|1-2|3-4|5-6">// Іменований імпорт
+import { add, subtract } from './math';
+// Дефолтний імпорт
+import Calculator from './Calculator';
+// Комбінований імпорт
+import React, { useState, useEffect } from 'react';</code></pre>
+				</section>
+
+				<!-- Import всього модуля -->
+				<section>
+					<h2 class="ztu-blue">IMPORT</h2>
+					<h3 class="ztu-orange">Import всього модуля</h3>
+					<pre><code class="javascript" data-line-numbers="|2">// Імпорт всього як об'єкт
+import * as Math from './math';
+console.log(Math.add(16, 26));</code></pre>
+				</section>
+
+				<!-- Aliasing та Side Effects -->
+				<section>
+					<h2 class="ztu-blue">IMPORT</h2>
+					<h3 class="ztu-orange">Aliasing та Side Effects</h3>
+					<pre><code class="javascript" data-line-numbers="1-2|3-5|">// Перейменування імпорту
+import { add as sum } from './math';
+// Side effects (без імпорту)
+import './styles.css';
+import 'react-toastify/dist/ReactToastify.css';</code></pre>
+				</section>
+
+				<!-- Динамічний імпорт -->
+				<section>
+					<h2 class="ztu-blue">IMPORT</h2>
+					<h3 class="ztu-orange">Динамічний імпорт</h3>
+					<pre><code class="javascript">import("./math").then(math => {
+  console.log(math.add(16, 26));
+});</code></pre>
+				</section>
+
+				<!-- Динамічний імпорт babel -->
+				<section>
+					<h2 class="ztu-blue">IMPORT</h2>
+					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
+					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
+				</section>
+
+				<!-- Export -->
+				<section>
+					<h2 class="ztu-blue">EXPORT</h2>
+				</section>
+
+				<!-- Іменований експорт -->
+				<section>
+					<h2 class="ztu-blue">EXPORT</h2>
+					<h3 class="ztu-orange">Іменований експорт</h3>
+					<pre><code class="javascript" data-line-numbers="|1-3|4-5|">// Експорт під час оголошення
+export const PI = 3.14159;
+export function add(a, b) { return a + b; }
+// Експорт існуючих змінних
+export { myFunction, anotherVar };</code></pre>
+				</section>
+
+				<!-- Дефолтний експорт -->
+				<section>
+					<h2 class="ztu-blue">EXPORT</h2>
+					<h3 class="ztu-orange">Дефолтний експорт</h3>
+					<pre><code class="javascript" >// Функція
+export default function Calculator() {}
+// Клас
+export default class MyClass {}
+// Значення
+export default 42;</code></pre>
+				</section>
+
+				<!-- Re-export -->
+				<section>
+					<h2 class="ztu-blue">EXPORT</h2>
+					<h3 class="ztu-orange">Re-export (Переекспорт)</h3>
+					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// Переекспорт всього
+export * from './math';
+// Переекспорт конкретних функцій
+export { add, subtract } from './math';
+// Переекспорт з перейменуванням
+export { default as Calculator } from './Calculator';</code></pre>
+				</section>
+
+				<!-- CommonJS vs ESM -->
+				<section>
+					<h2 class="ztu-blue">COMMONJS vs ESM</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
+						<div>
+							<h3 class="ztu-orange">CommonJS (Node.js)</h3>
+							<pre><code class="javascript" style="font-size: 0.7em;">// Export
+module.exports = { add };
+exports.PI = 3.14;
+
+// Import
+const { add } = require('./math');
+const math = require('./math');</code></pre>
+						</div>
+						<div>
+							<h3 class="ztu-orange">ESM (ES6 Modules)</h3>
+							<pre><code class="javascript" style="font-size: 0.7em;">// Export
+export { add };
+export const PI = 3.14;
+
+// Import
+import { add } from './math';
+import * as math from './math';</code></pre>
+						</div>
+					</div>
+				</section>
+
+				<!-- Tree Shaking -->
+				<section>
+					<h2 class="ztu-blue">TREE SHAKING</h2>
+				</section>
+
+				<!-- Tree Shaking визначення -->
+				<section>
+					<h2 class="ztu-blue">TREE SHAKING</h2>
+					<h3 class="ztu-orange">Що це таке?</h3>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Видалення невикористаного коду з бандлу</li>
+						<li class="fragment fade-in-then-semi-out">Зменшення розміру фінального файлу</li>
+						<li class="fragment fade-in-then-semi-out">Працює тільки з ES6 модулями</li>
+						<li class="fragment fade-in-then-semi-out">Статичний аналіз import/export</li>
+					</ul>
+				</section>
+
+				<!-- Tree Shaking приклад -->
+				<section>
+					<h2 class="ztu-blue">TREE SHAKING</h2>
+					<h3 class="ztu-orange">Приклад</h3>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
+						<div>
+							<h4 class="ztu-orange">utils.js</h4>
+							<pre><code class="javascript" style="font-size: 0.7em;">export function add(a, b) {
+  return a + b;
+}
+
+export function subtract(a, b) {
+  return a - b;
+}
+
+export function multiply(a, b) {
+  return a * b;
+}</code></pre>
+						</div>
+						<div>
+							<h4 class="ztu-orange">main.js</h4>
+							<pre><code class="javascript" style="font-size: 0.7em;">// Імпортуємо тільки add
+import { add } from './utils';
+
+console.log(add(2, 3));
+
+// subtract і multiply
+// НЕ потраплять в бандл!</code></pre>
+						</div>
+					</div>
+				</section>
+
+				<!-- Tree Shaking поганий приклад -->
+				<section>
+					<h2 class="ztu-blue">TREE SHAKING</h2>
+					<h3 class="ztu-orange">Що заважає Tree Shaking?</h3>
+					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ❌ Погано - імпорт всього модуля
+import * as utils from './utils';
+
+// ❌ Погано - side effects
+import './utils'; // виконує код при імпорті
+
+// ❌ Погано - CommonJS
+const { add } = require('./utils');</code></pre>
+				</section>
+
+				<!-- Tree Shaking добрий приклад -->
+				<section>
+					<h2 class="ztu-blue">TREE SHAKING</h2>
+					<h3 class="ztu-orange">Як робити правильно?</h3>
+					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ✅ Добре - іменований імпорт
+import { add, subtract } from './utils';
+
+// ✅ Добре - lodash-es замість lodash
+import { debounce } from 'lodash-es';
+
+// ✅ Добре - окремі модулі
+import debounce from 'lodash/debounce';</code></pre>
+				</section>
+
+
+				<!-- React Lazy визначення -->
+				<section>
+					<h2 class="ztu-blue">REACT LAZY</h2>
+					<p class="ztu-orange">Code Splitting</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Розділення коду на окремі чанки</li>
+						<li class="fragment fade-in-then-semi-out">Завантаження компонентів по потребі</li>
+						<li class="fragment fade-in-then-semi-out">Покращення часу завантаження</li>
+						<li class="fragment fade-in-then-semi-out">Зменшення initial bundle size</li>
+					</ul>
+				</section>
+
+				<!-- React.lazy приклад -->
+				<section>
+					<h2 class="ztu-blue">REACT LAZY</h2>
+					<p class="ztu-orange">React.lazy()</p>
+					<pre><code class="javascript">// Замість звичайного імпорту
+// import Dashboard from './Dashboard';
+
+// Динамічний імпорт з React.lazy
+const Dashboard = React.lazy(() => import('./Dashboard'));
+
+function App() {
+  return &lt;Dashboard /&gt;;
+}</code></pre>
+				</section>
+
+				<!-- Suspense -->
+				<section>
+					<h2 class="ztu-blue">REACT LAZY</h2>
+					<p class="ztu-orange">Suspense</p>
+					<pre><code class="javascript" >import { Suspense } from 'react';
+
+const Dashboard = React.lazy(() => import('./Dashboard'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;Завантаження...&lt;/div&gt;}&gt;
+      &lt;Dashboard /&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+				</section>
+	<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
+					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+				</section>
+
 			</div>
 		</div>
 
