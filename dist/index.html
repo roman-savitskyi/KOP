@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>КОП</title>
+		<title>React Hooks - Лекція 4</title>
 
 		<link rel="stylesheet" href="reveal.css">
 		<link rel="stylesheet" href="theme/ztu.css">
@@ -20,558 +20,350 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<h2 class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</h2>
-					<div class="flex flex-jb" style="align-items: end; margin-top: 100px;">
-						<div class="flex">
-							<!-- ZTU Logo placeholder -->
-						</div>
-						<div>
-							<h3 class="ztu-orange" style="font-weight: bold;">JS</h3>
-						</div>
-					</div>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
+					<p class="ztu-orange">HOOKS</p>
 				</section>
 
-				<!-- React Logo -->
+				<!-- React Icon -->
 				<section>
-					<div class="flex" style="justify-content: center; align-items: center; height: 100vh;">
-						<svg style="width: 300px; height: 300px; color: #61dafb;" viewBox="0 0 841.9 595.3">
-							<g fill="currentColor">
-								<path d="m666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9v-22.3c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6v-22.3c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.2 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zm-101.4 106.7c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24s9.5 15.8 14.4 23.4zm73.9-208.1c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6s22.9-35.6 58.3-50.6c8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zm53.8 142.9c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6z"/>
+					<div style="background: #f39c12; width: 300px; height: 300px; margin: 0 auto; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+						<svg width="150" height="150" viewBox="0 0 841.9 595.3" style="fill: #61DAFB;">
+							<g>
+								<path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.2 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/>
 								<circle cx="420.9" cy="296.5" r="45.7"/>
+								<path d="M520.5 78.1z"/>
 							</g>
 						</svg>
 					</div>
 				</section>
 
-				<!-- Roadmap -->
+				<!-- Загальне про хуки -->
 				<section>
-					<h2 class="ztu-blue">ROADMAP</h2>
-					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
-					<div class="flex" style="justify-content: center; align-items: center; height: 400px; background: #f8f9fa; border-radius: 10px;">
-						<div style="color: #999; font-size: 2em;">📄</div>
-					</div>
+					<h2 class="ztu-blue">ЗАГАЛЬНЕ ПРО ХУКИ</h2>
 				</section>
 
-				<!-- Empty slide for transitions -->
 				<section>
-					<div style="height: 100vh;"></div>
+					<h2 class="ztu-blue">ЗАГАЛЬНЕ ПРО ХУКИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Використовуються у функціональних компонентах</li>
+						<li class="fragment fade-in-then-semi-out">Прийшли з реакту 16.8</li>
+						<li class="fragment fade-in-then-semi-out">Викликаються лише на верхньому рівні компонента</li>
+						<li class="fragment fade-in-then-semi-out">Викликаються лише з реакт функцій</li>
+					</ul>
 				</section>
 
-				<!-- Hobbit image slide -->
+				<!-- Мотивація та проблеми -->
 				<section>
-					<div class="flex bg-ztu-blue" style="justify-content: center; align-items: center; height: 100vh;">
-						<div style="text-align: center; color: white;">
-							<h2>🏔️</h2>
-							<p style="font-style: italic;">Beautiful landscape placeholder</p>
-						</div>
-					</div>
+					<h2 class="ztu-blue">МОТИВАЦІЯ. ПРОБЛЕМИ</h2>
 				</section>
 
-				<!-- Методи життєвого циклу -->
 				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
+					<h2 class="ztu-blue">МОТИВАЦІЯ. ПРОБЛЕМИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Важке перевикористання логіки між компонентами</li>
+						<li class="fragment fade-in-then-semi-out">Важкі компоненти є нечитабельні</li>
+						<li class="fragment fade-in-then-semi-out">Класи важкі а повільні для JS розробки</li>
+					</ul>
+				</section>
+
+				<!-- useState -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+				</section>
+
+				<!-- useState синтаксис -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript">const [value, setter] = useState(defaultValue);</code></pre>
+					<ul class="ztu-list fragment">
+						<li class="fragment fade-in-then-semi-out">const. Виконання коду асинхронне.</li>
+						<li class="fragment fade-in-then-semi-out">setter(). Відбувається рендеринг компоненту.</li>
+						<li class="fragment fade-in-then-semi-out">Для кожної зміни стану новий useState.</li>
+						<li class="fragment fade-in-then-semi-out">Best practice. useState зверху функції.</li>
+					</ul>
+				</section>
+
+				<!-- useState приклад -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|3-4|8-11|14-16|">export function Price(props) {
+  const { price, unit, colorT } = props;
+  let [color, setColor] = useState(colorT);
+  const [stateSmth, setStateSmth] = useState(0);
+
+  const changeColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setColor(randomColor);
+    setStateSmth(stateSmth + 1);
+    setStateSmth(stateSmth + 1);
+  }
+
+  return (&lt;div style={{backgroundColor: color}}&gt;
+    {price}{unit}{stateSmth}
+    &lt;button onClick={changeColor}&gt;Change color {color} with {stateSmth}&lt;/button&gt;
+  &lt;/div&gt;);
+}</code></pre>
+				</section>
+
+				<!-- useState callback -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Використання callback з попереднім значенням</p>
+					<pre><code class="javascript" data-line-numbers="|9-10|">export function Price(props) {
+  const { price, unit, colorT } = props;
+  let [color, setColor] = useState(colorT);
+  const [stateSmth, setStateSmth] = useState(0);
+
+  const changeColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setColor(randomColor);
+    setStateSmth((prevCounter) => prevCounter + 2);
+    setStateSmth((prevCounter) => prevCounter + 1);
+  }
+
+  return (&lt;div style={{backgroundColor: color}}&gt;
+    {price}{unit}{stateSmth}
+    &lt;button onClick={changeColor}&gt;Change color {color} with {stateSmth}&lt;/button&gt;
+  &lt;/div&gt;);
+}</code></pre>
+				</section>
+
+				<!-- useState initialization -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Встановлення початкового значення</p>
+					<pre><code class="javascript" data-line-numbers="|1|6-7|">const randomNumber = () => Math.floor(Math.random()*100, 1);
+
+export function Price(props) {
+  const { price, unit, colorT } = props;
+  let [color, setColor] = useState(colorT);
+  const [stateSmth, setStateSmth] = useState(randomNumber);
+  // const [stateSmth, setStateSmth] = useState(randomNumber());
+
+  const randomNumber = () => Math.random();
+
+  const changeColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setColor(randomColor);
+    setStateSmth((prevCounter) => prevCounter + 2);
+    setStateSmth((prevCounter) => prevCounter + 1);
+  }
+
+  return (&lt;div style={{backgroundColor: color}}&gt;</code></pre>
 				</section>
 
 				<!-- useEffect -->
 				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<h3 class="ztu-orange">useEffect</h3>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
+					<h2 class="ztu-blue">USEEFFECT</h2>
 				</section>
 
-				<!-- Умовний рендеринг -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-				</section>
-
-				<!-- Зберігання в змінну -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<h3 class="ztu-orange">Зберігання в змінну</h3>
-					<pre><code class="javascript">export function idNumber(props) {
-  const { id } = props;
-  let message;
-
-  if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
-  } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
-  }
-
-  return (
-    &lt;&gt;
-      {message}
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- JS like. If-else or ternary -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<h3 class="ztu-orange">JS like. If-else or ternary</h3>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : &lt;p&gt;{props.children}&lt;/p&gt;
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- return null -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<h3 class="ztu-orange">return null</h3>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : null
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- Списки та ключі -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
-				</section>
-
-				<!-- Christmas list image -->
-				<section>
-					<div class="flex" style="justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #fd79a8, #e84393);">
-						<div style="text-align: center; color: white;">
-							<h2>🎄🎁</h2>
-							<p style="font-style: italic; font-size: 1.5em;">Christmas Wish List</p>
-							<p style="font-style: italic;">Old School Vinyl Records<br/>Turntables<br/>DJ Headphones<br/>Bling<br/>Diamond Grill<br/>...</p>
-						</div>
-					</div>
-				</section>
-
-				<!-- Списки -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Списки - animation steps -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<div class="fragment">
-						<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">const listItems = numbers.map((number) =></code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">  &lt;li&gt;{number}&lt;/li&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">);</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- На вхід може бути масив елементів -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<h3 class="ztu-orange">На вхід може бути масив елементів</h3>
-				</section>
-
-				<!-- Ключ є обов'язковим -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
+					<h2 class="ztu-blue">USEEFFECT</h2>
 					<ul class="ztu-list">
-						<li>На вхід може бути масив елементів</li>
-						<li class="fragment">Ключ є обов'язковим</li>
+						<li class="fragment fade-in-then-semi-out">Можливість виконання сторонніх дій (ефектів)</li>
+						<li class="fragment fade-in-then-semi-out">componentDidMount + componentDidUpdate + componentWillUnmount</li>
+						<li class="fragment fade-in-then-semi-out">Що компонент має зробити після рендера</li>
+						<li class="fragment fade-in-then-semi-out">useEffect не блокує рендеринг</li>
 					</ul>
 				</section>
 
-				<!-- Ключі -->
+				<!-- useEffect синтаксис -->
 				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript">useEffect(effect, [deps]);</code></pre>
 				</section>
 
-				<!-- Ключі - animation steps -->
+				<!-- useEffect Mount + Update -->
 				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<div class="fragment">
-						<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">const listItems = numbers.map((number) =></code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">);</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Ключі rules -->
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li class="fragment">Стабільна ідентичність</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li>Стабільна ідентичність</li>
-						<li class="fragment">Ключ унікальний в межах списку</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li>Стабільна ідентичність</li>
-						<li>Ключ унікальний в межах списку</li>
-						<li class="fragment">Ключі є рядковими</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li>Стабільна ідентичність</li>
-						<li>Ключ унікальний в межах списку</li>
-						<li>Ключі є рядковими</li>
-						<li class="fragment">Ключ застосовується для елементів масиву, а не до тегів</li>
-					</ul>
-				</section>
-
-				<!-- Index as key question -->
-				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<div class="flex" style=" justify-content: center; align-items: center; height: 400px; background: linear-gradient(135deg, #fdcb6e, #e17055);">
-						<div style="text-align: center; color: white;">
-							<h2>🤔😿</h2>
-							<p style="font-style: italic; font-size: 1.2em;">Confused Cat Says:</p>
-							<p style="font-style: italic;">"Should I use index as key?"</p>
-						</div>
-					</div>
-				</section>
-
-				<!-- Index as key article -->
-				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				</section>
-
-				<!-- Empty slide -->
-				<section>
-					<div class="flex" style=" justify-content: center; align-items: center; height: 100vh; background: #f8f9fa;">
-						<div style="color: #999; font-size: 2em;">📄</div>
-					</div>
-				</section>
-
-				<!-- Віртуалізований список -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
-					<div style="border: 1px solid #ccc; padding: 20px; background: white; font-family: monospace; font-size: 0.6em;">
-						<div style="background: #f5f5f5; padding: 10px; margin-bottom: 10px;">
-							react virtualized COMPONENTS WIZARD SOURCE DOCUMENTATION ISSUES
-						</div>
-						<div style="margin-bottom: 10px;">
-							COLLECTION GRID LIST MASONRY TABLE<br/>
-							ARROWKEYSTEPPER AUTOSIZER CELLMEASURER COLUMNSIZER INFINITELOADER MULTIGRID SCROLLSYNC<br/>
-							WINDOWSCROLLER
-						</div>
-						<div>
-							ArrowKeyStepper Source | Docs<br/>
-							This high-order component decorates a List, Table, or Grid and responds to arrow-key events...
-						</div>
-						<div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; margin-top: 10px;">
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:0</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:1</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:2</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:3</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:4</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:5</div>
-						</div>
-					</div>
-				</section>
-
-				<!-- Віртуалізований список rules -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li class="fragment">MutationObserver</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li>MutationObserver</li>
-						<li class="fragment">Активна робота з VirtualDOM</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li>MutationObserver</li>
-						<li>Активна робота з VirtualDOM</li>
-						<li class="fragment">Велике покращення швидкодії продукту</li>
-					</ul>
-				</section>
-
-				<!-- Бандлінг -->
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li class="fragment">Webpack</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li>Webpack</li>
-						<li class="fragment">Rollup</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li>Webpack</li>
-						<li>Rollup</li>
-						<li class="fragment">Parcel</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li>Webpack</li>
-						<li>Rollup</li>
-						<li>Parcel</li>
-						<li class="fragment">Vite</li>
-					</ul>
-				</section>
-
-				<!-- Webpack -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li class="fragment">Створення єдиної точки входу</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li>Створення єдиної точки входу</li>
-						<li class="fragment">Процес мініфікації, агліфікації та об'єднання</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li>Створення єдиної точки входу</li>
-						<li>Процес мініфікації, агліфікації та об'єднання</li>
-						<li class="fragment">Webpack-bundle-analyzer</li>
-					</ul>
-				</section>
-
-				<!-- Webpack Bundle Analyzer -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
-					<div style="border: 1px solid #ccc; padding: 20px; background: white;">
-						<div class="algorithms-diagram" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; height: 300px;">
-							<div class="flex bg-ztu-red" style="flex-direction: column; padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">1.c537096ae6015405db12.chunk.js</div>
-								<div style="font-size: 0.6em;">node_modules</div>
-								<div class="flex" style="background: #ffaa99; flex: 1; margin: 5px 0; align-items: center; justify-content: center; font-weight: bold;">aws-sdk.js</div>
-								<div class="flex" style="background: #ffbb99; height: 40px; align-items: center; justify-content: center;">tinymce.js</div>
-							</div>
-							<div class="bg-ztu-green" style="padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">4.189f5365eba08e19f99.chunk.js</div>
-								<div class="flex" style="background: #aaffaa; height: 200px; align-items: center; justify-content: center;">aws-sdk.js</div>
-								<div class="flex" style="background: #bbffbb; height: 50px; align-items: center; justify-content: center; font-size: 0.8em;">material.es5.js</div>
-							</div>
-							<div class="bg-ztu-blue" style="padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">vendor.e38aa6adc099116b12.bundle.js</div>
-								<div class="flex" style="background: #aaaaff; height: 100px; align-items: center; justify-content: center;">core.es5.js</div>
-								<div class="flex" style="background: #bbbbff; height: 130px; align-items: center; justify-content: center;">material.es5.js</div>
-							</div>
-							<div class="bg-ztu-orange" style="padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">0.874eaae92ca756e5219.chunk.js</div>
-								<div class="flex" style="background: #ffffaa; height: 250px; align-items: center; justify-content: center;">material.es5.js</div>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<!-- Import -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-				</section>
-
-				<!-- Статичний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Статичний імпорт</h3>
-					<pre><code class="javascript">import { add } from './math';
-console.log(add(16, 26));</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт</h3>
-					<pre><code class="javascript">import("./math").then(math => {
-  console.log(math.add(16, 26));
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentDidMount + componentDidUpdate</p>
+					<pre><code class="javascript">useEffect(() => {
+  console.log(`useEffect. Execute every time`);
 });</code></pre>
 				</section>
 
-				<!-- Динамічний імпорт babel -->
+				<!-- useEffect Mount only -->
 				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentDidMount</p>
+					<pre><code class="javascript">useEffect(() => {
+  console.log(`useEffect. Render once on onload`);
+}, []);</code></pre>
 				</section>
 
-				<!-- Export -->
+				<!-- useEffect Unmount -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentWillUnmount</p>
+					<pre><code class="javascript">useEffect(() => {
+  console.log(`useEffect. Render once on onload`);
+  return (() => console.log(`useEffect. Render once on unload`));
+}, []);</code></pre>
 				</section>
 
-				<!-- Іменований експорт -->
+				<!-- useEffect Update -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Іменований експорт</h3>
-					<pre><code class="javascript">export { myFunction };
-export const foo = Math.sqrt(2);</code></pre>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentDidUpdate</p>
+					<pre><code class="javascript">useEffect(() => {
+  fetch(`https://jsonplaceholder.typicode.com/${type}/1`)
+    .then(response => response.json())
+    .then(json => setData(json));
+}, [type]);</code></pre>
 				</section>
 
-				<!-- Дефолтний експорт -->
+				<!-- useRef -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт</h3>
-					<pre><code class="javascript">export default function() {}</code></pre>
+					<h2 class="ztu-blue">USEREF</h2>
 				</section>
 
-				<!-- Дефолтний експорт єдиний на скрипт -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт єдиний на скрипт</h3>
+					<h2 class="ztu-blue">USEREF</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Отримання посилання на DOM елемент</li>
+						<li class="fragment fade-in-then-semi-out">Зберігання данних без ререндеру</li>
+						<li class="fragment fade-in-then-semi-out">Отримання попереднього значення елементу</li>
+					</ul>
 				</section>
 
-				<!-- Tree Shaking -->
+				<!-- useRef приклад -->
 				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<div class="flex" style="justify-content: center; align-items: center; height: 400px; background: linear-gradient(135deg, #a29bfe, #6c5ce7);">
-						<div style="text-align: center; color: white; border: 3px solid white; padding: 40px; border-radius: 15px;">
-							<h2 style="font-size: 2em; margin: 0;">ТУТ МОЖЕ БУТИ</h2>
-							<h2 style="font-size: 2em; margin: 0;">ВАША РЕКЛАМА</h2>
-						</div>
+					<h2 class="ztu-blue">USEREF</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|6-7|9-11|12-14|16|22-23|">import {useState, useEffect, useRef} from "react";
+
+export function Ref() {
+  const [value, setValue] = useState('start');
+  const renderCount = useRef(1);
+  const inputRef = useRef(null);
+  const prevValue = useRef('');
+
+  useEffect(() => {
+    renderCount.current++;
+  });
+  useEffect(() => {
+    prevValue.current = value;
+  }, [value]);
+
+  const focus = () => inputRef.current.focus();
+
+  return (
+    &lt;&gt;
+      &lt;p&gt;Render {renderCount.current}&lt;/p&gt;
+      &lt;p&gt;Prev value {prevValue.current}&lt;/p&gt;
+      &lt;input ref={inputRef} onChange={e => setValue(e.target.value)} /&gt;
+      &lt;button onClick={focus}&gt;Move focus&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- useMemo -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange fragment">Мемоїзація - це метод оптимізації, який в основному використовується для прискорення комп'ютерних програм шляхом зберігання результатів дорогих викликів функцій та повернення кешованого результату, коли виклики на однакових вхідних даних відбуваються знову.</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Кешування об'єктів</li>
+						<li class="fragment fade-in-then-semi-out">Кешування важких функцій</li>
+					</ul>
+				</section>
+
+				<!-- useMemo синтаксис -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript">const memoValue = useMemo(() => {
+  expensiveOperationHere(data, value)
+}, [data, value]);</code></pre>
+				</section>
+
+				<!-- useMemo приклад -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|3-5|7-11|14-16|18|">import {useState, useMemo} from "react";
+
+function randomNumber() {
+  return Math.floor(Math.random()*100, 1);
+}
+
+function complex(value) {
+  let i = 0;
+  while (i < 100000000000000) i++;
+  return randomNumber();
+}
+
+export function Memo() {
+  const [value, setValue] = useState(0);
+  const [anotherNumber, setAnotherNumber] = useState(0);
+
+  // const recalculate = complex(value);
+  const recalculate = useMemo(() => complex(value), [value]);
+}</code></pre>
+				</section>
+
+				<!-- Порівняння об'єктів -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Порівняння об'єктів</p>
+					<pre><code class="javascript">{} === {} // false</code></pre>
+				</section>
+
+				<!-- useCallback -->
+				<section>
+					<h2 class="ztu-blue">USECALLBACK</h2>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USECALLBACK</h2>
+					<p class="ztu-orange">Мемоізується функція</p>
+					<pre><code class="javascript">const memoValue = useCallback(() => {
+  expensiveFunction(data, value)
+}, [data, value]);</code></pre>
+					<p class="fragment" style="margin-top: 20px;">useCallback(fn, deps) є еквівалентом useMemo(() => fn, deps).</p>
+				</section>
+
+				<!-- useContext -->
+				<section>
+					<h2 class="ztu-blue">USECONTEXT → CONTEXT API</h2>
+				</section>
+
+				<!-- useReducer -->
+				<section>
+					<h2 class="ztu-blue">USEREDUCER → REDUX</h2>
+				</section>
+
+				<!-- Інші хуки -->
+				<section>
+					<h2 class="ztu-blue">ІНШІ ХУКИ</h2>
+				</section>
+
+				<!-- Власні хуки -->
+				<section>
+					<h2 class="ztu-blue">ВЛАСНІ ХУКИ</h2>
+				</section>
+
+				<!-- Питання -->
+				<section>
+					<h1 class="ztu-blue">ШО? ШО?</h1>
+					<div style="text-align: center; margin-top: 40px;">
+						<img src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif" alt="Questions" style="max-width: 80%; height: auto; border-radius: 10px;" />
 					</div>
 				</section>
 
-				<!-- React Lazy -->
+				<!-- Кінець -->
 				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<div class="flex" style="justify-content: center; align-items: center; height: 400px; background: linear-gradient(135deg, #55a3ff, #003d82);">
-						<div style="text-align: center; color: white; border: 3px solid white; padding: 40px; border-radius: 15px;">
-							<h2 style="font-size: 2em; margin: 0;">ТУТ МОЖЕ БУТИ</h2>
-							<h2 style="font-size: 2em; margin: 0;">ВАША РЕКЛАМА</h2>
-						</div>
-					</div>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
+					<p class="ztu-orange">HOOKS</p>
 				</section>
 
-				<!-- ШО? ШО? -->
-				<section>
-					<h2 style="color: #666; font-size: 3em; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);">ШО? ШО?</h2>
-					<div class="flex bg-ztu-orange" style="justify-content: center; align-items: center; height: 400px;">
-						<div style="text-align: center; color: #2d3436;">
-							<h2 style="font-size: 4em; margin: 0;">❓❓</h2>
-							<p style="font-style: italic; font-size: 1.5em;">Question Cards</p>
-							<div class="flex" style="gap: 20px; justify-content: center; margin-top: 20px;">
-								<div class="flex" style="width: 80px; height: 120px; background: white; border-radius: 10px; align-items: center; justify-content: center; font-size: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">?</div>
-								<div class="flex" style="width: 80px; height: 120px; background: white; border-radius: 10px; align-items: center; justify-content: center; font-size: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">?</div>
-								<div class="flex" style="width: 80px; height: 120px; background: white; border-radius: 10px; align-items: center; justify-content: center; font-size: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">?</div>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<!-- Final empty slide -->
-				<section>
-					<div style="height: 100vh;"></div>
-				</section>
 			</div>
 		</div>
 

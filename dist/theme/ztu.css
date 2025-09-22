@@ -721,3 +721,42 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 .reveal .ztu-list li::marker {
   color: var(--ztu-blue);
 }
+
+/*********************************************
+ * REACT ICON STYLING
+ *********************************************/
+.react-icon-container {
+  background: var(--ztu-orange);
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-icon {
+  fill: #61DAFB;
+}
+
+/*********************************************
+ * QUESTIONS SECTION STYLING
+ *********************************************/
+.questions-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.questions-gif {
+  max-width: 80%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/*********************************************
+ * CALLBACK NOTE STYLING
+ *********************************************/
+.callback-note {
+  margin-top: 20px;
+}
