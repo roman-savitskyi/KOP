@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>React Hooks - Лекція 4</title>
+
+		<link rel="stylesheet" href="reveal.css">
+		<link rel="stylesheet" href="theme/ztu.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="footer-ztu-logo"></div>
+			<div class="footer-conference-logo"></div>
+			<div class="footer-beerjs-logo"></div>
+			<div class="slides">
+				<!-- Title Slide -->
+				<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
+					<p class="ztu-orange">HOOKS</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">ЗАГАЛЬНЕ ПРО ХУКИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Використовуються у функціональних компонентах</li>
+						<li class="fragment fade-in-then-semi-out">Прийшли з реакту 16.8</li>
+						<li class="fragment fade-in-then-semi-out">Викликаються лише на верхньому рівні компонента</li>
+						<li class="fragment fade-in-then-semi-out">Викликаються лише з реакт функцій</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">МОТИВАЦІЯ. ПРОБЛЕМИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Важке перевикористання логіки між компонентами</li>
+						<li class="fragment fade-in-then-semi-out">Важкі компоненти є нечитабельні</li>
+						<li class="fragment fade-in-then-semi-out">Класи важкі а повільні для JS розробки</li>
+					</ul>
+				</section>
+
+				<!-- Мотивація приклади -->
+				<section>
+					<h2 class="ztu-blue">ПРОБЛЕМИ КЛАСІВ</h2>
+					<p class="ztu-orange">До (Class Component)</p>
+					<pre><code class="javascript" >class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        Count: {this.state.count}
+      </button>
+    );
+  }
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">РІШЕННЯ З ХУКАМИ</h2>
+					<p class="ztu-orange">Після (Functional Component + Hooks)</p>
+					<pre><code class="javascript" data-line-numbers="1-2|4-8|">function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={()&nbsp;=&gt;&nbsp;setCount(count&nbsp;+&nbsp;1)}>
+      Count: {count}
+    </button>
+  );
+}</code></pre>
+					<ul class="ztu-list fragment">
+						<li class="fragment fade-in-then-semi-out">Менше коду</li>
+						<li class="fragment fade-in-then-semi-out">Немає this binding</li>
+						<li class="fragment fade-in-then-semi-out">Простіше тестування</li>
+					</ul>
+				</section>
+
+<!-- Правила хуків -->
+				<section>
+					<h2 class="ztu-blue">ПРАВИЛА ХУКІВ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Викликайте хуки тільки на верхньому рівні</li>
+						<li class="fragment fade-in-then-semi-out">Не викликайте в циклах, умовах чи вкладених функціях</li>
+						<li class="fragment fade-in-then-semi-out">Викликайте хуки тільки з React функцій</li>
+						<li class="fragment fade-in-then-semi-out">Використовуйте eslint-plugin-react-hooks</li>
+					</ul>
+				</section>
+				<!-- useState синтаксис -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript">const [value, setter] = useState(defaultValue);</code></pre>
+					<ul class="ztu-list fragment">
+						<li class="fragment fade-in-then-semi-out">const. Виконання коду асинхронне.</li>
+						<li class="fragment fade-in-then-semi-out">setter(). Відбувається рендеринг компоненту.</li>
+						<li class="fragment fade-in-then-semi-out">Для кожної зміни стану новий useState.</li>
+						<li class="fragment fade-in-then-semi-out">Best practice. useState зверху функції.</li>
+					</ul>
+				</section>
+
+				<!-- useState приклад -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|3-4|8-11|14-16|">export function Price(props) {
+  const { price, unit, colorT } = props;
+  let [color, setColor] = useState(colorT);
+  const [stateSmth, setStateSmth] = useState(0);
+
+  const changeColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setColor(randomColor);
+    setStateSmth(stateSmth + 1);
+    setStateSmth(stateSmth + 1);
+  }
+
+  return (<div style={{backgroundColor: color}}>
+    {price}{unit}{stateSmth}
+    <button onClick={changeColor}>Change color {color} with {stateSmth}</button>
+  </div>);
+}</code></pre>
+				</section>
+
+				<!-- useState callback -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Використання callback з попереднім значенням</p>
+					<pre><code class="javascript" data-line-numbers="|9-10|">export function Price(props) {
+  const { price, unit, colorT } = props;
+  let [color, setColor] = useState(colorT);
+  const [stateSmth, setStateSmth] = useState(0);
+
+  const changeColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setColor(randomColor);
+    setStateSmth((prevCounter) => prevCounter + 2);
+    setStateSmth((prevCounter) => prevCounter + 1);
+  }
+
+  return (<div style={{backgroundColor: color}}>
+    {price}{unit}{stateSmth}
+    <button onClick={changeColor}>Change color {color} with {stateSmth}</button>
+  </div>);
+}</code></pre>
+				</section>
+
+				<!-- useState initialization -->
+				<section>
+					<h2 class="ztu-blue">USESTATE</h2>
+					<p class="ztu-orange">Встановлення початкового значення</p>
+					<pre><code class="javascript" data-line-numbers="|1|6-7|">const randomNumber = () => Math.floor(Math.random()*100, 1);
+
+export function Price(props) {
+  const { price, unit, colorT } = props;
+  let [color, setColor] = useState(colorT);
+  const [stateSmth, setStateSmth] = useState(randomNumber);
+  // const [stateSmth, setStateSmth] = useState(randomNumber());
+
+  const changeColor = () => {
+    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    setColor(randomColor);
+    setStateSmth((prevCounter) => prevCounter + 2);
+    setStateSmth((prevCounter) => prevCounter + 1);
+  }
+
+  return (<div style={{backgroundColor: color}}>
+    {price}{unit}{stateSmth}
+    <button onClick={changeColor}>Change color {color} with {stateSmth}</button>
+  </div>);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Можливість виконання сторонніх дій (ефектів)</li>
+						<li class="fragment fade-in-then-semi-out">componentDidMount + componentDidUpdate + componentWillUnmount</li>
+						<li class="fragment fade-in-then-semi-out">Що компонент має зробити після рендера</li>
+						<li class="fragment fade-in-then-semi-out">useEffect не блокує рендеринг</li>
+					</ul>
+				</section>
+
+				<!-- useEffect синтаксис -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript">useEffect(effect, [deps]);</code></pre>
+				</section>
+
+				<!-- useEffect Mount + Update -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentDidMount + componentDidUpdate</p>
+					<pre><code class="javascript">useEffect(() => {
+  console.log(`useEffect. Execute every time`);
+});</code></pre>
+				</section>
+
+				<!-- useEffect Mount only -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentDidMount</p>
+					<pre><code class="javascript">useEffect(() => {
+  console.log(`useEffect. Render once on onload`);
+}, []);</code></pre>
+				</section>
+
+				<!-- useEffect Unmount -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentWillUnmount</p>
+					<pre><code class="javascript">useEffect(() => {
+  console.log(`useEffect. Render once on onload`);
+  return (() => console.log(`useEffect. Render once on unload`));
+}, []);</code></pre>
+				</section>
+
+				<!-- useEffect Update -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">componentDidUpdate</p>
+					<pre><code class="javascript">useEffect(() => {
+  fetch(`https://jsonplaceholder.typicode.com/${type}/1`)
+    .then(response => response.json())
+    .then(json => setData(json));
+}, [type]);</code></pre>
+				</section>
+
+				<!-- useEffect Dependencies -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Залежності (Dependencies)</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>[] (порожній масив)</strong> - виконується один раз при mount</li>
+						<li class="fragment fade-in-then-semi-out"><strong>[value]</strong> - виконується при зміні value</li>
+						<li class="fragment fade-in-then-semi-out"><strong>без масиву</strong> - виконується при кожному render</li>
+						<li class="fragment fade-in-then-semi-out"><strong>[a, b, c]</strong> - виконується при зміні будь-якого з a, b, c</li>
+					</ul>
+				</section>
+
+				<!-- useEffect правила -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Правила залежностей</p>
+					<pre><code class="javascript">function MyComponent() {
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState('');
+
+  // ❌ Відсутні залежності
+  useEffect(() => {
+    console.log(`Count is ${count}`);
+  }); // Буде виконуватися при кожному рендері
+
+  // ✅ Правильні залежності
+  useEffect(() => {
+    console.log(`Count is ${count}`);
+  }, [count]); // Тільки при зміні count
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEREF</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Отримання посилання на DOM елемент</li>
+						<li class="fragment fade-in-then-semi-out">Зберігання данних без ререндеру</li>
+						<li class="fragment fade-in-then-semi-out">Отримання попереднього значення елементу</li>
+					</ul>
+				</section>
+
+				<!-- useRef приклад -->
+				<section>
+					<h2 class="ztu-blue">USEREF</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|6-7|9-11|12-14|16|22-23|">import {useState, useEffect, useRef} from "react";
+
+export function Ref() {
+  const [value, setValue] = useState('start');
+  const renderCount = useRef(1);
+  const inputRef = useRef(null);
+  const prevValue = useRef('');
+
+  useEffect(() => {
+    renderCount.current++;
+  });
+  useEffect(() => {
+    prevValue.current = value;
+  }, [value]);
+
+  const focus = () => inputRef.current.focus();
+
+  return (
+    <>
+      <p>Render {renderCount.current}</p>
+      <p>Prev value {prevValue.current}</p>
+      <input ref={inputRef} onChange={e => setValue(e.target.value)} />
+      <button onClick={focus}>Move focus</button>
+    </>
+  );
+}</code></pre>
+				</section>
+
+				<!-- useMemo -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange fragment">Мемоїзація - це метод оптимізації, який в основному використовується для прискорення комп'ютерних програм шляхом зберігання результатів дорогих викликів функцій та повернення кешованого результату, коли виклики на однакових вхідних даних відбуваються знову.</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Кешування об'єктів</li>
+						<li class="fragment fade-in-then-semi-out">Кешування важких функцій</li>
+					</ul>
+				</section>
+
+				<!-- useMemo синтаксис -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript">const memoValue = useMemo(() => {
+  expensiveOperationHere(data, value)
+}, [data, value]);</code></pre>
+				</section>
+
+				<!-- useMemo приклад -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|3-5|7-11|14-16|18-20|22-26|">import {useState, useMemo} from "react";
+
+function randomNumber() {
+  return Math.floor(Math.random()*100, 1);
+}
+
+function complex(value) {
+  let i = 0;
+  while (i < 1000000000) i++;
+  return value * 2;
+}
+
+export function Memo() {
+  const [value, setValue] = useState(0);
+  const [anotherNumber, setAnotherNumber] = useState(0);
+
+  // Без мемоїзації - буде викликатися при кожному ререндері
+  // const recalculate = complex(value);
+  const recalculate = useMemo(() => complex(value), [value]);
+
+  return (
+    <div>
+      <input onChange={(e) => setValue(+e.target.value)} value={value} />
+      <button onClick={() => setAnotherNumber(Math.random())}>Random</button>
+      <p>Calculated: {recalculate}</p>
+      <p>Another: {anotherNumber}</p>
+    </div>
+  );
+}</code></pre>
+				</section>
+
+				<!-- Порівняння об'єктів -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Мемоїзація об'єктів</p>
+					<pre><code class="javascript" data-line-numbers="|3-6|8-12|">function UserProfile({users}) {
+  // ❌ Створюється новий об'єкт при кожному рендері
+  const userConfig = {
+    showAge: true,
+    showEmail: false
+  };
+
+  // ✅ Мемоїзований об'єкт
+  const memoizedConfig = useMemo(() => ({
+    showAge: true,
+    showEmail: false
+  }), []); // Порожній масив - не змінюється
+
+  return <UserList users={users} config={memoizedConfig} />;
+}</code></pre>
+				</section>
+
+				<!-- Коли НЕ використовувати -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Коли НЕ використовувати</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|5-7|9-10|">// ❌ Непотрібно для простих обчислень
+const simpleCalc = useMemo(() => a + b, [a, b]);
+const betterSimpleCalc = a + b; // Простіше без useMemo
+
+// ❌ Непотрібно для примітивних значень
+const stringValue = useMemo(() => 'hello', []);
+const betterString = 'hello'; // Без useMemo
+
+// ✅ Потрібно для складних обчислень
+const expensiveResult = useMemo(() => heavyCalculation(data), [data]);</code></pre>
+				</section>
+
+				<!-- Реальний приклад -->
+				<section>
+					<h2 class="ztu-blue">USEMEMO</h2>
+					<p class="ztu-orange">Реальний приклад - фільтрація списку</p>
+					<pre><code class="javascript">function ProductList({products, searchTerm, category}) {
+  const [sortBy, setSortBy] = useState('name');
+
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter(p => p.name.includes(searchTerm))
+      .filter(p => !category || p.category === category)
+      .sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
+  }, [products, searchTerm, category, sortBy]);
+
+  return (
+    <div>
+      {filteredProducts.map(product =>
+        <ProductCard key={product.id} product={product} />
+      )}
+    </div>
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USECALLBACK</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Мемоїзація функцій між рендерами</li>
+						<li class="fragment fade-in-then-semi-out">Запобігає непотрібним ререндерам дочірніх компонентів</li>
+						<li class="fragment fade-in-then-semi-out">Оптимізує передачу callbacks як props</li>
+						<li class="fragment fade-in-then-semi-out">useCallback(fn, deps) === useMemo(() => fn, deps)</li>
+					</ul>
+				</section>
+
+				<!-- useCallback практичний приклад -->
+				<section>
+					<h2 class="ztu-blue">USECALLBACK</h2>
+					<p class="ztu-orange">Практичний приклад</p>
+					<pre><code class="javascript" data-line-numbers="|5-10|12-17|">function TodoApp() {
+  const [todos, setTodos] = useState([]);
+  const [filter, setFilter] = useState('all');
+
+  // ❌ Створюється нова функція при кожному рендері
+  const handleToggle = (id) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? {...todo, completed: !todo.completed} : todo
+    ));
+  };
+
+  // ✅ Мемоїзована функція
+  const handleToggleMemo = useCallback((id) => {
+    setTodos(todos => todos.map(todo =>
+      todo.id === id ? {...todo, completed: !todo.completed} : todo
+    ));
+  }, []); // Порожній масив - використовуємо functional update
+
+  return <TodoList todos={todos} onToggle={handleToggleMemo} />;
+}</code></pre>
+				</section>
+
+				<!-- useContext -->
+				<section>
+					<h2 class="ztu-blue">USECONTEXT</h2>
+					<ul class="ztu-list">
+						<li class="">Отримання значення з Context без Provider wrapper</li>
+						<li class="">Більш чистий та читабельний код</li>
+						<li class="">Автоматичний ререндер при зміні context</li>
+					</ul>
+				</section>
+
+				<!-- useContext приклад -->
+				<section>
+					<h2 class="ztu-blue">USECONTEXT</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|1-2|4-6|7-12|14-18|">import {createContext, useContext, useState} from "react";
+const ThemeContext = createContext();
+
+function ThemeProvider({children}) {
+  const [theme, setTheme] = useState('light');
+  return (
+    <ThemeContext.Provider value={{theme, setTheme}}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+function Button() {
+  const {theme, setTheme} = useContext(ThemeContext);
+  return (
+    <button className={theme} onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+      Switch to {theme === 'light' ? 'dark' : 'light'} theme
+    </button>
+  );
+}</code></pre>
+				</section>
+
+				<!-- useReducer -->
+				<section>
+					<h2 class="ztu-blue">USEREDUCER</h2>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEREDUCER</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Альтернатива useState для складного стану</li>
+						<li class="fragment fade-in-then-semi-out">Централізоване управління станом компонента</li>
+						<li class="fragment fade-in-then-semi-out">Передбачувані зміни стану через actions</li>
+						<li class="fragment fade-in-then-semi-out">Схожий на Redux pattern</li>
+					</ul>
+				</section>
+
+				<!-- useReducer приклад -->
+				<section>
+					<h2 class="ztu-blue">USEREDUCER</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|1-9|11-15|17-21|">function counterReducer(state, action) {
+  switch (action.type) {
+    case 'INCREMENT':
+      return {count: state.count + 1};
+    case 'DECREMENT':
+      return {count: state.count - 1};
+    default:
+      return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(counterReducer, {count: 0});
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      <button onClick={() => dispatch({type: 'INCREMENT'})}>+</button>
+      <button onClick={() => dispatch({type: 'DECREMENT'})}>-</button>
+    </div>
+  );
+}</code></pre>
+				</section>
+				<!-- useLayoutEffect -->
+				<section>
+					<h2 class="ztu-blue">USELAYOUTEFFECT</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Синхронний useEffect після DOM мутацій</li>
+						<li class="fragment fade-in-then-semi-out">Виконується перед браузерним paint</li>
+						<li class="fragment fade-in-then-semi-out">Для вимірювань DOM елементів</li>
+						<li class="fragment fade-in-then-semi-out">Запобігає візуальному flickering</li>
+					</ul>
+				</section>
+
+				<!-- useLayoutEffect приклад -->
+				<section>
+					<h2 class="ztu-blue">USELAYOUTEFFECT</h2>
+					<p class="ztu-orange">Приклад - вимірювання елемента</p>
+					<pre><code class="javascript" data-line-numbers="|4-5|7-10|12-14|">function MeasuredDiv() {
+  const [height, setHeight] = useState(0);
+  const divRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (divRef.current) {
+      const rect = divRef.current.getBoundingClientRect();
+      setHeight(rect.height);
+    }
+  }); // Виконується перед paint
+
+  return (
+    <div ref={divRef}>
+      <p>Висота: {height}px</p>
+      <p>Динамічний контент...</p>
+    </div>
+  );
+}</code></pre>
+				</section>
+
+				<!-- useOptimistic -->
+				<section>
+					<h2 class="ztu-blue">USEOPTIMISTIC</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Оптимістичні UI оновлення (React 19)</li>
+						<li class="fragment fade-in-then-semi-out">Показує результат перед серверною відповіддю</li>
+						<li class="fragment fade-in-then-semi-out">Автоматичний rollback при помилці</li>
+						<li class="fragment fade-in-then-semi-out">Покращена UX для асинхронних операцій</li>
+					</ul>
+				</section>
+
+				<!-- useOptimistic приклад -->
+				<section>
+					<h2 class="ztu-blue">USEOPTIMISTIC</h2>
+					<p class="ztu-orange">Приклад - додавання коментаря</p>
+					<pre><code class="javascript">function Comments({comments}) {
+  const [optimisticComments, addOptimisticComment] = useOptimistic(
+    comments,
+    (state, newComment) => [...state, {id: 'temp', ...newComment}]
+  );
+
+  const submitComment = async (text) => {
+    addOptimisticComment({text, author: 'Me'});
+    try {
+      await saveComment(text);
+    } catch (error) {
+      // Автоматичний rollback
+    }
+  };
+
+  return (
+    <div>
+      {optimisticComments.map(comment =>
+        <div key={comment.id}>{comment.text}</div>
+      )}
+    </div>
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">ВЛАСНІ ХУКИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Функції що починаються з "use"</li>
+						<li class="fragment fade-in-then-semi-out">Повторне використання логіки між компонентами</li>
+						<li class="fragment fade-in-then-semi-out">Можуть використовувати інші хуки</li>
+						<li class="fragment fade-in-then-semi-out">Слідують правилам хуків</li>
+					</ul>
+				</section>
+
+				<!-- Власні хуки приклад -->
+				<section>
+					<h2 class="ztu-blue">ВЛАСНІ ХУКИ</h2>
+					<p class="ztu-orange">useLocalStorage приклад</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|4|13-15|22|25-29|">import {useState, useEffect} from "react";
+
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      return initialValue;
+    }
+  });
+
+  const setValue = (value) => {
+    try {
+      setStoredValue(value);
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return [storedValue, setValue];
+}
+
+// Використання
+function App() {
+  const [name, setName] = useLocalStorage('name', 'Anonymous');
+  return <input value={name} onChange={(e) => setName(e.target.value)} />;
+}</code></pre>
+				</section>
+
+				<!-- Додаткові можливості -->
+				<section>
+					<h2 class="ztu-blue">ДОДАТКОВІ МОЖЛИВОСТІ</h2>
+				</section>
+
+				
+
+				<!-- Performance Tips -->
+				<section>
+					<h2 class="ztu-blue">ОПТИМІЗАЦІЯ ПРОДУКТИВНОСТІ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>React.memo()</strong> - мемоїзація компонентів</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useMemo()</strong> - кешування обчислень</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useCallback()</strong> - кешування функцій</li>
+						<li class="fragment fade-in-then-semi-out"><strong>React.lazy() + Suspense</strong> - код-сплітінг</li>
+					</ul>
+				</section>
+
+				<!-- Best Practices -->
+				<section>
+					<h2 class="ztu-blue">BEST PRACTICES</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Виносьте логіку в custom hooks</li>
+						<li class="fragment fade-in-then-semi-out">Слідкуйте за залежностями useEffect</li>
+						<li class="fragment fade-in-then-semi-out">Не зловживайте useMemo/useCallback</li>
+						<li class="fragment fade-in-then-semi-out">Розділяйте state по логічних групах</li>
+					</ul>
+				</section>
+
+
+				<!-- Кінець -->
+				<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
+					<p class="ztu-orange">HOOKS</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				progress: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
