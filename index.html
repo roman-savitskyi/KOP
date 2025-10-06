@@ -20,513 +20,579 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+					<h1 class="ztu-blue">Компонентно орієнтоване програмування. ЛЕКЦІЯ 7</h1>
+					<p class="ztu-orange">Власні хуки, фрагменти, портали</p>
 				</section>
 
-				<!-- Roadmap -->
+				<!-- Власні хуки -->
 				<section>
-					<h2 class="ztu-blue">ROADMAP</h2>
-					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
-						<iframe data-src="https://miro.com/app/board/o9J_lVQm6fI=" data-preload width="800" height="600"></iframe>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Створення користувацьких хуків</p>
 				</section>
 
-				<!-- useEffect -->
+				<!-- Власні хуки - мотивація -->
 				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<p class="ztu-orange fragment fade-in-then-semi-out">useEffect</p>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
+						<div>
+							<h4 class="ztu-orange">❌ Дублювання логіки</h4>
+							<pre><code class="javascript" style="font-size: 0.6em;">function UserProfile() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return &lt;div&gt;Width: {width}&lt;/div&gt;;
+}
+
+function Dashboard() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return &lt;div&gt;Width: {width}&lt;/div&gt;;
+}</code></pre>
+						</div>
+						<div>
+							<h4 class="ztu-orange">✅ Рішення: власний хук</h4>
+							<pre><code class="javascript" style="font-size: 0.6em;">function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return width;
+}
+
+function UserProfile() {
+  const width = useWindowWidth();
+  return &lt;div&gt;Width: {width}&lt;/div&gt;;
+}
+
+function Dashboard() {
+  const width = useWindowWidth();
+  return &lt;div&gt;Width: {width}&lt;/div&gt;;
+}</code></pre>
+						</div>
+					</div>
 				</section>
 
-				<!-- Умовний рендеринг -->
+				<!-- Власні хуки - правила -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Правила створення</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Назва має починатися з "use"</li>
+						<li class="fragment fade-in-then-semi-out">Можуть використовувати інші хуки всередині</li>
+						<li class="fragment fade-in-then-semi-out">Дозволяють перевикористовувати логіку між компонентами</li>
+						<li class="fragment fade-in-then-semi-out">Кожен виклик хука має незалежний стан</li>
+					</ul>
 				</section>
 
-				<!-- Зберігання в змінну -->
+				<!-- Власні хуки - приклад useLocalStorage -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">Зберігання в змінну</p>
-					<pre><code class="javascript">export function IdNumber(props) {
-  const { id } = props;
-  let message;
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Приклад: useLocalStorage</p>
+					<pre><code class="javascript" data-line-numbers="|1|2-8|14-17|18|">function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      return initialValue;
+    }
+  });
 
-  if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
-  } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
+  const setValue = (value) => {
+    try {
+      // Підтримка функціонального оновлення
+      const valueToStore = value instanceof Function
+        ? value(storedValue)
+        : value;
+      setStoredValue(valueToStore);
+      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return [storedValue, setValue];
+}</code></pre>
+				</section>
+
+				<!-- Власні хуки - використання -->
+				<section>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Використання useLocalStorage</p>
+					<pre><code class="javascript" data-line-numbers="|2|7|10-12|">function Counter() {
+  const [count, setCount] = useLocalStorage('counter', 0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;button onClick={() => setCount(count + 1)}&gt;+1&lt;/button&gt;
+
+      &lt;!-- Функціональне оновлення --&gt;
+      &lt;button onClick={() => setCount(prev => prev + 1)}&gt;
+        +1 (functional)
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+					<p class="fragment" style="margin-top: 20px; color: #f97316;">💡 Значення автоматично синхронізується з localStorage!</p>
+				</section>
+
+				<!-- Власні хуки - приклад useWindowSize -->
+				<section>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Приклад: useWindowSize (з useEffect)</p>
+					<pre><code class="javascript" data-line-numbers="|1-5|6-14|16|">function useWindowSize() {
+  const [size, setSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return size;
+}</code></pre>
+				</section>
+
+				<!-- Власні хуки - використання useWindowSize -->
+				<section>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Використання useWindowSize</p>
+					<pre><code class="javascript" data-line-numbers="|2|5-9|">function ResponsiveComponent() {
+  const { width, height } = useWindowSize();
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Width: {width}px&lt;/p&gt;
+      &lt;p&gt;Height: {height}px&lt;/p&gt;
+      {width &lt; 768 && &lt;MobileView /&gt;}
+      {width &gt;= 768 && &lt;DesktopView /&gt;}
+    &lt;/div&gt;
+  );
+}</code></pre>
+					<p class="fragment" style="margin-top: 20px; color: #f97316;">💡 Хук автоматично підписується на події та прибирає підписку!</p>
+				</section>
+
+				<!-- Власні хуки - приклад useToggle -->
+				<section>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">Приклад: useToggle</p>
+					<pre><code class="javascript" data-line-numbers="|1-2|4-6|8-10|11|16-23">function useToggle(initialValue = false) {
+  const [value, setValue] = useState(initialValue);
+
+  const toggle = useCallback(() => {
+    setValue(v => !v);
+  }, []);
+
+  const setTrue = useCallback(() => setValue(true), []);
+  const setFalse = useCallback(() => setValue(false), []);
+
+  return [value, toggle, setValue, setTrue, setFalse];
+}
+
+// Використання
+function Modal() {
+  const [isOpen, toggle, setOpen, open, close] = useToggle(false);
+
+  return (
+    &lt;&gt;
+      &lt;button onClick={open}&gt;Open Modal&lt;/button&gt;
+      {isOpen && &lt;ModalContent onClose={close} /&gt;}
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Власні хуки - антипатерни -->
+				<section>
+					<h2 class="ztu-blue">Власні хуки</h2>
+					<p class="ztu-orange">⚠️ Типові помилки та антипатерни</p>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
+						<div>
+							<h4 class="ztu-orange">❌ Що НЕ робити</h4>
+							<pre><code class="javascript" style="font-size: 0.65em;" >// ❌ Назва без "use"
+function windowWidth() {
+  return useState(window.innerWidth);
+}
+
+// ❌ Хуки в умовах
+function useData(shouldFetch) {
+  if (shouldFetch) {
+    const [data] = useState(null);
+    return data;
   }
+}
 
-  return (
-    &lt;&gt;
-      {message}
-    &lt;/&gt;
-  );
+// ❌ Повернення JSX (це компонент!)
+function useButton() {
+  return &lt;button&gt;Click&lt;/button&gt;;
+}
+
+// ❌ Хук в циклі
+function useMultiple(items) {
+  items.forEach(item => {
+    const [state] = useState(item);
+  });
 }</code></pre>
-				</section>
+						</div>
+						<div>
+							<h4 class="ztu-orange">✅ Правильний підхід</h4>
+							<pre><code class="javascript" style="font-size: 0.65em;">// ✅ Назва з "use"
+function useWindowWidth() {
+  return useState(window.innerWidth);
+}
 
-				<!-- JS like. If-else or ternary -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">JS like. If-else or ternary</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
+// ✅ Хуки на верхньому рівні
+function useData(shouldFetch) {
+  const [data, setData] = useState(null);
 
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : &lt;p&gt;{props.children}&lt;/p&gt;
-      }
-    &lt;/&gt;
-  );
+  useEffect(() => {
+    if (shouldFetch) fetchData();
+  }, [shouldFetch]);
+
+  return data;
+}
+
+// ✅ Хук повертає дані/функції
+function useButton() {
+  const [clicked, setClicked] = useState(false);
+  return { clicked, setClicked };
 }</code></pre>
-				</section>
-
-				<!-- return null -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">return null</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : null
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- Списки та ключі -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
-				</section>
-
-				<!-- Списки -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Списки - з підсвіткою рядків -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
 						</div>
 					</div>
 				</section>
 
-				<!-- Ключ є обов'язковим -->
+				<!-- React Use -->
 				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">На вхід може бути масив елементів</li>
-						<li class="fragment fade-in-then-semi-out">Ключ є обов'язковим</li>
-					</ul>
+					<h2 class="ztu-blue">React use</h2>
+					<p class="ztu-orange">Бібліотека готових хуків</p>
+					<p style="font-size: 0.8em; color: #666;">https://github.com/streamich/react-use</p>
 				</section>
 
-				<!-- Ключі - з підсвіткою рядків -->
+				<!-- React Use - приклади -->
 				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
+					<h2 class="ztu-blue">React use</h2>
+					<p class="ztu-orange">Популярні хуки з бібліотеки</p>
+					<div style="font-size: 0.75em;">
+						<div class="fragment">
+							<h4 class="ztu-orange">useAsync - асинхронні операції</h4>
+							<pre><code class="javascript">import { useAsync } from 'react-use';
+
+function UserProfile({ userId }) {
+  const state = useAsync(async () => {
+    const response = await fetch(`/api/users/${userId}`);
+    return response.json();
+  }, [userId]);
+
+  if (state.loading) return &lt;div&gt;Loading...&lt;/div&gt;;
+  if (state.error) return &lt;div&gt;Error: {state.error.message}&lt;/div&gt;;
+  return &lt;div&gt;User: {state.value.name}&lt;/div&gt;;
+}</code></pre>
 						</div>
 					</div>
 				</section>
 
+				<!-- React Use - useDebounce -->
 				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
+					<h2 class="ztu-blue">React use</h2>
+					<p class="ztu-orange">useDebounce - відкладена зміна значення</p>
+					<pre><code class="javascript" style="font-size: 0.75em;">import { useDebounce } from 'react-use';
+
+function SearchInput() {
+  const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+
+  // Затримка 500ms перед оновленням
+  useDebounce(
+    () => {
+      setDebouncedQuery(query);
+    },
+    500,
+    [query]
+  );
+
+  return (
+    &lt;div&gt;
+      &lt;input value={query} onChange={(e) => setQuery(e.target.value)} /&gt;
+      &lt;p&gt;Searching for: {debouncedQuery}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- React Use - useClickAway -->
+				<section>
+					<h2 class="ztu-blue">React use</h2>
+					<p class="ztu-orange">useClickAway - клік поза елементом</p>
+					<pre><code class="javascript" style="font-size: 0.75em;">import { useClickAway } from 'react-use';
+import { useRef } from 'react';
+
+function Dropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
+
+  useClickAway(ref, () => {
+    setIsOpen(false);
+  });
+
+  return (
+    &lt;div ref={ref}&gt;
+      &lt;button onClick={() => setIsOpen(!isOpen)}&gt;
+        Toggle Dropdown
+      &lt;/button&gt;
+      {isOpen && (
+        &lt;ul&gt;
+          &lt;li&gt;Option 1&lt;/li&gt;
+          &lt;li&gt;Option 2&lt;/li&gt;
+        &lt;/ul&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+
+				<!-- Фрагменти -->
+				<section>
+					<h2 class="ztu-blue">Фрагменти</h2>
+				</section>
+
+				<!-- Фрагменти особливості -->
+				<section>
+					<h2 class="ztu-blue">Фрагменти</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Стабільна ідентичність</li>
-						<li class="fragment fade-in-then-semi-out">Ключ унікальний в межах списку</li>
-						<li class="fragment fade-in-then-semi-out">Ключі є рядковими</li>
-						<li class="fragment fade-in-then-semi-out">Ключ застосовується для елементів масиву, а не до тегів</li>
+						<li class="fragment fade-in-then-semi-out">В корні компоненту може бути лише 1 тег</li>
+						<li class="fragment fade-in-then-semi-out">Фрагмент використовуються там, де не потрібно мати тег в корені</li>
+						<li class="fragment fade-in-then-semi-out">Неможливо додати події, стилі і т.д.</li>
 					</ul>
 				</section>
 
-				<!-- Index as key article -->
+				<!-- Фрагменти - візуалізація проблеми -->
 				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				<iframe data-src="https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318" data-preload width="800" height="600"></iframe>
-				</section>
-				<!-- Віртуалізований список -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
-					<iframe data-src="https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper" data-preload width="800" height="600"></iframe>
-				
+					<h2 class="ztu-blue">Фрагменти</h2>
+					<p class="ztu-orange">Проблема: зайві wrapper елементи</p>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
+						<div>
+							<h4 class="ztu-orange">❌ Без фрагмента</h4>
+							<pre><code class="javascript" style="font-size: 0.7em;">function TableRow() {
+  return (
+    &lt;div&gt;
+      &lt;td&gt;Cell 1&lt;/td&gt;
+      &lt;td&gt;Cell 2&lt;/td&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+							<pre class="fragment"><code class="html" style="font-size: 0.7em;">&lt;table&gt;
+  &lt;tr&gt;
+    &lt;div&gt; &lt;!-- 💥 Поламана структура! --&gt;
+      &lt;td&gt;Cell 1&lt;/td&gt;
+      &lt;td&gt;Cell 2&lt;/td&gt;
+    &lt;/div&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+						</div>
+						<div>
+							<h4 class="ztu-orange">✅ З фрагментом</h4>
+							<pre><code class="javascript" style="font-size: 0.7em;">function TableRow() {
+  return (
+    &lt;&gt;
+      &lt;td&gt;Cell 1&lt;/td&gt;
+      &lt;td&gt;Cell 2&lt;/td&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+							<pre class="fragment"><code class="html" style="font-size: 0.7em;">&lt;table&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Cell 1&lt;/td&gt;
+    &lt;td&gt;Cell 2&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+						</div>
+					</div>
 				</section>
 
-
+				<!-- Фрагменти форми запису - скорочена -->
 				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
+					<h2 class="ztu-blue">Фрагменти. Можливі форми запису</h2>
+					<p class="ztu-orange">Скорочений запис</p>
+					<pre><code class="javascript" data-line-numbers="|3-6|">export function FragmentExample1() {
+  return (
+    &lt;&gt;
+      &lt;span&gt;Це перший фрагмент. &lt;/span&gt;
+      &lt;span&gt;Скорочений запис&lt;/span&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Фрагменти форми запису - React.Fragment -->
+				<section>
+					<h2 class="ztu-blue">Фрагменти. Можливі форми запису</h2>
+					<p class="ztu-orange">React.Fragment</p>
+					<pre><code class="javascript" data-line-numbers="|3-6|">export function FragmentExample2() {
+  return (
+    &lt;React.Fragment&gt;
+      &lt;span&gt;Це другий запис фрагмент. &lt;/span&gt;
+      &lt;span&gt;React.Fragment запис&lt;/span&gt;
+    &lt;/React.Fragment&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Фрагменти форми запису - Fragment -->
+				<section>
+					<h2 class="ztu-blue">Фрагменти. Можливі форми запису</h2>
+					<p class="ztu-orange">Fragment запис</p>
+					<pre><code class="javascript" data-line-numbers="|3-6|">export function FragmentExample3() {
+  return (
+    &lt;Fragment&gt;
+      &lt;span&gt;Це третій фрагмент. &lt;/span&gt;
+      &lt;span&gt;Fragment запис&lt;/span&gt;
+    &lt;/Fragment&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Портали -->
+				<section>
+					<h2 class="ztu-blue">Портали</h2>
+				</section>
+
+				<!-- Портали особливості -->
+				<section>
+					<h2 class="ztu-blue">Портали</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">MutationObserver</li>
-						<li class="fragment fade-in-then-semi-out">Активна робота з VirtualDOM</li>
-						<li class="fragment fade-in-then-semi-out">Велике покращення швидкодії продукту</li>
+						<li class="fragment fade-in-then-semi-out">Версія після 16.3</li>
+						<li class="fragment fade-in-then-semi-out">Можливість рендерити за межами кореневого елемента</li>
+						<li class="fragment fade-in-then-semi-out">Працює, як звичайний реакт елемент</li>
+						<li class="fragment fade-in-then-semi-out">Події спливають згідно з React деревом, а не DOM</li>
 					</ul>
 				</section>
 
-
+				<!-- Портали Use Cases -->
 				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
+					<h2 class="ztu-blue">Портали</h2>
+					<p class="ztu-orange">Коли використовувати?</p>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Webpack</li>
-						<li class="fragment fade-in-then-semi-out">Rollup</li>
-						<li class="fragment fade-in-then-semi-out">Parcel</li>
-						<li class="fragment fade-in-then-semi-out">Vite</li>
+						<li class="fragment fade-in-then-semi-out">Модальні вікна (Modals)</li>
+						<li class="fragment fade-in-then-semi-out">Спливаючі підказки (Tooltips)</li>
+						<li class="fragment fade-in-then-semi-out">Випадаючі меню (Dropdowns)</li>
+						<li class="fragment fade-in-then-semi-out">Повідомлення (Toast notifications)</li>
+						<li class="fragment fade-in-then-semi-out">Sidebar/Drawer компоненти</li>
 					</ul>
 				</section>
 
-
+				<!-- Портали HTML Setup -->
 				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Створення єдиної точки входу</li>
-						<li class="fragment fade-in-then-semi-out">Процес мініфікації, агліфікації та об'єднання</li>
-						<li class="fragment fade-in-then-semi-out">Webpack-bundle-analyzer</li>
-					</ul>
-				</section>
-
-				<!-- Webpack Bundle Analyzer -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
-					<iframe data-src="https://blog.bitsrc.io/6-tools-and-techniques-to-analyze-webpack-bundle-size-817337f8cf91" data-preload width="800" height="600"></iframe>
-				
+					<h2 class="ztu-blue">Портали</h2>
+					<p class="ztu-orange">HTML Setup</p>
+					<pre><code class="html" data-line-numbers="|3|4|">&lt;body&gt;
+  &lt;div id="root"&gt;&lt;/div&gt;
+  &lt;!-- Контейнер для порталів --&gt;
+  &lt;div id="modal"&gt;&lt;/div&gt;
+&lt;/body&gt;</code></pre>
 					
 				</section>
 
-				<!-- Vite -->
+				<!-- Портал синтаксис -->
 				<section>
-					<h2 class="ztu-blue">VITE</h2>
-				</section>
+					<h2 class="ztu-blue">Портал</h2>
+					<p class="ztu-orange">Синтаксис</p>
+					<pre><code class="javascript" data-line-numbers="|1|3|5-6|8-15|14">import { createPortal } from "react-dom";
 
-				<!-- Vite vs Webpack -->
-				<section>
-					<h2 class="ztu-blue">VITE vs WEBPACK</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
-						<div>
-							<h3 class="ztu-orange">Webpack</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Повільний старт (bundling)</li>
-								<li class="">Конфігурація складна</li>
-								<li class="">HMR повільний</li>
-								<li class="">Великий ecosystem</li>
-							</ul>
-						</div>
-						<div>
-							<h3 class="ztu-orange">Vite</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Швидкий старт (ESM)</li>
-								<li class="">Zero-config</li>
-								<li class="">Миттєвий HMR</li>
-								<li class="">Rollup під капотом</li>
-							</ul>
-						</div>
-					</div>
-				</section>
+const modalRootEl = document.querySelector('#modal');
 
-				<!-- Vite особливості -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">ESM в Dev режимі</li>
-						<li class="fragment fade-in-then-semi-out">esbuild для TypeScript</li>
-						<li class="fragment fade-in-then-semi-out">Rollup для Production</li>
-						<li class="fragment fade-in-then-semi-out">Плагіни сумісні з Rollup</li>
-					</ul>
-				</section>
+export function Portal(props) {
+  const { open, onClose } = props;
 
-				<!-- Vite команди -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<h3 class="ztu-orange">Команди</h3>
-					<pre><code class="bash"># Створити проект
-npm create vite@latest my-react-app
-# Запустити dev сервер
-npm run dev
-# Збірка для продакшну
-npm run build</code></pre>
-				</section>
-
-				<!-- Import -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-				</section>
-
-				<!-- Статичний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Статичний імпорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-2|3-4|5-6">// Іменований імпорт
-import { add, subtract } from './math';
-// Дефолтний імпорт
-import Calculator from './Calculator';
-// Комбінований імпорт
-import React, { useState, useEffect } from 'react';</code></pre>
-				</section>
-
-				<!-- Import всього модуля -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Import всього модуля</h3>
-					<pre><code class="javascript" data-line-numbers="|2">// Імпорт всього як об'єкт
-import * as Math from './math';
-console.log(Math.add(16, 26));</code></pre>
-				</section>
-
-				<!-- Aliasing та Side Effects -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Aliasing та Side Effects</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-5|">// Перейменування імпорту
-import { add as sum } from './math';
-// Side effects (без імпорту)
-import './styles.css';
-import 'react-toastify/dist/ReactToastify.css';</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт</h3>
-					<pre><code class="javascript">import("./math").then(math => {
-  console.log(math.add(16, 26));
-});</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт babel -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
-				</section>
-
-				<!-- Export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-				</section>
-
-				<!-- Іменований експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Іменований експорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-3|4-5|">// Експорт під час оголошення
-export const PI = 3.14159;
-export function add(a, b) { return a + b; }
-// Експорт існуючих змінних
-export { myFunction, anotherVar };</code></pre>
-				</section>
-
-				<!-- Дефолтний експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт</h3>
-					<pre><code class="javascript" >// Функція
-export default function Calculator() {}
-// Клас
-export default class MyClass {}
-// Значення
-export default 42;</code></pre>
-				</section>
-
-				<!-- Re-export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Re-export (Переекспорт)</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// Переекспорт всього
-export * from './math';
-// Переекспорт конкретних функцій
-export { add, subtract } from './math';
-// Переекспорт з перейменуванням
-export { default as Calculator } from './Calculator';</code></pre>
-				</section>
-
-				<!-- CommonJS vs ESM -->
-				<section>
-					<h2 class="ztu-blue">COMMONJS vs ESM</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h3 class="ztu-orange">CommonJS (Node.js)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-module.exports = { add };
-exports.PI = 3.14;
-
-// Import
-const { add } = require('./math');
-const math = require('./math');</code></pre>
-						</div>
-						<div>
-							<h3 class="ztu-orange">ESM (ES6 Modules)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-export { add };
-export const PI = 3.14;
-
-// Import
-import { add } from './math';
-import * as math from './math';</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-				</section>
-
-				<!-- Tree Shaking визначення -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що це таке?</h3>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Видалення невикористаного коду з бандлу</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення розміру фінального файлу</li>
-						<li class="fragment fade-in-then-semi-out">Працює тільки з ES6 модулями</li>
-						<li class="fragment fade-in-then-semi-out">Статичний аналіз import/export</li>
-					</ul>
-				</section>
-
-				<!-- Tree Shaking приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Приклад</h3>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h4 class="ztu-orange">utils.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">export function add(a, b) {
-  return a + b;
-}
-
-export function subtract(a, b) {
-  return a - b;
-}
-
-export function multiply(a, b) {
-  return a * b;
-}</code></pre>
-						</div>
-						<div>
-							<h4 class="ztu-orange">main.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Імпортуємо тільки add
-import { add } from './utils';
-
-console.log(add(2, 3));
-
-// subtract і multiply
-// НЕ потраплять в бандл!</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking поганий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що заважає Tree Shaking?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ❌ Погано - імпорт всього модуля
-import * as utils from './utils';
-
-// ❌ Погано - side effects
-import './utils'; // виконує код при імпорті
-
-// ❌ Погано - CommonJS
-const { add } = require('./utils');</code></pre>
-				</section>
-
-				<!-- Tree Shaking добрий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Як робити правильно?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ✅ Добре - іменований імпорт
-import { add, subtract } from './utils';
-
-// ✅ Добре - lodash-es замість lodash
-import { debounce } from 'lodash-es';
-
-// ✅ Добре - окремі модулі
-import debounce from 'lodash/debounce';</code></pre>
-				</section>
-
-
-				<!-- React Lazy визначення -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Code Splitting</p>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Розділення коду на окремі чанки</li>
-						<li class="fragment fade-in-then-semi-out">Завантаження компонентів по потребі</li>
-						<li class="fragment fade-in-then-semi-out">Покращення часу завантаження</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення initial bundle size</li>
-					</ul>
-				</section>
-
-				<!-- React.lazy приклад -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">React.lazy()</p>
-					<pre><code class="javascript">// Замість звичайного імпорту
-// import Dashboard from './Dashboard';
-
-// Динамічний імпорт з React.lazy
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
-  return &lt;Dashboard /&gt;;
+  return open ? createPortal(
+    &lt;div className="modal-background" onClick={onClose}&gt;
+      &lt;div className="modal-content"&gt;
+        {props.children}
+      &lt;/div&gt;
+    &lt;/div&gt;,
+    modalRootEl
+  ) : null;
 }</code></pre>
 				</section>
 
-				<!-- Suspense -->
+				<!-- Портал використання -->
 				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Suspense</p>
-					<pre><code class="javascript" >import { Suspense } from 'react';
+					<h2 class="ztu-blue">Портал</h2>
+					<p class="ztu-orange">Використання</p>
+					<pre><code class="javascript" data-line-numbers="|1|3|7|8-10|">import { Portal } from './components/Portal';
 
-const Dashboard = React.lazy(() => import('./Dashboard'));
+const [open, setOpen] = useState(false);
 
-function App() {
-  return (
-    &lt;Suspense fallback={&lt;div&gt;Завантаження...&lt;/div&gt;}&gt;
-      &lt;Dashboard /&gt;
-    &lt;/Suspense&gt;
-  );
-}</code></pre>
+return (
+  &lt;div&gt;
+    &lt;button onClick={() =&gt; setOpen(true)}&gt;Open&lt;/button&gt;
+    &lt;Portal open={open} onClose={() =&gt; setOpen(false)}&gt;
+      &lt;div&gt;My first test modal&lt;/div&gt;
+    &lt;/Portal&gt;
+  &lt;/div&gt;
+);</code></pre>
 				</section>
-	<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+
+				<!-- Портали - візуалізація -->
+				<section>
+					<h2 class="ztu-blue">Портали</h2>
+					<p class="ztu-orange">Як це працює в DOM?</p>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+						<div>
+							<h4 class="ztu-green">React дерево</h4>
+							<pre><code class="html" style="font-size: 0.65em;">&lt;App&gt;
+  &lt;Header /&gt;
+  &lt;MainContent&gt;
+    &lt;Button /&gt;
+    &lt;Portal&gt;
+      &lt;Modal /&gt;
+    &lt;/Portal&gt;
+  &lt;/MainContent&gt;
+&lt;/App&gt;</code></pre>
+						</div>
+						<div>
+							<h4 class="ztu-green">DOM структура</h4>
+							<pre><code class="html" style="font-size: 0.65em;">&lt;div id="root"&gt;
+  &lt;header /&gt;
+  &lt;main&gt;
+    &lt;button /&gt;
+  &lt;/main&gt;
+&lt;/div&gt;
+
+&lt;div id="modal"&gt;
+  &lt;div class="modal"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+						</div>
+					</div>
+					<p class="fragment" style="margin-top: 30px; color: #f97316;">💡 Modal рендериться в #modal, але події спливають через React дерево!</p>
+				</section>
+
+				<!-- Final Slide -->
+				<section>
+					<h1 class="ztu-blue">Компонентно орієнтоване програмування. ЛЕКЦІЯ 7</h1>
+					<p class="ztu-orange">Власні хуки, фрагменти, портали</p>
 				</section>
 
 			</div>
