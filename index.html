@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>КОП</title>
+		<title>КОП - Лекція 6</title>
 
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/ztu.css">
@@ -20,513 +20,888 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 6</h1>
+					<p class="ztu-orange">REACT FORMS, YUP, REACT-HOOK-FORM</p>
 				</section>
 
-				<!-- Roadmap -->
+				<!-- ФОРМИ Section -->
 				<section>
-					<h2 class="ztu-blue">ROADMAP</h2>
-					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
-						<iframe data-src="https://miro.com/app/board/o9J_lVQm6fI=" data-preload width="800" height="600"></iframe>
+					<h2 class="ztu-blue">Форми</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Базові форми</li>
+						<li class="fragment fade-in-then-semi-out">React Hook Form</li>
+						<li class="fragment fade-in-then-semi-out">Валідація з Yup</li>
+					</ul>
 				</section>
 
-				<!-- useEffect -->
-				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<p class="ztu-orange fragment fade-in-then-semi-out">useEffect</p>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
-				</section>
+				<!-- БАЗОВІ ФОРМИ -->
 
-				<!-- Умовний рендеринг -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-				</section>
+					<h2 class="ztu-blue">Базові форми</h2>
+					<p class="ztu-orange">Керовані компоненти</p>
+					<pre><code class="javascript" data-line-numbers="3|15-21|18|11-13|20|6-9">import { useState } from 'react';
 
-				<!-- Зберігання в змінну -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">Зберігання в змінну</p>
-					<pre><code class="javascript">export function IdNumber(props) {
-  const { id } = props;
-  let message;
+export function Form() {
+  const [value, setValue] = useState(0);
 
-  if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
-  } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
+  const handleSubmit = (event) => {
+    console.log('submit value', value);
+    event.preventDefault();
   }
 
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  }
+
+  return (&lt;form onSubmit={handleSubmit}&gt;
+    &lt;label&gt;
+      Ім'я:
+      &lt;input type="text" value={value} onChange={handleChange} /&gt;
+    &lt;/label&gt;
+    &lt;input type="submit" value="Надіслати" /&gt;
+  &lt;/form&gt;);
+}</code></pre>
+				</section>
+
+				<!-- КЕРОВАНІ КОМПОНЕНТИ -->
+				<section>
+					<h2 class="ztu-blue">Керовані компоненти</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Єдине джерело правди</li>
+						<li class="fragment fade-in-then-semi-out">Зберігають дані в стейті</li>
+						<li class="fragment fade-in-then-semi-out">Єдиний спосіб роботи</li>
+						<li class="fragment fade-in-then-semi-out">Зміна стану ЛИШЕ через onChange</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Керовані компоненти</h2>
+					<p class="ztu-orange">Textarea</p>
+					<pre><code class="javascript">export function Form() {
+  return (&lt;textarea value={value} onChange={handleChange}&gt;&lt;/textarea&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Керовані компоненти</h2>
+					<p class="ztu-orange">Select</p>
+					<pre><code class="javascript">export function Form() {
+  return ( &lt;select value={value} onChange={handleChange}&gt;
+    &lt;option value="грейпфрут"&gt;Грейпфрут&lt;/option&gt;
+    &lt;option value="лайм"&gt;Лайм&lt;/option&gt;
+    &lt;option value="кокос"&gt;Кокос&lt;/option&gt;
+    &lt;option value="манго"&gt;Манго&lt;/option&gt;
+  &lt;/select&gt;);
+}</code></pre>
+				</section>
+
+				<!-- НЕКЕРОВАНІ КОМПОНЕНТИ -->
+				<section>
+					<h2 class="ztu-blue">Некеровані компоненти</h2>
+					<pre><code class="javascript" data-line-numbers="3|11-17|1|9|14|16|4-7">import { useRef } from 'react';
+
+export function FormUncontrol() {
+  const handleSubmit = (event) => {
+    console.log('submit value', input.current.value);
+    event.preventDefault();
+  }
+
+  const input = useRef();
+
+  return (&lt;form onSubmit={handleSubmit}&gt;
+    &lt;label&gt;
+      Ім'я:
+      &lt;input type="text" ref={input} /&gt;
+    &lt;/label&gt;
+    &lt;input type="submit" value="Надіслати" /&gt;
+  &lt;/form&gt;);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Некеровані компоненти</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Використовуються з типом файл</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Порівняння</h2>
+					<table style="font-size: 0.7em; width: 100%;">
+						<thead>
+							<tr>
+								<th>Характеристика</th>
+								<th>Керовані</th>
+								<th>Некеровані</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td><strong>Джерело даних</strong></td>
+								<td>React state</td>
+								<td>DOM</td>
+							</tr>
+							<tr class="fragment">
+								<td><strong>Оновлення</strong></td>
+								<td>onChange + setState</td>
+								<td>Прямий доступ через ref</td>
+							</tr>
+							<tr class="fragment">
+								<td><strong>Валідація</strong></td>
+								<td>В реальному часі</td>
+								<td>При submit</td>
+							</tr>
+							<tr class="fragment">
+								<td><strong>Продуктивність</strong></td>
+								<td>Ре-рендер при зміні</td>
+								<td>Без ре-рендерів</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- А В ЧОМУ ПРОБЛЕМА? -->
+				<section>
+					<h2 class="ztu-blue">Які ж проблеми?</h2>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Багато коду для простої форми</h2>
+					<pre><code class="javascript" data-line-numbers="|2-5|7-9|11-13">function Form() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // валідація, обробка помилок...
+  };
+
+  return /* JSX */;
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Ре-рендер при кожній зміні</h2>
+					<pre><code class="javascript" data-line-numbers="|4|7">function Form() {
+  const [value, setValue] = useState('');
+
+  console.log('Form re-rendered'); // При кожному символі!
+
+  return (
+    &lt;input value={value} onChange={e => setValue(e.target.value)} /&gt;
+  );
+}
+
+// Для форми з 10 полями = 10 ре-рендерів на кожну зміну!</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Складна логіка перевірки</h2>
+					<pre><code class="javascript" data-line-numbers="|2-11">const handleSubmit = (e) => {
+  const newErrors = {};
+
+  if (!firstName) newErrors.firstName = "Обов'язкове поле";
+  if (!email) newErrors.email = "Обов'язкове поле";
+  else if (!/\S+@\S+/.test(email)) newErrors.email = "Невірний email";
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  // submit...
+};</code></pre>
+				</section>
+
+				<!-- БІБЛІОТЕКИ -->
+
+				<section>
+					<h2 class="ztu-blue">Бібліотеки</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">React-final-form</li>
+						<li class="fragment fade-in-then-semi-out">React-hook-form</li>
+						<li class="fragment fade-in-then-semi-out">Formik</li>
+						<li class="fragment fade-in-then-semi-out">Yup</li>
+					</ul>
+				</section>
+
+				<!-- REACT-HOOK-FORM -->
+				<section>
+					<h2 class="ztu-blue">React-hook-form</h2>
+					<p style="font-size: 0.8em; color: #666;">https://www.npmjs.com/package/react-hook-form</p>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">React-hook-form</h2>
+					<p class="ztu-orange">npm i react-hook-form</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">React-hook-form</h2>
+					<pre><code class="javascript" data-line-numbers="|1-2|5|6|9-13">import React from 'react';
+import { useForm } from 'react-hook-form';
+
+export function ReactHookForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data =&gt; console.log(data);
+  console.log(errors);
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register("firstName", { required: true })} /&gt;
+      &lt;input type="submit" /&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Документація</h2>
+					<table style="font-size: 0.7em; width: 100%;">
+						<tbody>
+							<tr class="">
+								<td><strong>Реєстрація полів</strong></td>
+								<td>https://react-hook-form.com/get-started#Registerfields</td>
+							</tr>
+							<tr class="">
+								<td><strong>Валідація</strong></td>
+								<td>https://react-hook-form.com/get-started#Applyvalidation</td>
+							</tr>
+							<tr class="">
+								<td><strong>Відображення помилок</strong></td>
+								<td>https://react-hook-form.com/get-started#Handleerrors</td>
+							</tr>
+							<tr class="">
+								<td><strong>Приклади коду</strong></td>
+								<td>https://github.com/react-hook-form/react-hook-form/tree/master/examples</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Required</p>
+					<pre><code class="javascript" data-line-numbers="|3">&lt;input
+  {...register("firstName", {
+    required: "Поле обов'язкове"
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Min/Max Length</p>
+					<pre><code class="javascript" data-line-numbers="|3-4">&lt;input
+  {...register("username", {
+    minLength: { value: 3, message: "Мінімум 3 символи" },
+    maxLength: { value: 20, message: "Максимум 20 символів" }
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Pattern (Regex)</p>
+					<pre><code class="javascript" data-line-numbers="|3-6">&lt;input
+  {...register("email", {
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: "Невірний формат email"
+    }
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Custom Validator</p>
+					<pre><code class="javascript" data-line-numbers="|3-5">&lt;input
+  {...register("password", {
+    validate: value =&gt;
+      value.includes("@") ||
+      "Пароль має містити символ @"
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Множинні валідатори</p>
+					<pre><code class="javascript" data-line-numbers="|3-8">&lt;input
+  {...register("password", {
+    validate: {
+      hasNumber: v =&gt; /\d/.test(v) || "Має містити цифру",
+      hasSpecial: v =&gt; /[@$!%*?&]/.test(v) || "Має містити спецсимвол",
+      minLength: v =&gt; v.length &gt;= 8 || "Мінімум 8 символів"
+    }
+  })}
+/&gt;</code></pre>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">Відображення помилок</h2>
+					<pre><code class="javascript" data-line-numbers="2|5|7-11">export function Form() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  return (&lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+    &lt;input {...register("firstName", { required: true })} /&gt;
+
+    {errors.firstName && (
+      &lt;span style={{ color: 'red' }}&gt;
+        Поле обов'язкове
+      &lt;/span&gt;
+    )}
+
+    &lt;input type="submit" /&gt;
+  &lt;/form&gt;);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Відображення помилок</h2>
+					<p class="ztu-orange">З повідомленням</p>
+					<pre><code class="javascript" data-line-numbers="1-4|6-10|8">&lt;input {...register("email", {
+  required: "Email обов'язковий",
+  pattern: { value: /^\S+@\S+$/i, message: "Невірний email" }
+})} /&gt;
+
+{errors.email && (
+  &lt;p className="error"&gt;
+    {errors.email.message}
+  &lt;/p&gt;
+)}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Відображення помилок</h2>
+					<p class="ztu-orange">ErrorMessage component</p>
+					<pre><code class="javascript" data-line-numbers="1|4|7-11">import { ErrorMessage } from '@hookform/error-message';
+
+export function Form() {
+  const { register, formState: { errors } } = useForm();
+
+  return (
+    &lt;ErrorMessage
+      errors={errors}
+      name="firstName"
+      render={({ message }) =&gt; &lt;p className="error"&gt;{message}&lt;/p&gt;}
+    /&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">UI патерни для помилок</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Червоний текст під полем</li>
+						<li class="fragment fade-in-then-semi-out">Червона рамка навколо input</li>
+						<li class="fragment fade-in-then-semi-out">Іконка помилки</li>
+						<li class="fragment fade-in-then-semi-out">Toast/notification для загальних помилок</li>
+						<li class="fragment fade-in-then-semi-out">Резюме помилок вгорі форми</li>
+					</ul>
+				</section>
+
+				<!-- FORM STATE -->
+
+				<section>
+					<h2 class="ztu-blue">Стан форми</h2>
+					<pre><code class="javascript" data-line-numbers="5-6|11-13">import { useForm } from 'react-hook-form';
+
+export function App() {
+  const { register, formState } = useForm();
+  const { isDirty, isValid, isSubmitting, touchedFields,
+          dirtyFields, errors } = formState;
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;button disabled={!isDirty || !isValid}&gt;
+        Надіслати
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Властивості стану форми</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>isDirty</strong> - чи змінювалась форма</li>
+						<li class="fragment fade-in-then-semi-out"><strong>isValid</strong> - чи валідна форма</li>
+						<li class="fragment fade-in-then-semi-out"><strong>isSubmitting</strong> - чи відправляється форма</li>
+						<li class="fragment fade-in-then-semi-out"><strong>isSubmitted</strong> - чи була відправлена</li>
+						<li class="fragment fade-in-then-semi-out"><strong>touchedFields</strong> - поля, яких торкались</li>
+						<li class="fragment fade-in-then-semi-out"><strong>dirtyFields</strong> - змінені поля</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Контроль кнопки submit</h2>
+					<p class="ztu-orange">Практичне використання</p>
+					<pre><code class="javascript" data-line-numbers="|7-9">export function App() {
+  const { register, handleSubmit, formState } = useForm({
+    mode: 'onChange'
+  });
+
+  return (
+    &lt;button
+      disabled={!formState.isValid || formState.isSubmitting}
+    &gt;
+      {formState.isSubmitting ? 'Відправка...' : 'Надіслати'}
+    &lt;/button&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Показ помилок тільки після взаємодії</h2>
+					<p class="ztu-orange">Практичне використання</p>
+					<pre><code class="javascript" data-line-numbers="2|7-9">export function App() {
+  const { register, formState: { errors, touchedFields } } = useForm();
+
   return (
     &lt;&gt;
-      {message}
+      &lt;input {...register("email", { required: true })} /&gt;
+      {touchedFields.email && errors.email && (
+        &lt;span&gt;Email обов'язковий&lt;/span&gt;
+      )}
     &lt;/&gt;
   );
 }</code></pre>
 				</section>
 
-				<!-- JS like. If-else or ternary -->
+				<!-- DEFAULT VALUES & RESET -->
+
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">JS like. If-else or ternary</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
+					<h2 class="ztu-blue">Початкові значення форми</h2>
+					<pre><code class="javascript" data-line-numbers="4-10|5-9|14-16">import { useForm } from 'react-hook-form';
+
+export function App() {
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      firstName: "Іван",
+      lastName: "Петренко",
+      age: 25
+    }
+  });
 
   return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : &lt;p&gt;{props.children}&lt;/p&gt;
-      }
-    &lt;/&gt;
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;input {...register("lastName")} /&gt;
+      &lt;input {...register("age")} /&gt;
+      &lt;input type="submit" /&gt;
+    &lt;/form&gt;
   );
 }</code></pre>
 				</section>
 
-				<!-- return null -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">return null</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
+					<h2 class="ztu-blue">Початкові асинхроні дані</h2>
+					<pre><code class="javascript" data-line-numbers="|7-13">import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+
+export function App() {
+  const { register, reset } = useForm();
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then(res => res.json())
+      .then(data => {
+        reset(data);
+      });
+  }, [reset]);
+
+  return &lt;form&gt;...&lt;/form&gt;;
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Скидання форми до початкових значень</h2>
+					<pre><code class="javascript" data-line-numbers="|5|17-19|8-11|10">import { useForm } from 'react-hook-form';
+
+export function App() {
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: { firstName: "" }
+  });
+
+  const onSubmit = data => {
+    console.log(data);
+    reset(); // Скидання до defaultValues
+  };
 
   return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : null
-      }
-    &lt;/&gt;
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;button type="submit"&gt;Надіслати&lt;/button&gt;
+      &lt;button type="button" onClick={() => reset()}&gt;
+        Очистити
+      &lt;/button&gt;
+    &lt;/form&gt;
   );
 }</code></pre>
 				</section>
 
-				<!-- Списки та ключі -->
 				<section>
-					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
-				</section>
+					<h2 class="ztu-blue">RESET з новими значеннями</h2>
+					<p class="ztu-orange">Встановлення нових значень</p>
+					<pre><code class="javascript" data-line-numbers="">// Скидання з новими значеннями
+reset({
+  firstName: "Новий",
+  lastName: "Користувач"
+});
 
-				<!-- Списки -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Списки - з підсвіткою рядків -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Ключ є обов'язковим -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">На вхід може бути масив елементів</li>
-						<li class="fragment fade-in-then-semi-out">Ключ є обов'язковим</li>
-					</ul>
-				</section>
-
-				<!-- Ключі - з підсвіткою рядків -->
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Стабільна ідентичність</li>
-						<li class="fragment fade-in-then-semi-out">Ключ унікальний в межах списку</li>
-						<li class="fragment fade-in-then-semi-out">Ключі є рядковими</li>
-						<li class="fragment fade-in-then-semi-out">Ключ застосовується для елементів масиву, а не до тегів</li>
-					</ul>
-				</section>
-
-				<!-- Index as key article -->
-				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				<iframe data-src="https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318" data-preload width="800" height="600"></iframe>
-				</section>
-				<!-- Віртуалізований список -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
-					<iframe data-src="https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper" data-preload width="800" height="600"></iframe>
-				
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">MutationObserver</li>
-						<li class="fragment fade-in-then-semi-out">Активна робота з VirtualDOM</li>
-						<li class="fragment fade-in-then-semi-out">Велике покращення швидкодії продукту</li>
-					</ul>
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Webpack</li>
-						<li class="fragment fade-in-then-semi-out">Rollup</li>
-						<li class="fragment fade-in-then-semi-out">Parcel</li>
-						<li class="fragment fade-in-then-semi-out">Vite</li>
-					</ul>
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Створення єдиної точки входу</li>
-						<li class="fragment fade-in-then-semi-out">Процес мініфікації, агліфікації та об'єднання</li>
-						<li class="fragment fade-in-then-semi-out">Webpack-bundle-analyzer</li>
-					</ul>
-				</section>
-
-				<!-- Webpack Bundle Analyzer -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
-					<iframe data-src="https://blog.bitsrc.io/6-tools-and-techniques-to-analyze-webpack-bundle-size-817337f8cf91" data-preload width="800" height="600"></iframe>
-				
-					
-				</section>
-
-				<!-- Vite -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-				</section>
-
-				<!-- Vite vs Webpack -->
-				<section>
-					<h2 class="ztu-blue">VITE vs WEBPACK</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
-						<div>
-							<h3 class="ztu-orange">Webpack</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Повільний старт (bundling)</li>
-								<li class="">Конфігурація складна</li>
-								<li class="">HMR повільний</li>
-								<li class="">Великий ecosystem</li>
-							</ul>
-						</div>
-						<div>
-							<h3 class="ztu-orange">Vite</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Швидкий старт (ESM)</li>
-								<li class="">Zero-config</li>
-								<li class="">Миттєвий HMR</li>
-								<li class="">Rollup під капотом</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Vite особливості -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">ESM в Dev режимі</li>
-						<li class="fragment fade-in-then-semi-out">esbuild для TypeScript</li>
-						<li class="fragment fade-in-then-semi-out">Rollup для Production</li>
-						<li class="fragment fade-in-then-semi-out">Плагіни сумісні з Rollup</li>
-					</ul>
-				</section>
-
-				<!-- Vite команди -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<h3 class="ztu-orange">Команди</h3>
-					<pre><code class="bash"># Створити проект
-npm create vite@latest my-react-app
-# Запустити dev сервер
-npm run dev
-# Збірка для продакшну
-npm run build</code></pre>
-				</section>
-
-				<!-- Import -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-				</section>
-
-				<!-- Статичний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Статичний імпорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-2|3-4|5-6">// Іменований імпорт
-import { add, subtract } from './math';
-// Дефолтний імпорт
-import Calculator from './Calculator';
-// Комбінований імпорт
-import React, { useState, useEffect } from 'react';</code></pre>
-				</section>
-
-				<!-- Import всього модуля -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Import всього модуля</h3>
-					<pre><code class="javascript" data-line-numbers="|2">// Імпорт всього як об'єкт
-import * as Math from './math';
-console.log(Math.add(16, 26));</code></pre>
-				</section>
-
-				<!-- Aliasing та Side Effects -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Aliasing та Side Effects</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-5|">// Перейменування імпорту
-import { add as sum } from './math';
-// Side effects (без імпорту)
-import './styles.css';
-import 'react-toastify/dist/ReactToastify.css';</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт</h3>
-					<pre><code class="javascript">import("./math").then(math => {
-  console.log(math.add(16, 26));
+// Часткове оновлення
+reset({
+  ...getValues(),
+  firstName: "Оновлене ім'я"
 });</code></pre>
 				</section>
 
-				<!-- Динамічний імпорт babel -->
 				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
-				</section>
-
-				<!-- Export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-				</section>
-
-				<!-- Іменований експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Іменований експорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-3|4-5|">// Експорт під час оголошення
-export const PI = 3.14159;
-export function add(a, b) { return a + b; }
-// Експорт існуючих змінних
-export { myFunction, anotherVar };</code></pre>
-				</section>
-
-				<!-- Дефолтний експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт</h3>
-					<pre><code class="javascript" >// Функція
-export default function Calculator() {}
-// Клас
-export default class MyClass {}
-// Значення
-export default 42;</code></pre>
-				</section>
-
-				<!-- Re-export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Re-export (Переекспорт)</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// Переекспорт всього
-export * from './math';
-// Переекспорт конкретних функцій
-export { add, subtract } from './math';
-// Переекспорт з перейменуванням
-export { default as Calculator } from './Calculator';</code></pre>
-				</section>
-
-				<!-- CommonJS vs ESM -->
-				<section>
-					<h2 class="ztu-blue">COMMONJS vs ESM</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h3 class="ztu-orange">CommonJS (Node.js)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-module.exports = { add };
-exports.PI = 3.14;
-
-// Import
-const { add } = require('./math');
-const math = require('./math');</code></pre>
-						</div>
-						<div>
-							<h3 class="ztu-orange">ESM (ES6 Modules)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-export { add };
-export const PI = 3.14;
-
-// Import
-import { add } from './math';
-import * as math from './math';</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-				</section>
-
-				<!-- Tree Shaking визначення -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що це таке?</h3>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Видалення невикористаного коду з бандлу</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення розміру фінального файлу</li>
-						<li class="fragment fade-in-then-semi-out">Працює тільки з ES6 модулями</li>
-						<li class="fragment fade-in-then-semi-out">Статичний аналіз import/export</li>
+					<h2 class="ztu-blue">Властивості скидання</h2>
+					
+					<pre><code class="javascript" data-line-numbers>reset(values, {
+  keepErrors: true,
+  keepDirty: true
+});</code></pre>
+<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>keepErrors</strong> - зберегти помилки</li>
+						<li class="fragment fade-in-then-semi-out"><strong>keepDirty</strong> - зберегти змінені поля</li>
+						<li class="fragment fade-in-then-semi-out"><strong>keepValues</strong> - зберегти поточні значення</li>
+						<li class="fragment fade-in-then-semi-out"><strong>keepDefaultValues</strong> - зберегти defaultValues</li>
 					</ul>
 				</section>
 
-				<!-- Tree Shaking приклад -->
+				<!-- ДИНАМІЧНІ ФОРМИ -->
+
 				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Приклад</h3>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h4 class="ztu-orange">utils.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">export function add(a, b) {
-  return a + b;
-}
+					<h2 class="ztu-blue">Динамічні форми</h2>
+					<p class="ztu-orange">useFieldArray</p>
+					<pre><code class="javascript" data-line-numbers="|1|4-8|12-14">import { useForm, useFieldArray } from 'react-hook-form';
 
-export function subtract(a, b) {
-  return a - b;
-}
+export function App() {
+  const { register, control } = useForm();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "users"
+  });
 
-export function multiply(a, b) {
-  return a * b;
-}</code></pre>
-						</div>
-						<div>
-							<h4 class="ztu-orange">main.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Імпортуємо тільки add
-import { add } from './utils';
-
-console.log(add(2, 3));
-
-// subtract і multiply
-// НЕ потраплять в бандл!</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking поганий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що заважає Tree Shaking?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ❌ Погано - імпорт всього модуля
-import * as utils from './utils';
-
-// ❌ Погано - side effects
-import './utils'; // виконує код при імпорті
-
-// ❌ Погано - CommonJS
-const { add } = require('./utils');</code></pre>
-				</section>
-
-				<!-- Tree Shaking добрий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Як робити правильно?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ✅ Добре - іменований імпорт
-import { add, subtract } from './utils';
-
-// ✅ Добре - lodash-es замість lodash
-import { debounce } from 'lodash-es';
-
-// ✅ Добре - окремі модулі
-import debounce from 'lodash/debounce';</code></pre>
-				</section>
-
-
-				<!-- React Lazy визначення -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Code Splitting</p>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Розділення коду на окремі чанки</li>
-						<li class="fragment fade-in-then-semi-out">Завантаження компонентів по потребі</li>
-						<li class="fragment fade-in-then-semi-out">Покращення часу завантаження</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення initial bundle size</li>
-					</ul>
-				</section>
-
-				<!-- React.lazy приклад -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">React.lazy()</p>
-					<pre><code class="javascript">// Замість звичайного імпорту
-// import Dashboard from './Dashboard';
-
-// Динамічний імпорт з React.lazy
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
-  return &lt;Dashboard /&gt;;
-}</code></pre>
-				</section>
-
-				<!-- Suspense -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Suspense</p>
-					<pre><code class="javascript" >import { Suspense } from 'react';
-
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
   return (
-    &lt;Suspense fallback={&lt;div&gt;Завантаження...&lt;/div&gt;}&gt;
-      &lt;Dashboard /&gt;
-    &lt;/Suspense&gt;
+    &lt;form&gt;
+      {fields.map((field, index) => (
+        &lt;input key={field.id} {...register(`users.${index}.name`)} /&gt;
+      ))}
+    &lt;/form&gt;
   );
 }</code></pre>
 				</section>
+
+				<section>
+					<h2 class="ztu-blue">Динамічні поля</h2>
+					<p class="ztu-orange">Додавання та видалення</p>
+					<pre><code class="javascript" data-line-numbers="|2-4|6-8|12-17|15|19-21">export function DynamicForm() {
+  const { register, control } = useForm({
+    defaultValues: { items: [{ name: '' }] }
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control, name: "items"
+  });
+
+  return (
+    &lt;form&gt;
+      {fields.map((field, index) => (
+        &lt;div key={field.id}&gt;
+          &lt;input {...register(`items.${index}.name`)} /&gt;
+          &lt;button onClick={() => remove(index)}&gt;Видалити&lt;/button&gt;
+        &lt;/div&gt;
+      ))}
+
+      &lt;button onClick={() => append({ name: '' })}&gt;
+        Додати поле
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEFIELDARRY методи</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>fields</strong> - масив полів</li>
+						<li class="fragment fade-in-then-semi-out"><strong>append(data)</strong> - додати в кінець</li>
+						<li class="fragment fade-in-then-semi-out"><strong>prepend(data)</strong> - додати на початок</li>
+						<li class="fragment fade-in-then-semi-out"><strong>remove(index)</strong> - видалити за індексом</li>
+						<li class="fragment fade-in-then-semi-out"><strong>insert(index, data)</strong> - вставити</li>
+						<li class="fragment fade-in-then-semi-out"><strong>swap(indexA, indexB)</strong> - поміняти місцями</li>
+					</ul>
+				</section>
+
+
+				<!-- PERFORMANCE -->
+
+				<section>
+					<h2 class="ztu-blue">Робота зі значеннями форм</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">watch() - підписка на зміни полів</li>
+						<li class="fragment fade-in-then-semi-out">getValues() - отримання значень без ре-рендеру</li>
+						<li class="fragment fade-in-then-semi-out">useWatch() - оптимізована підписка</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">WATCH()</h2>
+					<p class="ztu-orange">Викликає ре-рендер при кожній зміні</p>
+					<pre><code class="javascript" data-line-numbers="">import { useForm } from 'react-hook-form';
+
+export function WatchExample() {
+  const { register, watch } = useForm();
+
+  const firstName = watch("firstName");
+  const allFields = watch();
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;input {...register("lastName")} /&gt;
+      &lt;p&gt;Привіт, {firstName}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">GETVALUES()</h2>
+					<p class="ztu-orange">Без ре-рендеру компонента</p>
+					<pre><code class="javascript" data-line-numbers="">import { useForm } from 'react-hook-form';
+
+export function GetValuesExample() {
+  const { register, getValues } = useForm();
+
+  const handleClick = () => {
+    const values = getValues();
+    console.log(values);
+  };
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;button type="button" onClick={handleClick}&gt;
+        Показати значення
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEWATCH()</h2>
+					<p class="ztu-orange">Оптимізована підписка на зміни</p>
+					<pre><code class="javascript" data-line-numbers="">import { useForm, useWatch } from 'react-hook-form';
+
+export function UseWatchExample() {
+  const { register, control } = useForm();
+
+  const firstName = useWatch({
+    control,
+    name: "firstName"
+  });
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;p&gt;Вітаю, {firstName}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Коли та що використовувати?</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>watch()</strong> - прості форми, потрібен ре-рендер</li>
+						<li class="fragment fade-in-then-semi-out"><strong>getValues()</strong> - submit, events, без ре-рендеру</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useWatch()</strong> - складні форми, залежні поля</li>
+					</ul>
+				</section>
+
+				<!-- YUP -->
+
+				<section>
+					<h2 class="ztu-blue">YUP</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Гнучка користувацька валідація</li>
+						<li class="fragment fade-in-then-semi-out">Велика кількість хелперів</li>
+						<li class="fragment fade-in-then-semi-out">Перевикористання валідації</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP</h2>
+					<p style="font-size: 0.7em; color: #666;">https://github.com/jquense/yup</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP SCHEMA</h2>
+					<p class="ztu-orange">Створення схеми валідації</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-8|4|5|6-8|3-9">import * as yup from 'yup';
+
+const schema = yup.object({
+  firstName: yup.string().required("Ім'я обов'язкове"),
+  age: yup.number().positive().integer().required(),
+  email: yup.string()
+    .email("Невірний формат email")
+    .required("Email обов'язковий"),
+}).required();</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">REACT-HOOK-FORM + YUP</h2>
+					<p class="ztu-orange">npm i @hookform/resolvers</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP RESOLVER</h2>
+					<p class="ztu-orange">Інтеграція з React Hook Form</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|10-12|5-7">import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  firstName: yup.string().required("Ім'я обов'язкове"),
+}).required();
+
+export function App() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  return (
+    &lt;form onSubmit={handleSubmit(data =&gt; console.log(data))}&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;p&gt;{errors.firstName?.message}&lt;/p&gt;
+      &lt;input type="submit" /&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP МЕТОДИ ВАЛІДАЦІЇ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>string()</strong> - рядок (min, max, email, url, matches)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>number()</strong> - число (min, max, positive, integer)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>boolean()</strong> - логічне значення</li>
+						<li class="fragment fade-in-then-semi-out"><strong>date()</strong> - дата (min, max)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>array()</strong> - масив (min, max, of)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>object()</strong> - об'єкт (shape)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">ПЕРЕВАГИ YUP + RHF</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Декларативна валідація</li>
+						<li class="fragment fade-in-then-semi-out">Перевикористання схем</li>
+						<li class="fragment fade-in-then-semi-out">TypeScript підтримка</li>
+						<li class="fragment fade-in-then-semi-out">Єдине джерело правди для валідації</li>
+					</ul>
+				</section>
+
+				<!-- ПРАКТИЧНИЙ ПРИКЛАД -->
+
+				<section>
+					<h2 class="ztu-blue">ПРАКТИКА</h2>
+					<p class="ztu-orange">Повна форма реєстрації</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">СХЕМА ВАЛІДАЦІЇ</h2>
+					<pre><code class="javascript" data-line-numbers="|1-14">const registrationSchema = yup.object({
+  firstName: yup.string()
+    .required("Ім'я обов'язкове")
+    .min(2, "Мінімум 2 символи"),
+  email: yup.string()
+    .email("Невірний email")
+    .required("Email обов'язковий"),
+  password: yup.string()
+    .min(8, "Мінімум 8 символів")
+    .matches(/[A-Z]/, "Має містити велику букву")
+    .matches(/[0-9]/, "Має містити цифру")
+    .required("Пароль обов'язковий"),
+  terms: yup.boolean().oneOf([true], "Прийміть умови")
+}).required();</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТ ФОРМИ</h2>
+					<pre><code class="javascript" data-line-numbers="|1-6|8-11">export function RegistrationForm() {
+  const { register, handleSubmit, formState } = useForm({
+    resolver: yupResolver(registrationSchema),
+    mode: 'onChange'
+  });
+  const { errors, isSubmitting, isValid } = formState;
+
+  const onSubmit = async (data) => {
+    await fetch('/api/register', { method: 'POST', body: JSON.stringify(data) });
+    alert('Реєстрація успішна!');
+  };
+
+  return (/* JSX */);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">JSX ФОРМИ</h2>
+					<pre><code class="javascript" data-line-numbers="2-8|10-15">return (
+  &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+    &lt;div&gt;
+      &lt;input {...register("firstName")} placeholder="Ім'я" /&gt;
+      {errors.firstName && (
+        &lt;span className="error"&gt;{errors.firstName.message}&lt;/span&gt;
+      )}
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;input {...register("email")} placeholder="Email" /&gt;
+      {errors.email && (
+        &lt;span className="error"&gt;{errors.email.message}&lt;/span&gt;
+      )}
+    &lt;/div&gt;
+  {/* ... */}
+  &lt;/form&gt;
+);</code></pre>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">РЕЗУЛЬТАТ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Валідація в реальному часі</li>
+						<li class="fragment fade-in-then-semi-out">Зрозумілі повідомлення про помилки</li>
+						<li class="fragment fade-in-then-semi-out">Контроль стану кнопки</li>
+						<li class="fragment fade-in-then-semi-out">Мінімум бойлерплейт коду</li>
+						<li class="fragment fade-in-then-semi-out">Легко підтримувати і масштабувати</li>
+					</ul>
+				</section>
+
+				<!-- Question Slide -->
 	<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 6</h1>
+					<p class="ztu-orange">REACT FORMS, YUP, REACT-HOOK-FORM</p>
+					<p style="margin-top: 50px; font-size: 0.8em; color: #666;">Дякую за увагу!</p>
 				</section>
 
 			</div>
