@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>КОП - Лекція 6</title>
+
+		<link rel="stylesheet" href="reveal.css">
+		<link rel="stylesheet" href="theme/ztu.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="footer-ztu-logo"></div>
+			<div class="footer-conference-logo"></div>
+			<div class="footer-beerjs-logo"></div>
+			<div class="slides">
+				<!-- Title Slide -->
+				<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 6</h1>
+					<p class="ztu-orange">REACT FORMS, YUP, REACT-HOOK-FORM</p>
+				</section>
+
+				<!-- ФОРМИ Section -->
+				<section>
+					<h2 class="ztu-blue">Форми</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Базові форми</li>
+						<li class="fragment fade-in-then-semi-out">React Hook Form</li>
+						<li class="fragment fade-in-then-semi-out">Валідація з Yup</li>
+					</ul>
+				</section>
+
+				<!-- БАЗОВІ ФОРМИ -->
+
+				<section>
+					<h2 class="ztu-blue">Базові форми</h2>
+					<p class="ztu-orange">Керовані компоненти</p>
+					<pre><code class="javascript" data-line-numbers="3|15-21|18|11-13|20|6-9">import { useState } from 'react';
+
+export function Form() {
+  const [value, setValue] = useState(0);
+
+  const handleSubmit = (event) => {
+    console.log('submit value', value);
+    event.preventDefault();
+  }
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  }
+
+  return (&lt;form onSubmit={handleSubmit}&gt;
+    &lt;label&gt;
+      Ім'я:
+      &lt;input type="text" value={value} onChange={handleChange} /&gt;
+    &lt;/label&gt;
+    &lt;input type="submit" value="Надіслати" /&gt;
+  &lt;/form&gt;);
+}</code></pre>
+				</section>
+
+				<!-- КЕРОВАНІ КОМПОНЕНТИ -->
+				<section>
+					<h2 class="ztu-blue">Керовані компоненти</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Єдине джерело правди</li>
+						<li class="fragment fade-in-then-semi-out">Зберігають дані в стейті</li>
+						<li class="fragment fade-in-then-semi-out">Єдиний спосіб роботи</li>
+						<li class="fragment fade-in-then-semi-out">Зміна стану ЛИШЕ через onChange</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Керовані компоненти</h2>
+					<p class="ztu-orange">Textarea</p>
+					<pre><code class="javascript">export function Form() {
+  return (&lt;textarea value={value} onChange={handleChange}&gt;&lt;/textarea&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Керовані компоненти</h2>
+					<p class="ztu-orange">Select</p>
+					<pre><code class="javascript">export function Form() {
+  return ( &lt;select value={value} onChange={handleChange}&gt;
+    &lt;option value="грейпфрут"&gt;Грейпфрут&lt;/option&gt;
+    &lt;option value="лайм"&gt;Лайм&lt;/option&gt;
+    &lt;option value="кокос"&gt;Кокос&lt;/option&gt;
+    &lt;option value="манго"&gt;Манго&lt;/option&gt;
+  &lt;/select&gt;);
+}</code></pre>
+				</section>
+
+				<!-- НЕКЕРОВАНІ КОМПОНЕНТИ -->
+				<section>
+					<h2 class="ztu-blue">Некеровані компоненти</h2>
+					<pre><code class="javascript" data-line-numbers="3|11-17|1|9|14|16|4-7">import { useRef } from 'react';
+
+export function FormUncontrol() {
+  const handleSubmit = (event) => {
+    console.log('submit value', input.current.value);
+    event.preventDefault();
+  }
+
+  const input = useRef();
+
+  return (&lt;form onSubmit={handleSubmit}&gt;
+    &lt;label&gt;
+      Ім'я:
+      &lt;input type="text" ref={input} /&gt;
+    &lt;/label&gt;
+    &lt;input type="submit" value="Надіслати" /&gt;
+  &lt;/form&gt;);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Некеровані компоненти</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Використовуються з типом файл</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Порівняння</h2>
+					<table style="font-size: 0.7em; width: 100%;">
+						<thead>
+							<tr>
+								<th>Характеристика</th>
+								<th>Керовані</th>
+								<th>Некеровані</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td><strong>Джерело даних</strong></td>
+								<td>React state</td>
+								<td>DOM</td>
+							</tr>
+							<tr class="fragment">
+								<td><strong>Оновлення</strong></td>
+								<td>onChange + setState</td>
+								<td>Прямий доступ через ref</td>
+							</tr>
+							<tr class="fragment">
+								<td><strong>Валідація</strong></td>
+								<td>В реальному часі</td>
+								<td>При submit</td>
+							</tr>
+							<tr class="fragment">
+								<td><strong>Продуктивність</strong></td>
+								<td>Ре-рендер при зміні</td>
+								<td>Без ре-рендерів</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- А В ЧОМУ ПРОБЛЕМА? -->
+				<section>
+					<h2 class="ztu-blue">Які ж проблеми?</h2>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Багато коду для простої форми</h2>
+					<pre><code class="javascript" data-line-numbers="|2-5|7-9|11-13">function Form() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // валідація, обробка помилок...
+  };
+
+  return /* JSX */;
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Ре-рендер при кожній зміні</h2>
+					<pre><code class="javascript" data-line-numbers="|4|7">function Form() {
+  const [value, setValue] = useState('');
+
+  console.log('Form re-rendered'); // При кожному символі!
+
+  return (
+    &lt;input value={value} onChange={e => setValue(e.target.value)} /&gt;
+  );
+}
+
+// Для форми з 10 полями = 10 ре-рендерів на кожну зміну!</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Складна логіка перевірки</h2>
+					<pre><code class="javascript" data-line-numbers="|2-11">const handleSubmit = (e) => {
+  const newErrors = {};
+
+  if (!firstName) newErrors.firstName = "Обов'язкове поле";
+  if (!email) newErrors.email = "Обов'язкове поле";
+  else if (!/\S+@\S+/.test(email)) newErrors.email = "Невірний email";
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  // submit...
+};</code></pre>
+				</section>
+
+				<!-- БІБЛІОТЕКИ -->
+
+				<section>
+					<h2 class="ztu-blue">Бібліотеки</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">React-final-form</li>
+						<li class="fragment fade-in-then-semi-out">React-hook-form</li>
+						<li class="fragment fade-in-then-semi-out">Formik</li>
+						<li class="fragment fade-in-then-semi-out">Yup</li>
+					</ul>
+				</section>
+
+				<!-- REACT-HOOK-FORM -->
+				<section>
+					<h2 class="ztu-blue">React-hook-form</h2>
+					<p style="font-size: 0.8em; color: #666;">https://www.npmjs.com/package/react-hook-form</p>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">React-hook-form</h2>
+					<p class="ztu-orange">npm i react-hook-form</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">React-hook-form</h2>
+					<pre><code class="javascript" data-line-numbers="|1-2|5|6|9-13">import React from 'react';
+import { useForm } from 'react-hook-form';
+
+export function ReactHookForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data =&gt; console.log(data);
+  console.log(errors);
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register("firstName", { required: true })} /&gt;
+      &lt;input type="submit" /&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Документація</h2>
+					<table style="font-size: 0.7em; width: 100%;">
+						<tbody>
+							<tr class="">
+								<td><strong>Реєстрація полів</strong></td>
+								<td>https://react-hook-form.com/get-started#Registerfields</td>
+							</tr>
+							<tr class="">
+								<td><strong>Валідація</strong></td>
+								<td>https://react-hook-form.com/get-started#Applyvalidation</td>
+							</tr>
+							<tr class="">
+								<td><strong>Відображення помилок</strong></td>
+								<td>https://react-hook-form.com/get-started#Handleerrors</td>
+							</tr>
+							<tr class="">
+								<td><strong>Приклади коду</strong></td>
+								<td>https://github.com/react-hook-form/react-hook-form/tree/master/examples</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Required</p>
+					<pre><code class="javascript" data-line-numbers="|3">&lt;input
+  {...register("firstName", {
+    required: "Поле обов'язкове"
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Min/Max Length</p>
+					<pre><code class="javascript" data-line-numbers="|3-4">&lt;input
+  {...register("username", {
+    minLength: { value: 3, message: "Мінімум 3 символи" },
+    maxLength: { value: 20, message: "Максимум 20 символів" }
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Pattern (Regex)</p>
+					<pre><code class="javascript" data-line-numbers="|3-6">&lt;input
+  {...register("email", {
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: "Невірний формат email"
+    }
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Custom Validator</p>
+					<pre><code class="javascript" data-line-numbers="|3-5">&lt;input
+  {...register("password", {
+    validate: value =&gt;
+      value.includes("@") ||
+      "Пароль має містити символ @"
+  })}
+/&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Приклад валідації</h2>
+					<p class="ztu-orange">Множинні валідатори</p>
+					<pre><code class="javascript" data-line-numbers="|3-8">&lt;input
+  {...register("password", {
+    validate: {
+      hasNumber: v =&gt; /\d/.test(v) || "Має містити цифру",
+      hasSpecial: v =&gt; /[@$!%*?&]/.test(v) || "Має містити спецсимвол",
+      minLength: v =&gt; v.length &gt;= 8 || "Мінімум 8 символів"
+    }
+  })}
+/&gt;</code></pre>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">Відображення помилок</h2>
+					<pre><code class="javascript" data-line-numbers="2|5|7-11">export function Form() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  return (&lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+    &lt;input {...register("firstName", { required: true })} /&gt;
+
+    {errors.firstName && (
+      &lt;span style={{ color: 'red' }}&gt;
+        Поле обов'язкове
+      &lt;/span&gt;
+    )}
+
+    &lt;input type="submit" /&gt;
+  &lt;/form&gt;);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Відображення помилок</h2>
+					<p class="ztu-orange">З повідомленням</p>
+					<pre><code class="javascript" data-line-numbers="1-4|6-10|8">&lt;input {...register("email", {
+  required: "Email обов'язковий",
+  pattern: { value: /^\S+@\S+$/i, message: "Невірний email" }
+})} /&gt;
+
+{errors.email && (
+  &lt;p className="error"&gt;
+    {errors.email.message}
+  &lt;/p&gt;
+)}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Відображення помилок</h2>
+					<p class="ztu-orange">ErrorMessage component</p>
+					<pre><code class="javascript" data-line-numbers="1|4|7-11">import { ErrorMessage } from '@hookform/error-message';
+
+export function Form() {
+  const { register, formState: { errors } } = useForm();
+
+  return (
+    &lt;ErrorMessage
+      errors={errors}
+      name="firstName"
+      render={({ message }) =&gt; &lt;p className="error"&gt;{message}&lt;/p&gt;}
+    /&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">UI патерни для помилок</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Червоний текст під полем</li>
+						<li class="fragment fade-in-then-semi-out">Червона рамка навколо input</li>
+						<li class="fragment fade-in-then-semi-out">Іконка помилки</li>
+						<li class="fragment fade-in-then-semi-out">Toast/notification для загальних помилок</li>
+						<li class="fragment fade-in-then-semi-out">Резюме помилок вгорі форми</li>
+					</ul>
+				</section>
+
+				<!-- FORM STATE -->
+
+				<section>
+					<h2 class="ztu-blue">Стан форми</h2>
+					<pre><code class="javascript" data-line-numbers="5-6|11-13">import { useForm } from 'react-hook-form';
+
+export function App() {
+  const { register, formState } = useForm();
+  const { isDirty, isValid, isSubmitting, touchedFields,
+          dirtyFields, errors } = formState;
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;button disabled={!isDirty || !isValid}&gt;
+        Надіслати
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Властивості стану форми</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>isDirty</strong> - чи змінювалась форма</li>
+						<li class="fragment fade-in-then-semi-out"><strong>isValid</strong> - чи валідна форма</li>
+						<li class="fragment fade-in-then-semi-out"><strong>isSubmitting</strong> - чи відправляється форма</li>
+						<li class="fragment fade-in-then-semi-out"><strong>isSubmitted</strong> - чи була відправлена</li>
+						<li class="fragment fade-in-then-semi-out"><strong>touchedFields</strong> - поля, яких торкались</li>
+						<li class="fragment fade-in-then-semi-out"><strong>dirtyFields</strong> - змінені поля</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Контроль кнопки submit</h2>
+					<p class="ztu-orange">Практичне використання</p>
+					<pre><code class="javascript" data-line-numbers="|7-9">export function App() {
+  const { register, handleSubmit, formState } = useForm({
+    mode: 'onChange'
+  });
+
+  return (
+    &lt;button
+      disabled={!formState.isValid || formState.isSubmitting}
+    &gt;
+      {formState.isSubmitting ? 'Відправка...' : 'Надіслати'}
+    &lt;/button&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Показ помилок тільки після взаємодії</h2>
+					<p class="ztu-orange">Практичне використання</p>
+					<pre><code class="javascript" data-line-numbers="2|7-9">export function App() {
+  const { register, formState: { errors, touchedFields } } = useForm();
+
+  return (
+    &lt;&gt;
+      &lt;input {...register("email", { required: true })} /&gt;
+      {touchedFields.email && errors.email && (
+        &lt;span&gt;Email обов'язковий&lt;/span&gt;
+      )}
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- DEFAULT VALUES & RESET -->
+
+				<section>
+					<h2 class="ztu-blue">Початкові значення форми</h2>
+					<pre><code class="javascript" data-line-numbers="4-10|5-9|14-16">import { useForm } from 'react-hook-form';
+
+export function App() {
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      firstName: "Іван",
+      lastName: "Петренко",
+      age: 25
+    }
+  });
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;input {...register("lastName")} /&gt;
+      &lt;input {...register("age")} /&gt;
+      &lt;input type="submit" /&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Початкові асинхроні дані</h2>
+					<pre><code class="javascript" data-line-numbers="|7-13">import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+
+export function App() {
+  const { register, reset } = useForm();
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then(res => res.json())
+      .then(data => {
+        reset(data);
+      });
+  }, [reset]);
+
+  return &lt;form&gt;...&lt;/form&gt;;
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Скидання форми до початкових значень</h2>
+					<pre><code class="javascript" data-line-numbers="|5|17-19|8-11|10">import { useForm } from 'react-hook-form';
+
+export function App() {
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: { firstName: "" }
+  });
+
+  const onSubmit = data => {
+    console.log(data);
+    reset(); // Скидання до defaultValues
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;button type="submit"&gt;Надіслати&lt;/button&gt;
+      &lt;button type="button" onClick={() => reset()}&gt;
+        Очистити
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">RESET з новими значеннями</h2>
+					<p class="ztu-orange">Встановлення нових значень</p>
+					<pre><code class="javascript" data-line-numbers="">// Скидання з новими значеннями
+reset({
+  firstName: "Новий",
+  lastName: "Користувач"
+});
+
+// Часткове оновлення
+reset({
+  ...getValues(),
+  firstName: "Оновлене ім'я"
+});</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Властивості скидання</h2>
+					
+					<pre><code class="javascript" data-line-numbers>reset(values, {
+  keepErrors: true,
+  keepDirty: true
+});</code></pre>
+<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>keepErrors</strong> - зберегти помилки</li>
+						<li class="fragment fade-in-then-semi-out"><strong>keepDirty</strong> - зберегти змінені поля</li>
+						<li class="fragment fade-in-then-semi-out"><strong>keepValues</strong> - зберегти поточні значення</li>
+						<li class="fragment fade-in-then-semi-out"><strong>keepDefaultValues</strong> - зберегти defaultValues</li>
+					</ul>
+				</section>
+
+				<!-- ДИНАМІЧНІ ФОРМИ -->
+
+				<section>
+					<h2 class="ztu-blue">Динамічні форми</h2>
+					<p class="ztu-orange">useFieldArray</p>
+					<pre><code class="javascript" data-line-numbers="|1|4-8|12-14">import { useForm, useFieldArray } from 'react-hook-form';
+
+export function App() {
+  const { register, control } = useForm();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "users"
+  });
+
+  return (
+    &lt;form&gt;
+      {fields.map((field, index) => (
+        &lt;input key={field.id} {...register(`users.${index}.name`)} /&gt;
+      ))}
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Динамічні поля</h2>
+					<p class="ztu-orange">Додавання та видалення</p>
+					<pre><code class="javascript" data-line-numbers="|2-4|6-8|12-17|15|19-21">export function DynamicForm() {
+  const { register, control } = useForm({
+    defaultValues: { items: [{ name: '' }] }
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control, name: "items"
+  });
+
+  return (
+    &lt;form&gt;
+      {fields.map((field, index) => (
+        &lt;div key={field.id}&gt;
+          &lt;input {...register(`items.${index}.name`)} /&gt;
+          &lt;button onClick={() => remove(index)}&gt;Видалити&lt;/button&gt;
+        &lt;/div&gt;
+      ))}
+
+      &lt;button onClick={() => append({ name: '' })}&gt;
+        Додати поле
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEFIELDARRY методи</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>fields</strong> - масив полів</li>
+						<li class="fragment fade-in-then-semi-out"><strong>append(data)</strong> - додати в кінець</li>
+						<li class="fragment fade-in-then-semi-out"><strong>prepend(data)</strong> - додати на початок</li>
+						<li class="fragment fade-in-then-semi-out"><strong>remove(index)</strong> - видалити за індексом</li>
+						<li class="fragment fade-in-then-semi-out"><strong>insert(index, data)</strong> - вставити</li>
+						<li class="fragment fade-in-then-semi-out"><strong>swap(indexA, indexB)</strong> - поміняти місцями</li>
+					</ul>
+				</section>
+
+
+				<!-- PERFORMANCE -->
+
+				<section>
+					<h2 class="ztu-blue">Робота зі значеннями форм</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">watch() - підписка на зміни полів</li>
+						<li class="fragment fade-in-then-semi-out">getValues() - отримання значень без ре-рендеру</li>
+						<li class="fragment fade-in-then-semi-out">useWatch() - оптимізована підписка</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">WATCH()</h2>
+					<p class="ztu-orange">Викликає ре-рендер при кожній зміні</p>
+					<pre><code class="javascript" data-line-numbers="">import { useForm } from 'react-hook-form';
+
+export function WatchExample() {
+  const { register, watch } = useForm();
+
+  const firstName = watch("firstName");
+  const allFields = watch();
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;input {...register("lastName")} /&gt;
+      &lt;p&gt;Привіт, {firstName}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">GETVALUES()</h2>
+					<p class="ztu-orange">Без ре-рендеру компонента</p>
+					<pre><code class="javascript" data-line-numbers="">import { useForm } from 'react-hook-form';
+
+export function GetValuesExample() {
+  const { register, getValues } = useForm();
+
+  const handleClick = () => {
+    const values = getValues();
+    console.log(values);
+  };
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;button type="button" onClick={handleClick}&gt;
+        Показати значення
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">USEWATCH()</h2>
+					<p class="ztu-orange">Оптимізована підписка на зміни</p>
+					<pre><code class="javascript" data-line-numbers="">import { useForm, useWatch } from 'react-hook-form';
+
+export function UseWatchExample() {
+  const { register, control } = useForm();
+
+  const firstName = useWatch({
+    control,
+    name: "firstName"
+  });
+
+  return (
+    &lt;form&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;p&gt;Вітаю, {firstName}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">Коли та що використовувати?</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>watch()</strong> - прості форми, потрібен ре-рендер</li>
+						<li class="fragment fade-in-then-semi-out"><strong>getValues()</strong> - submit, events, без ре-рендеру</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useWatch()</strong> - складні форми, залежні поля</li>
+					</ul>
+				</section>
+
+				<!-- YUP -->
+
+				<section>
+					<h2 class="ztu-blue">YUP</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Гнучка користувацька валідація</li>
+						<li class="fragment fade-in-then-semi-out">Велика кількість хелперів</li>
+						<li class="fragment fade-in-then-semi-out">Перевикористання валідації</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP</h2>
+					<p style="font-size: 0.7em; color: #666;">https://github.com/jquense/yup</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP SCHEMA</h2>
+					<p class="ztu-orange">Створення схеми валідації</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-8|4|5|6-8|3-9">import * as yup from 'yup';
+
+const schema = yup.object({
+  firstName: yup.string().required("Ім'я обов'язкове"),
+  age: yup.number().positive().integer().required(),
+  email: yup.string()
+    .email("Невірний формат email")
+    .required("Email обов'язковий"),
+}).required();</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">REACT-HOOK-FORM + YUP</h2>
+					<p class="ztu-orange">npm i @hookform/resolvers</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP RESOLVER</h2>
+					<p class="ztu-orange">Інтеграція з React Hook Form</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|10-12|5-7">import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+const schema = yup.object({
+  firstName: yup.string().required("Ім'я обов'язкове"),
+}).required();
+
+export function App() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  return (
+    &lt;form onSubmit={handleSubmit(data =&gt; console.log(data))}&gt;
+      &lt;input {...register("firstName")} /&gt;
+      &lt;p&gt;{errors.firstName?.message}&lt;/p&gt;
+      &lt;input type="submit" /&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">YUP МЕТОДИ ВАЛІДАЦІЇ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>string()</strong> - рядок (min, max, email, url, matches)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>number()</strong> - число (min, max, positive, integer)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>boolean()</strong> - логічне значення</li>
+						<li class="fragment fade-in-then-semi-out"><strong>date()</strong> - дата (min, max)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>array()</strong> - масив (min, max, of)</li>
+						<li class="fragment fade-in-then-semi-out"><strong>object()</strong> - об'єкт (shape)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">ПЕРЕВАГИ YUP + RHF</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Декларативна валідація</li>
+						<li class="fragment fade-in-then-semi-out">Перевикористання схем</li>
+						<li class="fragment fade-in-then-semi-out">TypeScript підтримка</li>
+						<li class="fragment fade-in-then-semi-out">Єдине джерело правди для валідації</li>
+					</ul>
+				</section>
+
+				<!-- ПРАКТИЧНИЙ ПРИКЛАД -->
+
+				<section>
+					<h2 class="ztu-blue">ПРАКТИКА</h2>
+					<p class="ztu-orange">Повна форма реєстрації</p>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">СХЕМА ВАЛІДАЦІЇ</h2>
+					<pre><code class="javascript" data-line-numbers="|1-14">const registrationSchema = yup.object({
+  firstName: yup.string()
+    .required("Ім'я обов'язкове")
+    .min(2, "Мінімум 2 символи"),
+  email: yup.string()
+    .email("Невірний email")
+    .required("Email обов'язковий"),
+  password: yup.string()
+    .min(8, "Мінімум 8 символів")
+    .matches(/[A-Z]/, "Має містити велику букву")
+    .matches(/[0-9]/, "Має містити цифру")
+    .required("Пароль обов'язковий"),
+  terms: yup.boolean().oneOf([true], "Прийміть умови")
+}).required();</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТ ФОРМИ</h2>
+					<pre><code class="javascript" data-line-numbers="|1-6|8-11">export function RegistrationForm() {
+  const { register, handleSubmit, formState } = useForm({
+    resolver: yupResolver(registrationSchema),
+    mode: 'onChange'
+  });
+  const { errors, isSubmitting, isValid } = formState;
+
+  const onSubmit = async (data) => {
+    await fetch('/api/register', { method: 'POST', body: JSON.stringify(data) });
+    alert('Реєстрація успішна!');
+  };
+
+  return (/* JSX */);
+}</code></pre>
+				</section>
+
+				<section>
+					<h2 class="ztu-blue">JSX ФОРМИ</h2>
+					<pre><code class="javascript" data-line-numbers="2-8|10-15">return (
+  &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+    &lt;div&gt;
+      &lt;input {...register("firstName")} placeholder="Ім'я" /&gt;
+      {errors.firstName && (
+        &lt;span className="error"&gt;{errors.firstName.message}&lt;/span&gt;
+      )}
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;input {...register("email")} placeholder="Email" /&gt;
+      {errors.email && (
+        &lt;span className="error"&gt;{errors.email.message}&lt;/span&gt;
+      )}
+    &lt;/div&gt;
+  {/* ... */}
+  &lt;/form&gt;
+);</code></pre>
+				</section>
+
+
+				<section>
+					<h2 class="ztu-blue">РЕЗУЛЬТАТ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Валідація в реальному часі</li>
+						<li class="fragment fade-in-then-semi-out">Зрозумілі повідомлення про помилки</li>
+						<li class="fragment fade-in-then-semi-out">Контроль стану кнопки</li>
+						<li class="fragment fade-in-then-semi-out">Мінімум бойлерплейт коду</li>
+						<li class="fragment fade-in-then-semi-out">Легко підтримувати і масштабувати</li>
+					</ul>
+				</section>
+
+				<!-- Question Slide -->
+	<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 6</h1>
+					<p class="ztu-orange">REACT FORMS, YUP, REACT-HOOK-FORM</p>
+					<p style="margin-top: 50px; font-size: 0.8em; color: #666;">Дякую за увагу!</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				progress: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
