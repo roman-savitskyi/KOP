@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>КОП</title>
+		<title>React Context та State Managers</title>
 
 		<link rel="stylesheet" href="reveal.css">
 		<link rel="stylesheet" href="theme/ztu.css">
@@ -20,558 +20,526 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<h2 class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</h2>
-					<div class="flex flex-jb" style="align-items: end; margin-top: 100px;">
-						<div class="flex">
-							<!-- ZTU Logo placeholder -->
-						</div>
-						<div>
-							<h3 class="ztu-orange" style="font-weight: bold;">JS</h3>
-						</div>
-					</div>
+					<h1 class="ztu-blue">КОП. ЛЕКЦІЯ 9</h1>
+					<p class="ztu-orange">REACT CONTEXT ТА STATE MANAGERS</p>
 				</section>
 
-				<!-- React Logo -->
+				<!-- Проблема -->
 				<section>
-					<div class="flex" style="justify-content: center; align-items: center; height: 100vh;">
-						<svg style="width: 300px; height: 300px; color: #61dafb;" viewBox="0 0 841.9 595.3">
-							<g fill="currentColor">
-								<path d="m666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9v-22.3c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6v-22.3c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.2 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zm-101.4 106.7c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24s9.5 15.8 14.4 23.4zm73.9-208.1c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6s22.9-35.6 58.3-50.6c8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zm53.8 142.9c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6z"/>
-								<circle cx="420.9" cy="296.5" r="45.7"/>
-							</g>
-						</svg>
-					</div>
+					<h2 class="ztu-blue">ПРОБЛЕМА PROP DRILLING</h2>
+					<p class="ztu-orange">Передача пропсів через багато рівнів</p>
 				</section>
 
-				<!-- Roadmap -->
+				<!-- Prop Drilling приклад -->
 				<section>
-					<h2 class="ztu-blue">ROADMAP</h2>
-					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
-					<div class="flex" style="justify-content: center; align-items: center; height: 400px; background: #f8f9fa; border-radius: 10px;">
-						<div style="color: #999; font-size: 2em;">📄</div>
-					</div>
+					<h2 class="ztu-blue">PROP DRILLING</h2>
+					<pre><code class="jsx" data-line-numbers="|1-3|5-7|9-11">&lt;App user={user}&gt;
+  &lt;Header user={user}&gt;
+    &lt;UserMenu user={user}&gt;
+      &lt;Avatar user={user} /&gt;
+    &lt;/UserMenu&gt;
+  &lt;/Header&gt;
+  &lt;Main user={user}&gt;
+    &lt;Profile user={user} /&gt;
+  &lt;/Main&gt;
+&lt;/App&gt;</code></pre>
 				</section>
 
-				<!-- Empty slide for transitions -->
+				<!-- React Context -->
 				<section>
-					<div style="height: 100vh;"></div>
+					<h2 class="ztu-blue">REACT CONTEXT</h2>
+					<p class="ztu-orange">Вбудований механізм глобального стану</p>
 				</section>
 
-				<!-- Hobbit image slide -->
+				<!-- createContext -->
 				<section>
-					<div class="flex bg-ztu-blue" style="justify-content: center; align-items: center; height: 100vh;">
-						<div style="text-align: center; color: white;">
-							<h2>🏔️</h2>
-							<p style="font-style: italic;">Beautiful landscape placeholder</p>
-						</div>
-					</div>
-				</section>
+					<h2 class="ztu-blue">CREATECONTEXT</h2>
+					<p class="ztu-orange">Створення контексту</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-6">import { createContext } from 'react';
 
-				<!-- Методи життєвого циклу -->
-				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
-				</section>
-
-				<!-- useEffect -->
-				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<h3 class="ztu-orange">useEffect</h3>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
-				</section>
-
-				<!-- Умовний рендеринг -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-				</section>
-
-				<!-- Зберігання в змінну -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<h3 class="ztu-orange">Зберігання в змінну</h3>
-					<pre><code class="javascript">export function idNumber(props) {
-  const { id } = props;
-  let message;
-
-  if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
-  } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
-  }
-
-  return (
-    &lt;&gt;
-      {message}
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- JS like. If-else or ternary -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<h3 class="ztu-orange">JS like. If-else or ternary</h3>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : &lt;p&gt;{props.children}&lt;/p&gt;
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- return null -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<h3 class="ztu-orange">return null</h3>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : null
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- Списки та ключі -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
-				</section>
-
-				<!-- Christmas list image -->
-				<section>
-					<div class="flex" style="justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #fd79a8, #e84393);">
-						<div style="text-align: center; color: white;">
-							<h2>🎄🎁</h2>
-							<p style="font-style: italic; font-size: 1.5em;">Christmas Wish List</p>
-							<p style="font-style: italic;">Old School Vinyl Records<br/>Turntables<br/>DJ Headphones<br/>Bling<br/>Diamond Grill<br/>...</p>
-						</div>
-					</div>
-				</section>
-
-				<!-- Списки -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Списки - animation steps -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<div class="fragment">
-						<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">const listItems = numbers.map((number) =></code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">  &lt;li&gt;{number}&lt;/li&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">);</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- На вхід може бути масив елементів -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<h3 class="ztu-orange">На вхід може бути масив елементів</h3>
-				</section>
-
-				<!-- Ключ є обов'язковим -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<ul class="ztu-list">
-						<li>На вхід може бути масив елементів</li>
-						<li class="fragment">Ключ є обов'язковим</li>
-					</ul>
-				</section>
-
-				<!-- Ключі -->
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Ключі - animation steps -->
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<div class="fragment">
-						<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">const listItems = numbers.map((number) =></code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">);</code></pre>
-					</div>
-					<div class="fragment">
-						<pre><code class="javascript">&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					</div>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Ключі rules -->
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li class="fragment">Стабільна ідентичність</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li>Стабільна ідентичність</li>
-						<li class="fragment">Ключ унікальний в межах списку</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li>Стабільна ідентичність</li>
-						<li>Ключ унікальний в межах списку</li>
-						<li class="fragment">Ключі є рядковими</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li>Стабільна ідентичність</li>
-						<li>Ключ унікальний в межах списку</li>
-						<li>Ключі є рядковими</li>
-						<li class="fragment">Ключ застосовується для елементів масиву, а не до тегів</li>
-					</ul>
-				</section>
-
-				<!-- Index as key question -->
-				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<div class="flex" style=" justify-content: center; align-items: center; height: 400px; background: linear-gradient(135deg, #fdcb6e, #e17055);">
-						<div style="text-align: center; color: white;">
-							<h2>🤔😿</h2>
-							<p style="font-style: italic; font-size: 1.2em;">Confused Cat Says:</p>
-							<p style="font-style: italic;">"Should I use index as key?"</p>
-						</div>
-					</div>
-				</section>
-
-				<!-- Index as key article -->
-				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				</section>
-
-				<!-- Empty slide -->
-				<section>
-					<div class="flex" style=" justify-content: center; align-items: center; height: 100vh; background: #f8f9fa;">
-						<div style="color: #999; font-size: 2em;">📄</div>
-					</div>
-				</section>
-
-				<!-- Віртуалізований список -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
-					<div style="border: 1px solid #ccc; padding: 20px; background: white; font-family: monospace; font-size: 0.6em;">
-						<div style="background: #f5f5f5; padding: 10px; margin-bottom: 10px;">
-							react virtualized COMPONENTS WIZARD SOURCE DOCUMENTATION ISSUES
-						</div>
-						<div style="margin-bottom: 10px;">
-							COLLECTION GRID LIST MASONRY TABLE<br/>
-							ARROWKEYSTEPPER AUTOSIZER CELLMEASURER COLUMNSIZER INFINITELOADER MULTIGRID SCROLLSYNC<br/>
-							WINDOWSCROLLER
-						</div>
-						<div>
-							ArrowKeyStepper Source | Docs<br/>
-							This high-order component decorates a List, Table, or Grid and responds to arrow-key events...
-						</div>
-						<div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; margin-top: 10px;">
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:0</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:1</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:2</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:3</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:4</div>
-							<div style="border: 1px solid #ddd; padding: 5px; text-align: center;">r:0, c:5</div>
-						</div>
-					</div>
-				</section>
-
-				<!-- Віртуалізований список rules -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li class="fragment">MutationObserver</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li>MutationObserver</li>
-						<li class="fragment">Активна робота з VirtualDOM</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li>MutationObserver</li>
-						<li>Активна робота з VirtualDOM</li>
-						<li class="fragment">Велике покращення швидкодії продукту</li>
-					</ul>
-				</section>
-
-				<!-- Бандлінг -->
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li class="fragment">Webpack</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li>Webpack</li>
-						<li class="fragment">Rollup</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li>Webpack</li>
-						<li>Rollup</li>
-						<li class="fragment">Parcel</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li>Webpack</li>
-						<li>Rollup</li>
-						<li>Parcel</li>
-						<li class="fragment">Vite</li>
-					</ul>
-				</section>
-
-				<!-- Webpack -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li class="fragment">Створення єдиної точки входу</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li>Створення єдиної точки входу</li>
-						<li class="fragment">Процес мініфікації, агліфікації та об'єднання</li>
-					</ul>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li>Створення єдиної точки входу</li>
-						<li>Процес мініфікації, агліфікації та об'єднання</li>
-						<li class="fragment">Webpack-bundle-analyzer</li>
-					</ul>
-				</section>
-
-				<!-- Webpack Bundle Analyzer -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
-					<div style="border: 1px solid #ccc; padding: 20px; background: white;">
-						<div class="algorithms-diagram" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; height: 300px;">
-							<div class="flex bg-ztu-red" style="flex-direction: column; padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">1.c537096ae6015405db12.chunk.js</div>
-								<div style="font-size: 0.6em;">node_modules</div>
-								<div class="flex" style="background: #ffaa99; flex: 1; margin: 5px 0; align-items: center; justify-content: center; font-weight: bold;">aws-sdk.js</div>
-								<div class="flex" style="background: #ffbb99; height: 40px; align-items: center; justify-content: center;">tinymce.js</div>
-							</div>
-							<div class="bg-ztu-green" style="padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">4.189f5365eba08e19f99.chunk.js</div>
-								<div class="flex" style="background: #aaffaa; height: 200px; align-items: center; justify-content: center;">aws-sdk.js</div>
-								<div class="flex" style="background: #bbffbb; height: 50px; align-items: center; justify-content: center; font-size: 0.8em;">material.es5.js</div>
-							</div>
-							<div class="bg-ztu-blue" style="padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">vendor.e38aa6adc099116b12.bundle.js</div>
-								<div class="flex" style="background: #aaaaff; height: 100px; align-items: center; justify-content: center;">core.es5.js</div>
-								<div class="flex" style="background: #bbbbff; height: 130px; align-items: center; justify-content: center;">material.es5.js</div>
-							</div>
-							<div class="bg-ztu-orange" style="padding: 10px;">
-								<div style="font-weight: bold; font-size: 0.8em;">0.874eaae92ca756e5219.chunk.js</div>
-								<div class="flex" style="background: #ffffaa; height: 250px; align-items: center; justify-content: center;">material.es5.js</div>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<!-- Import -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-				</section>
-
-				<!-- Статичний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Статичний імпорт</h3>
-					<pre><code class="javascript">import { add } from './math';
-console.log(add(16, 26));</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт</h3>
-					<pre><code class="javascript">import("./math").then(math => {
-  console.log(math.add(16, 26));
+const ThemeContext = createContext({
+  theme: 'light',
+  toggleTheme: () => {}
 });</code></pre>
 				</section>
 
-				<!-- Динамічний імпорт babel -->
+				<!-- Provider -->
 				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
+					<h2 class="ztu-blue">PROVIDER</h2>
+					<p class="ztu-orange">Надання значення контексту</p>
+					<pre><code class="jsx" data-line-numbers="|1-2|4-10|12-14">const ThemeProvider = ({ children }) =&gt; {
+  const [theme, setTheme] = useState('light');
+
+  const value = {
+    theme,
+    toggleTheme: () =&gt; setTheme(
+      prev =&gt; prev === 'light' ? 'dark' : 'light'
+    )
+  };
+
+  return (
+    &lt;ThemeContext.Provider value={value}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+  );
+};</code></pre>
 				</section>
 
-				<!-- Export -->
+				<!-- useContext -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
+					<h2 class="ztu-blue">USECONTEXT</h2>
+					<p class="ztu-orange">Споживання контексту в компоненті</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|6">import { useContext } from 'react';
+
+const ThemedButton = () =&gt; {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return &lt;button onClick={toggleTheme}&gt;{theme}&lt;/button&gt;;
+};</code></pre>
 				</section>
 
-				<!-- Іменований експорт -->
+				<!-- Context обмеження -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Іменований експорт</h3>
-					<pre><code class="javascript">export { myFunction };
-export const foo = Math.sqrt(2);</code></pre>
+					<h2 class="ztu-blue">CONTEXT ОБМЕЖЕННЯ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Re-render всіх споживачів при зміні</li>
+						<li class="fragment fade-in">Немає вбудованого кешування</li>
+						<li class="fragment fade-in">Складна оптимізація</li>
+						<li class="fragment fade-in">Немає DevTools</li>
+					</ul>
 				</section>
 
-				<!-- Дефолтний експорт -->
+				<!-- Коли потрібен State Manager -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт</h3>
-					<pre><code class="javascript">export default function() {}</code></pre>
+					<h2 class="ztu-blue">КОЛИ ПОТРІБЕН STATE MANAGER?</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Складна бізнес-логіка</li>
+						<li class="fragment fade-in">Часті оновлення стану</li>
+						<li class="fragment fade-in">Потреба в DevTools та time-travel</li>
+						<li class="fragment fade-in">Серверний стан (caching, sync)</li>
+					</ul>
 				</section>
 
-				<!-- Дефолтний експорт єдиний на скрипт -->
+				<!-- State Managers огляд -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт єдиний на скрипт</h3>
+					<h2 class="ztu-blue">STATE MANAGERS</h2>
+					<p class="ztu-orange">Огляд популярних рішень</p>
 				</section>
 
-				<!-- Tree Shaking -->
+				<!-- Redux Toolkit -->
 				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<div class="flex" style="justify-content: center; align-items: center; height: 400px; background: linear-gradient(135deg, #a29bfe, #6c5ce7);">
-						<div style="text-align: center; color: white; border: 3px solid white; padding: 40px; border-radius: 15px;">
-							<h2 style="font-size: 2em; margin: 0;">ТУТ МОЖЕ БУТИ</h2>
-							<h2 style="font-size: 2em; margin: 0;">ВАША РЕКЛАМА</h2>
-						</div>
-					</div>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">Офіційний стандарт для Redux</p>
 				</section>
 
-				<!-- React Lazy -->
+				<!-- Redux Toolkit особливості -->
 				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<div class="flex" style="justify-content: center; align-items: center; height: 400px; background: linear-gradient(135deg, #55a3ff, #003d82);">
-						<div style="text-align: center; color: white; border: 3px solid white; padding: 40px; border-radius: 15px;">
-							<h2 style="font-size: 2em; margin: 0;">ТУТ МОЖЕ БУТИ</h2>
-							<h2 style="font-size: 2em; margin: 0;">ВАША РЕКЛАМА</h2>
-						</div>
-					</div>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Flux архітектура</li>
+						<li class="fragment fade-in">Single source of truth</li>
+						<li class="fragment fade-in">Immutable updates (Immer)</li>
+						<li class="fragment fade-in">Redux DevTools</li>
+						<li class="fragment fade-in">RTK Query для API</li>
+					</ul>
 				</section>
 
-				<!-- ШО? ШО? -->
+				<!-- Redux Toolkit - createSlice -->
 				<section>
-					<h2 style="color: #666; font-size: 3em; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);">ШО? ШО?</h2>
-					<div class="flex bg-ztu-orange" style="justify-content: center; align-items: center; height: 400px;">
-						<div style="text-align: center; color: #2d3436;">
-							<h2 style="font-size: 4em; margin: 0;">❓❓</h2>
-							<p style="font-style: italic; font-size: 1.5em;">Question Cards</p>
-							<div class="flex" style="gap: 20px; justify-content: center; margin-top: 20px;">
-								<div class="flex" style="width: 80px; height: 120px; background: white; border-radius: 10px; align-items: center; justify-content: center; font-size: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">?</div>
-								<div class="flex" style="width: 80px; height: 120px; background: white; border-radius: 10px; align-items: center; justify-content: center; font-size: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">?</div>
-								<div class="flex" style="width: 80px; height: 120px; background: white; border-radius: 10px; align-items: center; justify-content: center; font-size: 2em; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">?</div>
-							</div>
-						</div>
-					</div>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">createSlice</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-15|7-14">import { createSlice } from '@reduxjs/toolkit';
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: { value: 0 },
+  reducers: {
+    increment: state =&gt; {
+      state.value += 1; // Immer дозволяє мутації
+    },
+    decrement: state =&gt; {
+      state.value -= 1;
+    },
+    incrementByAmount: (state, action) =&gt; {
+      state.value += action.payload;
+    }
+  }
+});</code></pre>
 				</section>
 
-				<!-- Final empty slide -->
+				<!-- Redux Toolkit - configureStore -->
 				<section>
-					<div style="height: 100vh;"></div>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">configureStore</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-7">import { configureStore } from '@reduxjs/toolkit';
+
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer
+  }
+});</code></pre>
 				</section>
+
+				<!-- Redux Toolkit - useSelector/useDispatch -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">React hooks</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|5|8">import { useSelector, useDispatch } from 'react-redux';
+
+const Counter = () =&gt; {
+  const count = useSelector(state =&gt; state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    &lt;button onClick={() =&gt; dispatch(increment())}&gt;
+      {count}
+    &lt;/button&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- Zustand -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Мінімалістичний state manager</p>
+				</section>
+
+				<!-- Zustand особливості -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Простий API (один hook)</li>
+						<li class="fragment fade-in">Малий розмір (~1KB)</li>
+						<li class="fragment fade-in">Без boilerplate</li>
+						<li class="fragment fade-in">Працює поза React</li>
+						<li class="fragment fade-in">Підтримує middleware</li>
+					</ul>
+				</section>
+
+				<!-- Zustand - create store -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Створення store</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-11|5-10">import { create } from 'zustand';
+
+const useStore = create((set) =&gt; ({
+  count: 0,
+  increment: () =&gt; set(state =&gt; ({
+    count: state.count + 1
+  })),
+  decrement: () =&gt; set(state =&gt; ({
+    count: state.count - 1
+  })),
+  reset: () =&gt; set({ count: 0 })
+}));</code></pre>
+				</section>
+
+				<!-- Zustand - використання -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Використання в компоненті</p>
+					<pre><code class="javascript" data-line-numbers="|1-2|5-6">const Counter = () =&gt; {
+  const { count, increment, decrement } = useStore();
+
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{count}&lt;/span&gt;
+      &lt;button onClick={increment}&gt;+&lt;/button&gt;
+      &lt;button onClick={decrement}&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- MobX -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<p class="ztu-orange">Reactive state management</p>
+				</section>
+
+				<!-- MobX особливості -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Observable state</li>
+						<li class="fragment fade-in">Автоматичне відстеження залежностей</li>
+						<li class="fragment fade-in">Мутабельний підхід</li>
+						<li class="fragment fade-in">Computed values</li>
+						<li class="fragment fade-in">Actions для змін</li>
+					</ul>
+				</section>
+
+				<!-- MobX - store -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<p class="ztu-orange">Створення store</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-4|6-8|10-12">import { makeAutoObservable } from 'mobx';
+
+class CounterStore {
+  count = 0;
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  increment() {
+    this.count += 1;
+  }
+
+  decrement() {
+    this.count -= 1;
+  }
+}
+
+const counterStore = new CounterStore();</code></pre>
+				</section>
+
+				<!-- MobX - observer -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<p class="ztu-orange">Observer компонент</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-11">import { observer } from 'mobx-react-lite';
+
+const Counter = observer(() =&gt; (
+  &lt;div&gt;
+    &lt;span&gt;{counterStore.count}&lt;/span&gt;
+    &lt;button onClick={() =&gt; counterStore.increment()}&gt;
+      +
+    &lt;/button&gt;
+  &lt;/div&gt;
+));</code></pre>
+				</section>
+
+				<!-- Recoil -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<p class="ztu-orange">Атомарний state manager від Meta</p>
+				</section>
+
+				<!-- Recoil особливості -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Atoms - одиниці стану</li>
+						<li class="fragment fade-in">Selectors - derived state</li>
+						<li class="fragment fade-in">React-first підхід</li>
+						<li class="fragment fade-in">Concurrent Mode support</li>
+						<li class="fragment fade-in">Experimental від Meta</li>
+					</ul>
+				</section>
+
+				<!-- Recoil - atom -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<p class="ztu-orange">Atom</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-6|8-11">import { atom, selector } from 'recoil';
+
+const countState = atom({
+  key: 'countState',
+  default: 0
+});
+
+const doubledCount = selector({
+  key: 'doubledCount',
+  get: ({ get }) =&gt; get(countState) * 2
+});</code></pre>
+				</section>
+
+				<!-- Recoil - hooks -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<p class="ztu-orange">Hooks</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|5|8">import { useRecoilState, useRecoilValue } from 'recoil';
+
+const Counter = () =&gt; {
+  const [count, setCount] = useRecoilState(countState);
+  const doubled = useRecoilValue(doubledCount);
+
+  return (
+    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+      {count} (doubled: {doubled})
+    &lt;/button&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- Vue State Managers -->
+				<section>
+					<h2 class="ztu-blue">VUE STATE MANAGERS</h2>
+					<p class="ztu-orange">VueX та Pinia</p>
+				</section>
+
+				<!-- VueX -->
+				<section>
+					<h2 class="ztu-blue">VUEX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Офіційний state manager для Vue 2/3</li>
+						<li class="fragment fade-in">Flux-подібна архітектура</li>
+						<li class="fragment fade-in">State, Mutations, Actions, Getters</li>
+						<li class="fragment fade-in">Modules для масштабування</li>
+					</ul>
+				</section>
+
+				<!-- VueX приклад -->
+				<section>
+					<h2 class="ztu-blue">VUEX</h2>
+					<p class="ztu-orange">Store</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-16|5|6-8|9-11">import { createStore } from 'vuex';
+
+const store = createStore({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment(state) {
+      state.count++;
+    }
+  },
+  actions: {
+    incrementAsync({ commit }) {
+      setTimeout(() =&gt; commit('increment'), 1000);
+    }
+  }
+});</code></pre>
+				</section>
+
+				<!-- Pinia -->
+				<section>
+					<h2 class="ztu-blue">PINIA</h2>
+					<p class="ztu-orange">Новий стандарт для Vue 3</p>
+				</section>
+
+				<!-- Pinia особливості -->
+				<section>
+					<h2 class="ztu-blue">PINIA</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Простіший API ніж VueX</li>
+						<li class="fragment fade-in">TypeScript підтримка</li>
+						<li class="fragment fade-in">Без mutations (тільки actions)</li>
+						<li class="fragment fade-in">DevTools інтеграція</li>
+						<li class="fragment fade-in">Модульна архітектура</li>
+					</ul>
+				</section>
+
+				<!-- Pinia приклад -->
+				<section>
+					<h2 class="ztu-blue">PINIA</h2>
+					<p class="ztu-orange">defineStore</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-14|4|5-7|8-13">import { defineStore } from 'pinia';
+
+export const useCounterStore = defineStore('counter', {
+  state: () =&gt; ({ count: 0 }),
+  getters: {
+    doubled: (state) =&gt; state.count * 2
+  },
+  actions: {
+    increment() {
+      this.count++;
+    },
+    async incrementAsync() {
+      await delay(1000);
+      this.count++;
+    }
+  }
+});</code></pre>
+				</section>
+
+				<!-- Jotai -->
+				<section>
+					<h2 class="ztu-blue">JOTAI</h2>
+					<p class="ztu-orange">Примітивний та гнучкий state manager</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Атомарний підхід (як Recoil)</li>
+						<li class="fragment fade-in">Мінімалістичний API</li>
+						<li class="fragment fade-in">Bottom-up підхід</li>
+						<li class="fragment fade-in">TypeScript-first</li>
+					</ul>
+				</section>
+
+				<!-- Jotai приклад -->
+				<section>
+					<h2 class="ztu-blue">JOTAI</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|1|3|5-7">import { atom, useAtom } from 'jotai';
+
+const countAtom = atom(0);
+
+const Counter = () =&gt; {
+  const [count, setCount] = useAtom(countAtom);
+  return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;;
+};</code></pre>
+				</section>
+
+				<!-- Порівняння -->
+				<section>
+					<h2 class="ztu-blue">ПОРІВНЯННЯ</h2>
+					<p class="ztu-orange">Коли що використовувати?</p>
+				</section>
+
+				<!-- Таблиця порівняння -->
+				<section>
+					<h2 class="ztu-blue">ПОРІВНЯННЯ</h2>
+					<table style="font-size: 0.6em;">
+						<thead>
+							<tr>
+								<th>Рішення</th>
+								<th>Розмір</th>
+								<th>Складність</th>
+								<th>Use Case</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td>Context</td>
+								<td>0KB</td>
+								<td>Низька</td>
+								<td>Простий глобальний стан</td>
+							</tr>
+							<tr class="fragment">
+								<td>Zustand</td>
+								<td>~1KB</td>
+								<td>Низька</td>
+								<td>Малі/середні проекти</td>
+							</tr>
+							<tr class="fragment">
+								<td>Redux Toolkit</td>
+								<td>~11KB</td>
+								<td>Середня</td>
+								<td>Enterprise проекти</td>
+							</tr>
+							<tr class="fragment">
+								<td>MobX</td>
+								<td>~16KB</td>
+								<td>Середня</td>
+								<td>Reactive patterns</td>
+							</tr>
+							<tr class="fragment">
+								<td>Recoil/Jotai</td>
+								<td>~20KB/~3KB</td>
+								<td>Низька</td>
+								<td>Атомарний стан</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Рекомендації -->
+				<section>
+					<h2 class="ztu-blue">РЕКОМЕНДАЦІЇ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in"><strong>Малий проект:</strong> Context або Zustand</li>
+						<li class="fragment fade-in"><strong>Середній проект:</strong> Zustand або Redux Toolkit</li>
+						<li class="fragment fade-in"><strong>Enterprise:</strong> Redux Toolkit</li>
+						<li class="fragment fade-in"><strong>Reactive:</strong> MobX</li>
+						<li class="fragment fade-in"><strong>Vue:</strong> Pinia (Vue 3) або VueX (Vue 2)</li>
+					</ul>
+				</section>
+
+				<!-- Питання -->
+				<section>
+					<h1 class="ztu-orange">ПИТАННЯ?</h1>
+				</section>
+
 			</div>
 		</div>
 
@@ -580,14 +548,9 @@ export const foo = Math.sqrt(2);</code></pre>
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
 		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
 				progress: true,
-
-				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
 		</script>

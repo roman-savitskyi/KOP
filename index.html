@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>КОП</title>
+		<title>React Context та State Managers</title>
 
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/ztu.css">
@@ -20,513 +20,689 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+					<h1 class="ztu-blue">КОП. ЛЕКЦІЯ 9</h1>
+					<p class="ztu-orange">REACT CONTEXT ТА STATE MANAGERS</p>
 				</section>
 
-				<!-- Roadmap -->
+				<!-- Prop Drilling приклад -->
 				<section>
-					<h2 class="ztu-blue">ROADMAP</h2>
-					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
-						<iframe data-src="https://miro.com/app/board/o9J_lVQm6fI=" data-preload width="800" height="600"></iframe>
+										<h2 class="ztu-blue">ПРОБЛЕМА PROP DRILLING</h2>
+					<p class="ztu-orange">Передача пропсів через багато рівнів</p>
+					<pre><code class="jsx">&lt;App user={user}&gt;
+  &lt;Header user={user}&gt;
+    &lt;UserMenu user={user}&gt;
+      &lt;Avatar user={user} /&gt;
+    &lt;/UserMenu&gt;
+  &lt;/Header&gt;
+  &lt;Main user={user}&gt;
+    &lt;Profile user={user} /&gt;
+  &lt;/Main&gt;
+&lt;/App&gt;</code></pre>
 				</section>
 
-				<!-- useEffect -->
+				<!-- React Context -->
 				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<p class="ztu-orange fragment fade-in-then-semi-out">useEffect</p>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
+					<h2 class="ztu-blue">REACT CONTEXT</h2>
+					<p class="ztu-orange">Вбудований механізм глобального стану</p>
 				</section>
 
-				<!-- Умовний рендеринг -->
+				<!-- createContext -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-				</section>
+					<h2 class="ztu-blue">CREATECONTEXT</h2>
+					<p class="ztu-orange">Створення контексту</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-6">import { createContext } from 'react';
 
-				<!-- Зберігання в змінну -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">Зберігання в змінну</p>
-					<pre><code class="javascript">export function IdNumber(props) {
-  const { id } = props;
-  let message;
-
-  if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
-  } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
-  }
-
-  return (
-    &lt;&gt;
-      {message}
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- JS like. If-else or ternary -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">JS like. If-else or ternary</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : &lt;p&gt;{props.children}&lt;/p&gt;
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- return null -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">return null</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : null
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- Списки та ключі -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
-				</section>
-
-				<!-- Списки -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Списки - з підсвіткою рядків -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Ключ є обов'язковим -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">На вхід може бути масив елементів</li>
-						<li class="fragment fade-in-then-semi-out">Ключ є обов'язковим</li>
-					</ul>
-				</section>
-
-				<!-- Ключі - з підсвіткою рядків -->
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Стабільна ідентичність</li>
-						<li class="fragment fade-in-then-semi-out">Ключ унікальний в межах списку</li>
-						<li class="fragment fade-in-then-semi-out">Ключі є рядковими</li>
-						<li class="fragment fade-in-then-semi-out">Ключ застосовується для елементів масиву, а не до тегів</li>
-					</ul>
-				</section>
-
-				<!-- Index as key article -->
-				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				<iframe data-src="https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318" data-preload width="800" height="600"></iframe>
-				</section>
-				<!-- Віртуалізований список -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
-					<iframe data-src="https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper" data-preload width="800" height="600"></iframe>
-				
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">MutationObserver</li>
-						<li class="fragment fade-in-then-semi-out">Активна робота з VirtualDOM</li>
-						<li class="fragment fade-in-then-semi-out">Велике покращення швидкодії продукту</li>
-					</ul>
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Webpack</li>
-						<li class="fragment fade-in-then-semi-out">Rollup</li>
-						<li class="fragment fade-in-then-semi-out">Parcel</li>
-						<li class="fragment fade-in-then-semi-out">Vite</li>
-					</ul>
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Створення єдиної точки входу</li>
-						<li class="fragment fade-in-then-semi-out">Процес мініфікації, агліфікації та об'єднання</li>
-						<li class="fragment fade-in-then-semi-out">Webpack-bundle-analyzer</li>
-					</ul>
-				</section>
-
-				<!-- Webpack Bundle Analyzer -->
-				<section>
-					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
-					<iframe data-src="https://blog.bitsrc.io/6-tools-and-techniques-to-analyze-webpack-bundle-size-817337f8cf91" data-preload width="800" height="600"></iframe>
-				
-					
-				</section>
-
-				<!-- Vite -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-				</section>
-
-				<!-- Vite vs Webpack -->
-				<section>
-					<h2 class="ztu-blue">VITE vs WEBPACK</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
-						<div>
-							<h3 class="ztu-orange">Webpack</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Повільний старт (bundling)</li>
-								<li class="">Конфігурація складна</li>
-								<li class="">HMR повільний</li>
-								<li class="">Великий ecosystem</li>
-							</ul>
-						</div>
-						<div>
-							<h3 class="ztu-orange">Vite</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Швидкий старт (ESM)</li>
-								<li class="">Zero-config</li>
-								<li class="">Миттєвий HMR</li>
-								<li class="">Rollup під капотом</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Vite особливості -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">ESM в Dev режимі</li>
-						<li class="fragment fade-in-then-semi-out">esbuild для TypeScript</li>
-						<li class="fragment fade-in-then-semi-out">Rollup для Production</li>
-						<li class="fragment fade-in-then-semi-out">Плагіни сумісні з Rollup</li>
-					</ul>
-				</section>
-
-				<!-- Vite команди -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<h3 class="ztu-orange">Команди</h3>
-					<pre><code class="bash"># Створити проект
-npm create vite@latest my-react-app
-# Запустити dev сервер
-npm run dev
-# Збірка для продакшну
-npm run build</code></pre>
-				</section>
-
-				<!-- Import -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-				</section>
-
-				<!-- Статичний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Статичний імпорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-2|3-4|5-6">// Іменований імпорт
-import { add, subtract } from './math';
-// Дефолтний імпорт
-import Calculator from './Calculator';
-// Комбінований імпорт
-import React, { useState, useEffect } from 'react';</code></pre>
-				</section>
-
-				<!-- Import всього модуля -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Import всього модуля</h3>
-					<pre><code class="javascript" data-line-numbers="|2">// Імпорт всього як об'єкт
-import * as Math from './math';
-console.log(Math.add(16, 26));</code></pre>
-				</section>
-
-				<!-- Aliasing та Side Effects -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Aliasing та Side Effects</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-5|">// Перейменування імпорту
-import { add as sum } from './math';
-// Side effects (без імпорту)
-import './styles.css';
-import 'react-toastify/dist/ReactToastify.css';</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт</h3>
-					<pre><code class="javascript">import("./math").then(math => {
-  console.log(math.add(16, 26));
+const ThemeContext = createContext({
+  theme: 'light',
+  toggleTheme: () => {}
 });</code></pre>
 				</section>
 
-				<!-- Динамічний імпорт babel -->
+				<!-- Provider -->
 				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
-				</section>
+					<h2 class="ztu-blue">PROVIDER</h2>
+					<p class="ztu-orange">Надання значення контексту</p>
+					<pre><code class="jsx" data-line-numbers="|1-2|4-10|12-14">const ThemeProvider = ({ children }) =&gt; {
+  const [theme, setTheme] = useState('light');
 
-				<!-- Export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-				</section>
+  const value = {
+    theme,
+    toggleTheme: () =&gt; setTheme(
+      prev =&gt; prev === 'light' ? 'dark' : 'light'
+    )
+  };
 
-				<!-- Іменований експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Іменований експорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-3|4-5|">// Експорт під час оголошення
-export const PI = 3.14159;
-export function add(a, b) { return a + b; }
-// Експорт існуючих змінних
-export { myFunction, anotherVar };</code></pre>
-				</section>
-
-				<!-- Дефолтний експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт</h3>
-					<pre><code class="javascript" >// Функція
-export default function Calculator() {}
-// Клас
-export default class MyClass {}
-// Значення
-export default 42;</code></pre>
-				</section>
-
-				<!-- Re-export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Re-export (Переекспорт)</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// Переекспорт всього
-export * from './math';
-// Переекспорт конкретних функцій
-export { add, subtract } from './math';
-// Переекспорт з перейменуванням
-export { default as Calculator } from './Calculator';</code></pre>
-				</section>
-
-				<!-- CommonJS vs ESM -->
-				<section>
-					<h2 class="ztu-blue">COMMONJS vs ESM</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h3 class="ztu-orange">CommonJS (Node.js)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-module.exports = { add };
-exports.PI = 3.14;
-
-// Import
-const { add } = require('./math');
-const math = require('./math');</code></pre>
-						</div>
-						<div>
-							<h3 class="ztu-orange">ESM (ES6 Modules)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-export { add };
-export const PI = 3.14;
-
-// Import
-import { add } from './math';
-import * as math from './math';</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-				</section>
-
-				<!-- Tree Shaking визначення -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що це таке?</h3>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Видалення невикористаного коду з бандлу</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення розміру фінального файлу</li>
-						<li class="fragment fade-in-then-semi-out">Працює тільки з ES6 модулями</li>
-						<li class="fragment fade-in-then-semi-out">Статичний аналіз import/export</li>
-					</ul>
-				</section>
-
-				<!-- Tree Shaking приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Приклад</h3>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h4 class="ztu-orange">utils.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">export function add(a, b) {
-  return a + b;
-}
-
-export function subtract(a, b) {
-  return a - b;
-}
-
-export function multiply(a, b) {
-  return a * b;
-}</code></pre>
-						</div>
-						<div>
-							<h4 class="ztu-orange">main.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Імпортуємо тільки add
-import { add } from './utils';
-
-console.log(add(2, 3));
-
-// subtract і multiply
-// НЕ потраплять в бандл!</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking поганий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що заважає Tree Shaking?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ❌ Погано - імпорт всього модуля
-import * as utils from './utils';
-
-// ❌ Погано - side effects
-import './utils'; // виконує код при імпорті
-
-// ❌ Погано - CommonJS
-const { add } = require('./utils');</code></pre>
-				</section>
-
-				<!-- Tree Shaking добрий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Як робити правильно?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ✅ Добре - іменований імпорт
-import { add, subtract } from './utils';
-
-// ✅ Добре - lodash-es замість lodash
-import { debounce } from 'lodash-es';
-
-// ✅ Добре - окремі модулі
-import debounce from 'lodash/debounce';</code></pre>
-				</section>
-
-
-				<!-- React Lazy визначення -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Code Splitting</p>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Розділення коду на окремі чанки</li>
-						<li class="fragment fade-in-then-semi-out">Завантаження компонентів по потребі</li>
-						<li class="fragment fade-in-then-semi-out">Покращення часу завантаження</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення initial bundle size</li>
-					</ul>
-				</section>
-
-				<!-- React.lazy приклад -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">React.lazy()</p>
-					<pre><code class="javascript">// Замість звичайного імпорту
-// import Dashboard from './Dashboard';
-
-// Динамічний імпорт з React.lazy
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
-  return &lt;Dashboard /&gt;;
-}</code></pre>
-				</section>
-
-				<!-- Suspense -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Suspense</p>
-					<pre><code class="javascript" >import { Suspense } from 'react';
-
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
   return (
-    &lt;Suspense fallback={&lt;div&gt;Завантаження...&lt;/div&gt;}&gt;
-      &lt;Dashboard /&gt;
-    &lt;/Suspense&gt;
+    &lt;ThemeContext.Provider value={value}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
   );
-}</code></pre>
+};</code></pre>
 				</section>
-	<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+
+				<!-- useContext -->
+				<section>
+					<h2 class="ztu-blue">USECONTEXT</h2>
+					<p class="ztu-orange">Споживання контексту в компоненті</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|6">import { useContext } from 'react';
+
+const ThemedButton = () =&gt; {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return &lt;button onClick={toggleTheme}&gt;{theme}&lt;/button&gt;;
+};</code></pre>
+				</section>
+
+				<!-- Context обмеження -->
+				<section>
+					<h2 class="ztu-blue">CONTEXT ОБМЕЖЕННЯ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Re-render всіх споживачів при зміні</li>
+						<li class="fragment fade-in">Немає вбудованого кешування</li>
+						<li class="fragment fade-in">Складна оптимізація</li>
+						<li class="fragment fade-in">Немає DevTools</li>
+					</ul>
+				</section>
+
+				<!-- Коли потрібен State Manager -->
+				<section>
+					<h2 class="ztu-blue">КОЛИ ПОТРІБЕН STATE MANAGER?</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Складна бізнес-логіка</li>
+						<li class="fragment fade-in">Часті оновлення стану</li>
+						<li class="fragment fade-in">Потреба в DevTools та time-travel</li>
+						<li class="fragment fade-in">Серверний стан (caching, sync)</li>
+					</ul>
+				</section>
+
+				<!-- State Managers огляд -->
+				<section>
+					<h2 class="ztu-blue">STATE MANAGERS</h2>
+					<p class="ztu-orange">Огляд популярних рішень</p>
+				</section>
+
+				<!-- Redux Toolkit -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">Офіційний стандарт для Redux</p>
+				</section>
+
+				<!-- Redux Toolkit особливості -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Flux архітектура</li>
+						<li class="fragment fade-in">Single source of truth</li>
+						<li class="fragment fade-in">Immutable updates (Immer)</li>
+						<li class="fragment fade-in">Redux DevTools</li>
+						<li class="fragment fade-in">RTK Query для API</li>
+					</ul>
+				</section>
+
+				<!-- Redux Toolkit - createSlice -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">createSlice</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-15|7-14">import { createSlice } from '@reduxjs/toolkit';
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: { value: 0 },
+  reducers: {
+    increment: state =&gt; {
+      state.value += 1; // Immer дозволяє мутації
+    },
+    decrement: state =&gt; {
+      state.value -= 1;
+    },
+    incrementByAmount: (state, action) =&gt; {
+      state.value += action.payload;
+    }
+  }
+});</code></pre>
+				</section>
+
+				<!-- Redux Toolkit - configureStore -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">configureStore</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-7">import { configureStore } from '@reduxjs/toolkit';
+
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer
+  }
+});</code></pre>
+				</section>
+
+				<!-- Redux Toolkit - useSelector/useDispatch -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">React hooks</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|5|8">import { useSelector, useDispatch } from 'react-redux';
+
+const Counter = () =&gt; {
+  const count = useSelector(state =&gt; state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    &lt;button onClick={() =&gt; dispatch(increment())}&gt;
+      {count}
+    &lt;/button&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- Redux Architecture -->
+				<section>
+					<h2 class="ztu-blue">REDUX АРХІТЕКТУРА</h2>
+					<p class="ztu-orange">Однонаправлений потік даних</p>
+				</section>
+
+				<!-- Redux Flow Diagram -->
+				<section>
+					<h2 class="ztu-blue">REDUX DATA FLOW</h2>
+					<pre style="font-size: 0.5em; line-height: 1.4;"><code>
+┌─────────────────────────────────────────────────────────────┐
+│                         UI Component                         │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  const dispatch = useDispatch()                       │  │
+│  │  dispatch(increment())              ←────────────────┼──┼── User Action
+│  └──────────────────────────────────────────────────────┘  │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+              ┌──────────────────┐
+              │      Action       │
+              │ { type, payload } │
+              └─────────┬─────────┘
+                        │
+                        ▼
+              ┌──────────────────┐
+              │    Middleware     │
+              │   (thunk, saga)   │
+              └─────────┬─────────┘
+                        │
+                        ▼
+              ┌──────────────────┐
+              │     Reducer       │
+              │ (pure function)   │
+              └─────────┬─────────┘
+                        │
+                        ▼
+              ┌──────────────────┐
+              │   Redux Store     │
+              │   (single tree)   │
+              └─────────┬─────────┘
+                        │
+                        ▼
+┌───────────────────────┴─────────────────────────────────────┐
+│                         UI Component                         │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  const state = useSelector(selector)                  │  │
+│  │  // Re-render on state change                         │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+					</code></pre>
+				</section>
+
+				<!-- Redux Principles -->
+				<section>
+					<h2 class="ztu-blue">REDUX ПРИНЦИПИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Single Source of Truth - один store</li>
+						<li class="fragment fade-in">State is Read-Only - тільки через actions</li>
+						<li class="fragment fade-in">Changes via Pure Functions - reducers</li>
+						<li class="fragment fade-in">Predictable State Updates</li>
+					</ul>
+				</section>
+
+				<!-- Middleware -->
+				<section>
+					<h2 class="ztu-blue">MIDDLEWARE</h2>
+					<p class="ztu-orange">Розширення функціональності між action та reducer</p>
+				</section>
+
+				<!-- Middleware diagram -->
+				<section>
+					<h2 class="ztu-blue">MIDDLEWARE FLOW</h2>
+					<pre style="font-size: 0.6em;"><code>
+Action → Middleware 1 → Middleware 2 → Reducer → Store
+
+                ↓ Side Effects ↓
+            - Logging
+            - Async API calls
+            - Analytics
+            - Crash reporting
+					</code></pre>
+				</section>
+
+				<!-- Redux Thunk -->
+				<section>
+					<h2 class="ztu-blue">REDUX THUNK</h2>
+					<p class="ztu-orange">Middleware для async логіки</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|5-14|6|7-9|10-13">// Action Creator повертає функцію
+const fetchUser = (userId) => {
+  return async (dispatch, getState) => {
+
+    dispatch({ type: 'USER_LOADING' });
+
+    try {
+      const response = await fetch(`/api/users/${userId}`);
+      const data = await response.json();
+      dispatch({ type: 'USER_SUCCESS', payload: data });
+    } catch (error) {
+      dispatch({ type: 'USER_ERROR', payload: error });
+    }
+  };
+};</code></pre>
+				</section>
+
+				<!-- Custom Middleware -->
+				<section>
+					<h2 class="ztu-blue">CUSTOM MIDDLEWARE</h2>
+					<p class="ztu-orange">Власний middleware</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|4|5|6|7">const logger = store => next => action => {
+  console.log('Dispatching:', action);
+  const result = next(action);
+  console.log('Next State:', store.getState());
+  return result;
+};
+
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(logger)
+});</code></pre>
+				</section>
+
+				<!-- Selectors -->
+				<section>
+					<h2 class="ztu-blue">SELECTORS</h2>
+					<p class="ztu-orange">Функції для отримання даних зі store</p>
+				</section>
+
+				<!-- Simple Selector -->
+				<section>
+					<h2 class="ztu-blue">ПРОСТИЙ SELECTOR</h2>
+					<pre><code class="javascript" data-line-numbers="|1-3|5-7">// Простий selector
+const selectCounter = (state) => state.counter.value;
+
+// Використання
+const Counter = () => {
+  const count = useSelector(selectCounter);
+  return &lt;div&gt;{count}&lt;/div&gt;;
+};</code></pre>
+				</section>
+
+				<!-- Reselect -->
+				<section>
+					<h2 class="ztu-blue">RESELECT</h2>
+					<p class="ztu-orange">Мемоізовані селектори</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-4|6-11">import { createSelector } from '@reduxjs/toolkit';
+
+const selectTodos = state => state.todos;
+const selectFilter = state => state.filter;
+
+const selectFilteredTodos = createSelector(
+  [selectTodos, selectFilter],
+  (todos, filter) => {
+    return todos.filter(todo => todo.status === filter);
+  }
+);</code></pre>
+				</section>
+
+				<!-- Reselect переваги -->
+				<section>
+					<h2 class="ztu-blue">RESELECT ПЕРЕВАГИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Мемоізація результатів</li>
+						<li class="fragment fade-in">Re-compute тільки при зміні inputs</li>
+						<li class="fragment fade-in">Композиція селекторів</li>
+						<li class="fragment fade-in">Запобігання зайвим re-renders</li>
+					</ul>
+				</section>
+
+				<!-- Zustand -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Мінімалістичний state manager</p>
+				</section>
+
+				<!-- Zustand особливості -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Простий API (один hook)</li>
+						<li class="fragment fade-in">Малий розмір (~1KB)</li>
+						<li class="fragment fade-in">Без boilerplate</li>
+						<li class="fragment fade-in">Працює поза React</li>
+						<li class="fragment fade-in">Підтримує middleware</li>
+					</ul>
+				</section>
+
+				<!-- Zustand - create store -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Створення store</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-11|5-10">import { create } from 'zustand';
+
+const useStore = create((set) =&gt; ({
+  count: 0,
+  increment: () =&gt; set(state =&gt; ({
+    count: state.count + 1
+  })),
+  decrement: () =&gt; set(state =&gt; ({
+    count: state.count - 1
+  })),
+  reset: () =&gt; set({ count: 0 })
+}));</code></pre>
+				</section>
+
+				<!-- Zustand - використання -->
+				<section>
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Використання в компоненті</p>
+					<pre><code class="javascript" data-line-numbers="|1-2|5-6">const Counter = () =&gt; {
+  const { count, increment, decrement } = useStore();
+
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{count}&lt;/span&gt;
+      &lt;button onClick={increment}&gt;+&lt;/button&gt;
+      &lt;button onClick={decrement}&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- MobX -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<p class="ztu-orange">Reactive state management</p>
+				</section>
+
+				<!-- MobX особливості -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Observable state</li>
+						<li class="fragment fade-in">Автоматичне відстеження залежностей</li>
+						<li class="fragment fade-in">Мутабельний підхід</li>
+						<li class="fragment fade-in">Computed values</li>
+						<li class="fragment fade-in">Actions для змін</li>
+					</ul>
+				</section>
+
+				<!-- MobX - store -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<p class="ztu-orange">Створення store</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-4|6-8|10-12">import { makeAutoObservable } from 'mobx';
+
+class CounterStore {
+  count = 0;
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  increment() {
+    this.count += 1;
+  }
+
+  decrement() {
+    this.count -= 1;
+  }
+}
+
+const counterStore = new CounterStore();</code></pre>
+				</section>
+
+				<!-- MobX - observer -->
+				<section>
+					<h2 class="ztu-blue">MOBX</h2>
+					<p class="ztu-orange">Observer компонент</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-11">import { observer } from 'mobx-react-lite';
+
+const Counter = observer(() =&gt; (
+  &lt;div&gt;
+    &lt;span&gt;{counterStore.count}&lt;/span&gt;
+    &lt;button onClick={() =&gt; counterStore.increment()}&gt;
+      +
+    &lt;/button&gt;
+  &lt;/div&gt;
+));</code></pre>
+				</section>
+
+				<!-- Recoil -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<p class="ztu-orange">Атомарний state manager від Meta</p>
+				</section>
+
+				<!-- Recoil особливості -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Atoms - одиниці стану</li>
+						<li class="fragment fade-in">Selectors - derived state</li>
+						<li class="fragment fade-in">React-first підхід</li>
+						<li class="fragment fade-in">Concurrent Mode support</li>
+						<li class="fragment fade-in">Experimental від Meta</li>
+					</ul>
+				</section>
+
+				<!-- Recoil - atom -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<p class="ztu-orange">Atom</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-6|8-11">import { atom, selector } from 'recoil';
+
+const countState = atom({
+  key: 'countState',
+  default: 0
+});
+
+const doubledCount = selector({
+  key: 'doubledCount',
+  get: ({ get }) =&gt; get(countState) * 2
+});</code></pre>
+				</section>
+
+				<!-- Recoil - hooks -->
+				<section>
+					<h2 class="ztu-blue">RECOIL</h2>
+					<p class="ztu-orange">Hooks</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|5|8">import { useRecoilState, useRecoilValue } from 'recoil';
+
+const Counter = () =&gt; {
+  const [count, setCount] = useRecoilState(countState);
+  const doubled = useRecoilValue(doubledCount);
+
+  return (
+    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+      {count} (doubled: {doubled})
+    &lt;/button&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- Vue State Managers -->
+				<section>
+					<h2 class="ztu-blue">VUE STATE MANAGERS</h2>
+					<p class="ztu-orange">VueX та Pinia</p>
+				</section>
+
+				<!-- VueX -->
+				<section>
+					<h2 class="ztu-blue">VUEX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Офіційний state manager для Vue 2/3</li>
+						<li class="fragment fade-in">Flux-подібна архітектура</li>
+						<li class="fragment fade-in">State, Mutations, Actions, Getters</li>
+						<li class="fragment fade-in">Modules для масштабування</li>
+					</ul>
+				</section>
+
+				<!-- VueX приклад -->
+				<section>
+					<h2 class="ztu-blue">VUEX</h2>
+					<p class="ztu-orange">Store</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-16|5|6-8|9-11">import { createStore } from 'vuex';
+
+const store = createStore({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment(state) {
+      state.count++;
+    }
+  },
+  actions: {
+    incrementAsync({ commit }) {
+      setTimeout(() =&gt; commit('increment'), 1000);
+    }
+  }
+});</code></pre>
+				</section>
+
+				<!-- Pinia -->
+				<section>
+					<h2 class="ztu-blue">PINIA</h2>
+					<p class="ztu-orange">Новий стандарт для Vue 3</p>
+				</section>
+
+				<!-- Pinia особливості -->
+				<section>
+					<h2 class="ztu-blue">PINIA</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Простіший API ніж VueX</li>
+						<li class="fragment fade-in">TypeScript підтримка</li>
+						<li class="fragment fade-in">Без mutations (тільки actions)</li>
+						<li class="fragment fade-in">DevTools інтеграція</li>
+						<li class="fragment fade-in">Модульна архітектура</li>
+					</ul>
+				</section>
+
+				<!-- Pinia приклад -->
+				<section>
+					<h2 class="ztu-blue">PINIA</h2>
+					<p class="ztu-orange">defineStore</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-14|4|5-7|8-13">import { defineStore } from 'pinia';
+
+export const useCounterStore = defineStore('counter', {
+  state: () =&gt; ({ count: 0 }),
+  getters: {
+    doubled: (state) =&gt; state.count * 2
+  },
+  actions: {
+    increment() {
+      this.count++;
+    },
+    async incrementAsync() {
+      await delay(1000);
+      this.count++;
+    }
+  }
+});</code></pre>
+				</section>
+
+				<!-- Jotai -->
+				<section>
+					<h2 class="ztu-blue">JOTAI</h2>
+					<p class="ztu-orange">Примітивний та гнучкий state manager</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Атомарний підхід (як Recoil)</li>
+						<li class="fragment fade-in">Мінімалістичний API</li>
+						<li class="fragment fade-in">Bottom-up підхід</li>
+						<li class="fragment fade-in">TypeScript-first</li>
+					</ul>
+				</section>
+
+				<!-- Jotai приклад -->
+				<section>
+					<h2 class="ztu-blue">JOTAI</h2>
+					<p class="ztu-orange">Приклад</p>
+					<pre><code class="javascript" data-line-numbers="|1|3|5-7">import { atom, useAtom } from 'jotai';
+
+const countAtom = atom(0);
+
+const Counter = () =&gt; {
+  const [count, setCount] = useAtom(countAtom);
+  return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;;
+};</code></pre>
+				</section>
+
+				<!-- Порівняння -->
+				<section>
+					<h2 class="ztu-blue">ПОРІВНЯННЯ</h2>
+					<p class="ztu-orange">Коли що використовувати?</p>
+				</section>
+
+				<!-- Таблиця порівняння -->
+				<section>
+					<h2 class="ztu-blue">ПОРІВНЯННЯ</h2>
+					<table style="font-size: 0.6em;">
+						<thead>
+							<tr>
+								<th>Рішення</th>
+								<th>Розмір</th>
+								<th>Складність</th>
+								<th>Use Case</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="fragment">
+								<td>Context</td>
+								<td>0KB</td>
+								<td>Низька</td>
+								<td>Простий глобальний стан</td>
+							</tr>
+							<tr class="fragment">
+								<td>Zustand</td>
+								<td>~1KB</td>
+								<td>Низька</td>
+								<td>Малі/середні проекти</td>
+							</tr>
+							<tr class="fragment">
+								<td>Redux Toolkit</td>
+								<td>~11KB</td>
+								<td>Середня</td>
+								<td>Enterprise проекти</td>
+							</tr>
+							<tr class="fragment">
+								<td>MobX</td>
+								<td>~16KB</td>
+								<td>Середня</td>
+								<td>Reactive patterns</td>
+							</tr>
+							<tr class="fragment">
+								<td>Recoil/Jotai</td>
+								<td>~20KB/~3KB</td>
+								<td>Низька</td>
+								<td>Атомарний стан</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Рекомендації -->
+				<section>
+					<h2 class="ztu-blue">РЕКОМЕНДАЦІЇ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in"><strong>Малий проект:</strong> Context або Zustand</li>
+						<li class="fragment fade-in"><strong>Середній проект:</strong> Zustand або Redux Toolkit</li>
+						<li class="fragment fade-in"><strong>Enterprise:</strong> Redux Toolkit</li>
+						<li class="fragment fade-in"><strong>Reactive:</strong> MobX</li>
+						<li class="fragment fade-in"><strong>Vue:</strong> Pinia (Vue 3) або VueX (Vue 2)</li>
+					</ul>
+				</section>
+
+				<!-- Питання -->
+				<section>
+					<h1 class="ztu-orange">ПИТАННЯ?</h1>
 				</section>
 
 			</div>
@@ -537,14 +713,9 @@ function App() {
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
 		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
 				progress: true,
-
-				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
 		</script>
