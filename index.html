@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>КОП</title>
+		<title>React Router V6. React.lazy. Suspense</title>
 
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/ztu.css">
@@ -20,513 +20,511 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+					<h1 class="ztu-blue">КОП. ЛЕКЦІЯ 9</h1>
+					<p class="ztu-orange">REACT ROUTER V7. REACT.LAZY. SUSPENSE</p>
 				</section>
 
-				<!-- Roadmap -->
+				<!-- React Router -->
 				<section>
-					<h2 class="ztu-blue">ROADMAP</h2>
-					<p style="font-size: 0.8em; color: #666;">https://miro.com/app/board/o9J_lVQm6fI=</p>
-						<iframe data-src="https://miro.com/app/board/o9J_lVQm6fI=" data-preload width="800" height="600"></iframe>
+					<h2 class="ztu-blue">REACT ROUTER</h2>
+					<p>https://reactrouter.com/en/main</p>
+					<iframe src="https://reactrouter.com/en/main" width="800" height="600"></iframe>
 				</section>
 
-				<!-- useEffect -->
+				<!-- Installation -->
 				<section>
-					<h2 class="ztu-blue">МЕТОДИ ЖИТТЄВОГО ЦИКЛУ</h2>
-					<p class="ztu-orange fragment fade-in-then-semi-out">useEffect</p>
-					<img src="https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ogimage.png" alt="React Lifecycle Diagram" style="max-width: 90%; height: auto;" />
+					<h2 class="ztu-blue">REACT ROUTER V7</h2>
+					<pre><code class="bash" data-line-numbers>npm install react-router</code></pre>
 				</section>
 
-				<!-- Умовний рендеринг -->
+				<!-- Packages -->
 				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-				</section>
-
-				<!-- Зберігання в змінну -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">Зберігання в змінну</p>
-					<pre><code class="javascript">export function IdNumber(props) {
-  const { id } = props;
-  let message;
-
-  if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
-  } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
-  }
-
-  return (
-    &lt;&gt;
-      {message}
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- JS like. If-else or ternary -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">JS like. If-else or ternary</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : &lt;p&gt;{props.children}&lt;/p&gt;
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- return null -->
-				<section>
-					<h2 class="ztu-blue">УМОВНИЙ РЕНДЕРИНГ</h2>
-					<p class="ztu-orange">return null</p>
-					<pre><code class="javascript">export function Title(props) {
-  const { tag } = props;
-
-  return (
-    &lt;&gt;
-      {(tag === 'h1')
-        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
-        : null
-      }
-    &lt;/&gt;
-  );
-}</code></pre>
-				</section>
-
-				<!-- Списки та ключі -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ ТА КЛЮЧІ</h2>
-				</section>
-
-				<!-- Списки -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-				</section>
-
-				<!-- Списки - з підсвіткою рядків -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Ключ є обов'язковим -->
-				<section>
-					<h2 class="ztu-blue">СПИСКИ</h2>
+					<h2 class="ztu-blue">REACT ROUTER V7</h2>
+					<p class="ztu-orange">Unified Package Structure</p>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">На вхід може бути масив елементів</li>
-						<li class="fragment fade-in-then-semi-out">Ключ є обов'язковим</li>
+						<li class="fragment fade-in">react-router (основний пакет)</li>
+						<li class="fragment fade-in">react-router/dom (для веб)</li>
+						<li class="fragment fade-in">react-router/native (для React Native)</li>
 					</ul>
 				</section>
 
-				<!-- Ключі - з підсвіткою рядків -->
+				<!-- Features -->
 				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5|">const numbers = [1, 2, 3, 4, 5];
-const listItems = numbers.map((number) =>
-  &lt;li key={number.toString()}&gt;{number}&lt;/li&gt;
-);
-&lt;ul&gt;{listItems}&lt;/ul&gt;</code></pre>
-					<div class="fragment">
-						<div style="border: 1px solid #ccc; padding: 20px; margin-top: 20px; background: white;">
-							<ul class="ztu-list">
-								<li>1</li>
-								<li>2</li>
-								<li>3</li>
-								<li>4</li>
-								<li>5</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h2 class="ztu-blue">КЛЮЧІ</h2>
+					<h2 class="ztu-blue">REACT ROUTER V7</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Стабільна ідентичність</li>
-						<li class="fragment fade-in-then-semi-out">Ключ унікальний в межах списку</li>
-						<li class="fragment fade-in-then-semi-out">Ключі є рядковими</li>
-						<li class="fragment fade-in-then-semi-out">Ключ застосовується для елементів масиву, а не до тегів</li>
+						<li class="fragment fade-in">SPA navigation</li>
+						<li class="fragment fade-in">Enhanced TypeScript support</li>
+						<li class="fragment fade-in">React 19 integration</li>
 					</ul>
 				</section>
 
-				<!-- Index as key article -->
+				<!-- V7 New Features -->
 				<section>
-					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				<iframe data-src="https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318" data-preload width="800" height="600"></iframe>
-				</section>
-				<!-- Віртуалізований список -->
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
-					<p style="font-size: 0.7em; color: #666;">https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper</p>
-					<iframe data-src="https://bvaughn.github.io/react-virtualized/#/components/ArrowKeyStepper" data-preload width="800" height="600"></iframe>
-				
-				</section>
-
-
-				<section>
-					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
+					<h2 class="ztu-blue">V7 НОВІ ОСОБЛИВОСТІ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">MutationObserver</li>
-						<li class="fragment fade-in-then-semi-out">Активна робота з VirtualDOM</li>
-						<li class="fragment fade-in-then-semi-out">Велике покращення швидкодії продукту</li>
+						<li class="fragment fade-in">Уніфікація імпортів</li>
+						<li class="fragment fade-in">startTransition за замовчуванням</li>
+						<li class="fragment fade-in">Автогенерація типів</li>
+						<li class="fragment fade-in">Server-side rendering</li>
+						<li class="fragment fade-in">Static pre-rendering</li>
 					</ul>
 				</section>
 
-
+				<!-- V7 Imports -->
 				<section>
-					<h2 class="ztu-blue">БАНДЛІНГ</h2>
+					<h2 class="ztu-blue">V7 IMPORTS</h2>
+					<p class="ztu-orange">Порівняння імпортів v6 та v7</p>
+					<pre><code class="javascript" >// v6
+import { BrowserRouter, Routes, Route }
+  from 'react-router-dom';
+
+// v7
+import { BrowserRouter, Routes, Route }
+  from 'react-router';</code></pre>
+				</section>
+
+				<!-- Router Types -->
+				<section>
+					<h2 class="ztu-blue">ТИПИ РОУТЕРІВ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Webpack</li>
-						<li class="fragment fade-in-then-semi-out">Rollup</li>
-						<li class="fragment fade-in-then-semi-out">Parcel</li>
-						<li class="fragment fade-in-then-semi-out">Vite</li>
+						<li class="fragment fade-in">BrowserRouter</li>
+						<li class="fragment fade-in">MemoryRouter</li>
+						<li class="fragment fade-in">HashRouter</li>
+						<li class="fragment fade-in">NativeRouter</li>
+						<li class="fragment fade-in">StaticRouter</li>
 					</ul>
 				</section>
 
+			
 
+				<!-- V6.4 Router Types -->
 				<section>
-					<h2 class="ztu-blue">WEBPACK</h2>
+					<h2 class="ztu-blue">V6.4 ТИПИ РОУТЕРІВ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Створення єдиної точки входу</li>
-						<li class="fragment fade-in-then-semi-out">Процес мініфікації, агліфікації та об'єднання</li>
-						<li class="fragment fade-in-then-semi-out">Webpack-bundle-analyzer</li>
+						<li class="fragment fade-in">createBrowserRouter</li>
+						<li class="fragment fade-in">createMemoryRouter</li>
+						<li class="fragment fade-in">createHashRouter</li>
+						<li class="fragment fade-in">createStaticRouter</li>
 					</ul>
 				</section>
 
-				<!-- Webpack Bundle Analyzer -->
+				<!-- createBrowserRouter Example -->
 				<section>
-					<h2 class="ztu-blue">WEBPACK-BUNDLE-ANALYZER</h2>
-					<iframe data-src="https://blog.bitsrc.io/6-tools-and-techniques-to-analyze-webpack-bundle-size-817337f8cf91" data-preload width="800" height="600"></iframe>
-				
-					
+					<h2 class="ztu-blue">CREATEBROWSERROUTER</h2>
+					<p class="ztu-orange">Приклад створення роутера</p>
+					<pre><code class="javascript" data-line-numbers="|2-4|6-7|10-11|12-16">import './App.css';
+import { Lesson1 } from './pages/Lesson1';
+import { Home } from './pages/Home';
+import { PageNotFound } from './pages/404';
+
+import { Routes, createRoutesFromElements, Route,
+         createBrowserRouter, RouterProvider } from 'react-router';
+
+function App() {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/lesson1" element={&lt;Lesson1 /&gt;} /&gt;
+        &lt;Route path="/articles/:id" element={&lt;Articles /&gt;} /&gt;</code></pre>
 				</section>
 
-				<!-- Vite -->
+				<!-- createBrowserRouter Benefits -->
 				<section>
-					<h2 class="ztu-blue">VITE</h2>
-				</section>
-
-				<!-- Vite vs Webpack -->
-				<section>
-					<h2 class="ztu-blue">VITE vs WEBPACK</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
-						<div>
-							<h3 class="ztu-orange">Webpack</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Повільний старт (bundling)</li>
-								<li class="">Конфігурація складна</li>
-								<li class="">HMR повільний</li>
-								<li class="">Великий ecosystem</li>
-							</ul>
-						</div>
-						<div>
-							<h3 class="ztu-orange">Vite</h3>
-							<ul class="ztu-list" style="font-size: 0.8em;">
-								<li class="">Швидкий старт (ESM)</li>
-								<li class="">Zero-config</li>
-								<li class="">Миттєвий HMR</li>
-								<li class="">Rollup під капотом</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<!-- Vite особливості -->
-				<section>
-					<h2 class="ztu-blue">VITE</h2>
+					<h2 class="ztu-blue">CREATEBROWSERROUTER</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">ESM в Dev режимі</li>
-						<li class="fragment fade-in-then-semi-out">esbuild для TypeScript</li>
-						<li class="fragment fade-in-then-semi-out">Rollup для Production</li>
-						<li class="fragment fade-in-then-semi-out">Плагіни сумісні з Rollup</li>
+						<li class="fragment fade-in">Рекомендований маршрутизатор</li>
+						<li class="fragment fade-in">Базується на DOM History API</li>
 					</ul>
 				</section>
 
-				<!-- Vite команди -->
+				<!-- Routes -->
 				<section>
-					<h2 class="ztu-blue">VITE</h2>
-					<h3 class="ztu-orange">Команди</h3>
-					<pre><code class="bash"># Створити проект
-npm create vite@latest my-react-app
-# Запустити dev сервер
-npm run dev
-# Збірка для продакшну
-npm run build</code></pre>
+					<h2 class="ztu-blue">ROUTES</h2>
+					<p class="ztu-orange">Масив роутерів. Можливо використовувати, як структуру данних</p>
+					<pre><code class="javascript" data-line-numbers="|2-3|4|5|6-11">createBrowserRouter([
+  {
+    path: "/",
+    element: &lt;Root /&gt;,
+    loader: rootLoader,
+    children: [
+      {
+        path: "events/:id",
+        element: &lt;Event /&gt;,
+        loader: eventLoader,
+      },
+    ],
+  },
+]);</code></pre>
 				</section>
 
-				<!-- Import -->
+				<!-- Basename -->
 				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-				</section>
-
-				<!-- Статичний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Статичний імпорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-2|3-4|5-6">// Іменований імпорт
-import { add, subtract } from './math';
-// Дефолтний імпорт
-import Calculator from './Calculator';
-// Комбінований імпорт
-import React, { useState, useEffect } from 'react';</code></pre>
-				</section>
-
-				<!-- Import всього модуля -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Import всього модуля</h3>
-					<pre><code class="javascript" data-line-numbers="|2">// Імпорт всього як об'єкт
-import * as Math from './math';
-console.log(Math.add(16, 26));</code></pre>
-				</section>
-
-				<!-- Aliasing та Side Effects -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Aliasing та Side Effects</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-5|">// Перейменування імпорту
-import { add as sum } from './math';
-// Side effects (без імпорту)
-import './styles.css';
-import 'react-toastify/dist/ReactToastify.css';</code></pre>
-				</section>
-
-				<!-- Динамічний імпорт -->
-				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт</h3>
-					<pre><code class="javascript">import("./math").then(math => {
-  console.log(math.add(16, 26));
+					<h2 class="ztu-blue">BASENAME</h2>
+					<p class="ztu-orange">Властивість. Задання посилання на корінь ресурсу</p>
+					<pre><code class="javascript" data-line-numbers>createBrowserRouter(routes, {
+  basename: "/app",
 });</code></pre>
 				</section>
 
-				<!-- Динамічний імпорт babel -->
+				<!-- Nested Routes Example -->
 				<section>
-					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
+					<h2 class="ztu-blue">NESTED ROUTES</h2>
+					<p class="ztu-orange">Вкладені маршрути для складних інтерфейсів</p>
+					<pre><code class="jsx" data-line-numbers="|1|2|3|4-6|7">&lt;Route path="/dashboard" element={&lt;Dashboard /&gt;}&gt;
+  &lt;Route index element={&lt;DashboardHome /&gt;} /&gt;
+  &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;
+  &lt;Route path="profile" element={&lt;Profile /&gt;}&gt;
+    &lt;Route path="edit" element={&lt;EditProfile /&gt;} /&gt;
+  &lt;/Route&gt;
+&lt;/Route&gt;</code></pre>
 				</section>
 
-				<!-- Export -->
+				<!-- Nested Routes with Outlet -->
 				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-				</section>
-
-				<!-- Іменований експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Іменований експорт</h3>
-					<pre><code class="javascript" data-line-numbers="|1-3|4-5|">// Експорт під час оголошення
-export const PI = 3.14159;
-export function add(a, b) { return a + b; }
-// Експорт існуючих змінних
-export { myFunction, anotherVar };</code></pre>
-				</section>
-
-				<!-- Дефолтний експорт -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Дефолтний експорт</h3>
-					<pre><code class="javascript" >// Функція
-export default function Calculator() {}
-// Клас
-export default class MyClass {}
-// Значення
-export default 42;</code></pre>
-				</section>
-
-				<!-- Re-export -->
-				<section>
-					<h2 class="ztu-blue">EXPORT</h2>
-					<h3 class="ztu-orange">Re-export (Переекспорт)</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// Переекспорт всього
-export * from './math';
-// Переекспорт конкретних функцій
-export { add, subtract } from './math';
-// Переекспорт з перейменуванням
-export { default as Calculator } from './Calculator';</code></pre>
-				</section>
-
-				<!-- CommonJS vs ESM -->
-				<section>
-					<h2 class="ztu-blue">COMMONJS vs ESM</h2>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h3 class="ztu-orange">CommonJS (Node.js)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-module.exports = { add };
-exports.PI = 3.14;
-
-// Import
-const { add } = require('./math');
-const math = require('./math');</code></pre>
-						</div>
-						<div>
-							<h3 class="ztu-orange">ESM (ES6 Modules)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-export { add };
-export const PI = 3.14;
-
-// Import
-import { add } from './math';
-import * as math from './math';</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-				</section>
-
-				<!-- Tree Shaking визначення -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що це таке?</h3>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Видалення невикористаного коду з бандлу</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення розміру фінального файлу</li>
-						<li class="fragment fade-in-then-semi-out">Працює тільки з ES6 модулями</li>
-						<li class="fragment fade-in-then-semi-out">Статичний аналіз import/export</li>
-					</ul>
-				</section>
-
-				<!-- Tree Shaking приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Приклад</h3>
-					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
-						<div>
-							<h4 class="ztu-orange">utils.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">export function add(a, b) {
-  return a + b;
-}
-
-export function subtract(a, b) {
-  return a - b;
-}
-
-export function multiply(a, b) {
-  return a * b;
-}</code></pre>
-						</div>
-						<div>
-							<h4 class="ztu-orange">main.js</h4>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Імпортуємо тільки add
-import { add } from './utils';
-
-console.log(add(2, 3));
-
-// subtract і multiply
-// НЕ потраплять в бандл!</code></pre>
-						</div>
-					</div>
-				</section>
-
-				<!-- Tree Shaking поганий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Що заважає Tree Shaking?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ❌ Погано - імпорт всього модуля
-import * as utils from './utils';
-
-// ❌ Погано - side effects
-import './utils'; // виконує код при імпорті
-
-// ❌ Погано - CommonJS
-const { add } = require('./utils');</code></pre>
-				</section>
-
-				<!-- Tree Shaking добрий приклад -->
-				<section>
-					<h2 class="ztu-blue">TREE SHAKING</h2>
-					<h3 class="ztu-orange">Як робити правильно?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ✅ Добре - іменований імпорт
-import { add, subtract } from './utils';
-
-// ✅ Добре - lodash-es замість lodash
-import { debounce } from 'lodash-es';
-
-// ✅ Добре - окремі модулі
-import debounce from 'lodash/debounce';</code></pre>
-				</section>
-
-
-				<!-- React Lazy визначення -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Code Splitting</p>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Розділення коду на окремі чанки</li>
-						<li class="fragment fade-in-then-semi-out">Завантаження компонентів по потребі</li>
-						<li class="fragment fade-in-then-semi-out">Покращення часу завантаження</li>
-						<li class="fragment fade-in-then-semi-out">Зменшення initial bundle size</li>
-					</ul>
-				</section>
-
-				<!-- React.lazy приклад -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">React.lazy()</p>
-					<pre><code class="javascript">// Замість звичайного імпорту
-// import Dashboard from './Dashboard';
-
-// Динамічний імпорт з React.lazy
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
-  return &lt;Dashboard /&gt;;
-}</code></pre>
-				</section>
-
-				<!-- Suspense -->
-				<section>
-					<h2 class="ztu-blue">REACT LAZY</h2>
-					<p class="ztu-orange">Suspense</p>
-					<pre><code class="javascript" >import { Suspense } from 'react';
-
-const Dashboard = React.lazy(() => import('./Dashboard'));
-
-function App() {
+					<h2 class="ztu-blue">NESTED ROUTES + OUTLET</h2>
+					<pre><code class="jsx" data-line-numbers="|6">const Dashboard = () =&gt; {
   return (
-    &lt;Suspense fallback={&lt;div&gt;Завантаження...&lt;/div&gt;}&gt;
-      &lt;Dashboard /&gt;
-    &lt;/Suspense&gt;
+    &lt;div&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+      &lt;nav&gt;{/* Navigation */}&lt;/nav&gt;
+      &lt;Outlet /&gt; {/* Child routes render here */}
+    &lt;/div&gt;
   );
+};</code></pre>
+				</section>
+
+				<!-- Route -->
+				<section>
+					<h2 class="ztu-blue">ROUTE</h2>
+					<p class="ztu-orange">Конфігурація маршруту з усіма властивостями</p>
+					<pre><code class="javascript" data-line-numbers="|3-4|6-7|9-14|17-18">const router = createBrowserRouter([
+  {
+    // it renders this element
+    element: &lt;Team /&gt;,
+
+    // when the URL matches this segment
+    path: "teams/:teamId",
+
+    // with this data loaded before rendering
+    loader: async ({ request, params }) =&gt; {
+      return fetch(
+        `/fake/api/teams/${params.teamId}.json`,
+        { signal: request.signal }
+      );
+    },
+
+    // performing this mutation when data is submitted to it
+    action: async ({ request }) =&gt; {</code></pre>
+				</section>
+
+				<!-- Loader Example -->
+				<section>
+					<h2 class="ztu-blue">LOADER</h2>
+					<p class="ztu-orange">Завантаження даних перед рендерингом</p>
+					<pre><code class="javascript" data-line-numbers="|1-7|9-10">const teamLoader = async ({ params }) =&gt; {
+  const response = await fetch(`/api/teams/${params.teamId}`);
+  if (!response.ok) {
+    throw new Response("Not Found", { status: 404 });
+  }
+  return response.json();
+};
+
+// In route config
+{ path: "teams/:teamId", element: &lt;Team /&gt;, loader: teamLoader }</code></pre>
+				</section>
+
+				<!-- useLoaderData -->
+				<section>
+					<h2 class="ztu-blue">USELOADERDATA</h2>
+					<p class="ztu-orange">Доступ до даних завантажених loader-ом</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|7">import { useLoaderData } from "react-router";
+
+const Team = () =&gt; {
+  const team = useLoaderData();
+
+  return (
+    &lt;h1&gt;{team.name}&lt;/h1&gt;
+  );
+};</code></pre>
+				</section>
+
+
+				<!-- errorElement Example -->
+				<section>
+					<h2 class="ztu-blue">ERRORELEMENT</h2>
+					<p class="ztu-orange">Обробка помилок у маршрутах</p>
+					<pre><code class="javascript" data-line-numbers="|5">{
+  path: "teams/:teamId",
+  element: &lt;Team /&gt;,
+  loader: teamLoader,
+  errorElement: &lt;TeamError /&gt;
 }</code></pre>
 				</section>
-	<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
-					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
+
+				<!-- useRouteError -->
+				<section>
+					<h2 class="ztu-blue">USEROUTEERROR</h2>
+					<p class="ztu-orange">Доступ до помилки в errorElement</p>
+					<pre><code class="jsx" data-line-numbers="|1|4|6-8">import { useRouteError } from "react-router";
+
+const TeamError = () =&gt; {
+  const error = useRouteError();
+
+  if (error.status === 404) {
+    return &lt;h1&gt;Team not found&lt;/h1&gt;;
+  }
+
+  return &lt;h1&gt;Something went wrong&lt;/h1&gt;;
+};</code></pre>
+				</section>
+
+				<!-- Path -->
+				<section>
+					<h2 class="ztu-blue">PATH</h2>
+					<p class="ztu-orange">Властивість. Шлях для маршрутизації</p>
+					<pre><code class="javascript" data-line-numbers>path: "teams/:teamId",</code></pre>
+				</section>
+
+				<!-- Path Dynamic Segments -->
+				<section>
+					<h2 class="ztu-blue">PATH</h2>
+					<p class="ztu-orange">Динамічні сегменти. Не можуть бути частковими.</p>
+					<pre><code class="javascript" data-line-numbers>path: "teams/:teamId/product/:productId",</code></pre>
+				</section>
+
+				<!-- Catchall -->
+				<section>
+					<h2 class="ztu-blue">CATCHALL *</h2>
+					<p class="ztu-orange">Все після сегменту</p>
+					<pre><code class="javascript" data-line-numbers>path: "teams/:teamId/product/*",</code></pre>
+				</section>
+
+				<!-- Link -->
+				<section>
+					<h2 class="ztu-blue">LINK</h2>
+					<p class="ztu-orange">Навігація на клієнті</p>
+					<pre><code class="jsx" data-line-numbers="|2">&lt;header className="header-menu"&gt;
+  &lt;Link to="/"&gt;Home&lt;/Link&gt;
+  &lt;Link to="/lesson1"&gt;Lesson1&lt;/Link&gt;
+  &lt;Link to="/sdfdfdsf"&gt;Incorrect&lt;/Link&gt;
+  &lt;Link to="/articles"&gt;Articles&lt;/Link&gt;
+&lt;/header&gt;</code></pre>
+				</section>
+
+				<!-- Link Properties -->
+				<section>
+					<h2 class="ztu-blue">LINK</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">to</li>
+						<li class="fragment fade-in">relative</li>
+						<li class="fragment fade-in">preventScrollReset</li>
+					</ul>
+				</section>
+
+				<!-- NavLink -->
+				<section>
+					<h2 class="ztu-blue">NAVLINK</h2>
+					<p class="ztu-orange">Link з підтримкою активного стану</p>
+					<pre><code class="jsx" data-line-numbers="|2">&lt;header className="header-menu"&gt;
+  &lt;NavLink to="/"&gt;Home&lt;/NavLink&gt;
+  &lt;NavLink to="/lesson1"&gt;Lesson1&lt;/NavLink&gt;
+  &lt;NavLink to="/sdfdfdsf"&gt;Incorrect&lt;/NavLink&gt;
+&lt;/header&gt;</code></pre>
+				</section>
+
+				<!-- Outlet -->
+				<section>
+					<h2 class="ztu-blue">OUTLET</h2>
+					<p class="ztu-orange">Місце, куди буде доданий весь контент</p>
+				</section>
+
+				<!-- Index -->
+				<section>
+					<h2 class="ztu-blue">INDEX</h2>
+					<pre><code class="jsx" data-line-numbers="|4">const router = createBrowserRouter(
+  createRoutesFromElements(
+    &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+      &lt;Route index element={&lt;Home /&gt;} /&gt;
+      &lt;Route path="/lesson1" element={&lt;Lesson1 /&gt;} /&gt;
+      &lt;Route path="/articles/:id" element={&lt;Articles /&gt;} /&gt;
+      &lt;Route path="*" element={&lt;PageNotFound /&gt;} /&gt;
+    &lt;/Route&gt;
+  )
+);</code></pre>
+				</section>
+
+				<!-- useParams -->
+				<section>
+					<h2 class="ztu-blue">USEPARAMS</h2>
+					<p class="ztu-orange">Доступ до динамічних параметрів URL</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|9">import { useParams } from "react-router";
+
+const Articles = () =&gt; {
+  const { id } = useParams();
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Articles&lt;/h1&gt;
+      &lt;span&gt;Page: {id}&lt;/span&gt;
+    &lt;/div&gt;
+  );
+};
+
+export { Articles };</code></pre>
+				</section>
+
+				<!-- useNavigate -->
+				<section>
+					<h2 class="ztu-blue">USENAVIGATE</h2>
+					<p class="ztu-orange">Можливість емуляції браузерної навігації</p>
+					<pre><code class="javascript" data-line-numbers="|2|6|9">import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+
+const Articles = () =&gt; {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState({});
+
+  const goBack = () =&gt; navigate(-1);
+
+  useEffect(() =&gt; {
+    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      .then(response =&gt; response.json())
+      .then(json =&gt; setData(json));
+  }, []);</code></pre>
+				</section>
+
+
+				<!-- useLocation Example -->
+				<section>
+					<h2 class="ztu-blue">USELOCATION</h2>
+					<p class="ztu-orange">Доступ до поточного URL та його стану</p>
+					<pre><code class="javascript" data-line-numbers="|1|4|6-10">import { useLocation } from "react-router";
+
+const Analytics = () =&gt; {
+  const location = useLocation();
+
+  useEffect(() =&gt; {
+    // Track page view
+    analytics.pageView(location.pathname);
+  }, [location]);
+
+  return &lt;Outlet /&gt;;
+};</code></pre>
+				</section>
+
+				<!-- useLocation Properties -->
+				<section>
+					<h2 class="ztu-blue">USELOCATION</h2>
+					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5">location.pathname  // "/products/123"
+location.search    // "?sort=asc"
+location.hash      // "#details"
+location.state     // { from: "/home" }
+location.key       // "abc123"</code></pre>
+				</section>
+
+				<!-- Navigate -->
+				<section>
+					<h2 class="ztu-blue">NAVIGATE</h2>
+					<p class="ztu-orange">Переадресація</p>
+					<pre><code class="jsx" data-line-numbers="|2">&lt;Route path="/lesson1" element={&lt;Lesson1 /&gt;} /&gt;
+&lt;Route path="/lesson9" element={&lt;Navigate to="/lesson1" /&gt;} /&gt;</code></pre>
+				</section>
+
+
+				<!-- Protected Route Component -->
+				<section>
+					<h2 class="ztu-blue">PROTECTED ROUTE</h2>
+					<p class="ztu-orange">Захист маршрутів від неавторизованих користувачів</p>
+					<pre><code class="jsx" >const ProtectedRoute = ({ children }) =&gt; {
+  const { user } = useAuth();
+
+  if (!user) {
+    return &lt;Navigate to="/login" replace /&gt;;
+  }
+
+  return children;
+};</code></pre>
+				</section>
+
+				<!-- Protected Route Usage -->
+				<section>
+					<h2 class="ztu-blue">PROTECTED ROUTE</h2>
+					<pre><code class="jsx" data-line-numbers="|2-6|3-5">&lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+  &lt;Route path="/dashboard" element={
+    &lt;ProtectedRoute&gt;
+      &lt;Dashboard /&gt;
+    &lt;/ProtectedRoute&gt;
+  } /&gt;
+  &lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
+&lt;/Route&gt;</code></pre>
+				</section>
+
+				<!-- React.lazy -->
+				<section>
+					<h2 class="ztu-blue">REACT.LAZY</h2>
+					<p class="ztu-orange">Динамічне завантаження компонентів</p>
+					<pre><code class="javascript" data-line-numbers="|1">const Header = lazy(() => import('./components/Header'));</code></pre>
+				</section>
+
+				<!-- React.Suspense -->
+				<section>
+					<h2 class="ztu-blue">REACT.SUSPENSE</h2>
+					<p class="ztu-orange">Відображення fallback під час завантаження</p>
+					<pre><code class="jsx" data-line-numbers="|1-3">&lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+  &lt;Header /&gt;
+&lt;/Suspense&gt;</code></pre>
+				</section>
+
+				<!-- Error Boundary -->
+				<section>
+					<h2 class="ztu-blue">ERROR BOUNDARY</h2>
+					<p class="ztu-orange">Обробка помилок завантаження lazy компонентів</p>
+				</section>
+
+				<!-- Error Boundary Class -->
+				<section>
+					<h2 class="ztu-blue">ERROR BOUNDARY</h2>
+					<p class="ztu-orange">Реалізація класового компонента</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|4-6|8-11|13-18">class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log('Error:', error);
+    console.log('Error Info:', errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return &lt;h1&gt;Something went wrong.&lt;/h1&gt;;
+    }
+    return this.props.children;
+  }
+}</code></pre>
+				</section>
+
+				<!-- Error Boundary Usage -->
+				<section>
+					<h2 class="ztu-blue">ERROR BOUNDARY + SUSPENSE</h2>
+					<p class="ztu-orange">Комбінація для безпечного lazy loading</p>
+					<pre><code class="jsx" >const LazyComponent = lazy(() => import('./LazyComponent'));
+
+&lt;ErrorBoundary&gt;
+  &lt;Suspense fallback={&lt;Loading /&gt;}&gt;
+    &lt;LazyComponent /&gt;
+  &lt;/Suspense&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+				</section>
+
+				<!-- Questions -->
+				<section>
+					<h1>Дякую за увагу</h1>
+					<p  class="ztu-orange">Запитання</p>
 				</section>
 
 			</div>
@@ -537,14 +535,9 @@ function App() {
 		<script src="plugin/markdown/markdown.js"></script>
 		<script src="plugin/highlight/highlight.js"></script>
 		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
 				progress: true,
-
-				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
 		</script>
