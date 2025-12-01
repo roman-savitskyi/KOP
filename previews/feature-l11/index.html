@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>КОП</title>
+
+		<link rel="stylesheet" href="reveal.css">
+		<link rel="stylesheet" href="theme/ztu.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="footer-ztu-logo"></div>
+			<div class="footer-conference-logo"></div>
+			<div class="footer-beerjs-logo"></div>
+			<div class="slides">
+				<!-- Title Slide -->
+				<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 12</h1>
+					<p class="ztu-orange">REDUX, REDUX TOOLKIT</p>
+				</section>
+
+				<!-- Яку проблему вирішує Redux -->
+				<section>
+					<h2 class="ztu-blue">ЯКУ ПРОБЛЕМУ ВИРІШУЄ REDUX?</h2>
+					<img src="https://redux.js.org/assets/images/one-way-data-flow-04fe46332c1ccb3497ecb04b94e55b97.png" alt="Redux Problem" style="max-width: 80%; height: auto;" />
+				</section>
+
+				<!-- Менеджери стану -->
+				<section>
+					<h2 class="ztu-blue">МЕНЕДЖЕРИ СТАНУ</h2>
+					<ul class="ztu-list">
+						<li>Redux</li>
+						<li>MobX</li>
+						<li>Recoil</li>
+						<li>Context API</li>
+						<li>Zustand</li>
+					</ul>
+				</section>
+
+				<!-- Порівняння менеджерів стану -->
+				<section>
+					<h2 class="ztu-blue">ПОРІВНЯННЯ</h2>
+					<table style="font-size: 0.65em; width: 100%;">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Redux</th>
+								<th>MobX</th>
+								<th>Context API</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Підхід</strong></td>
+								<td>Іммутабельний</td>
+								<td>Мутабельний</td>
+								<td>Вбудований в React</td>
+							</tr>
+							<tr>
+								<td><strong>Boilerplate</strong></td>
+								<td>Багато (без RTK)</td>
+								<td>Мінімальний</td>
+								<td>Мінімальний</td>
+							</tr>
+							<tr>
+								<td><strong>Крива навчання</strong></td>
+								<td>Складна</td>
+								<td>Помірна</td>
+								<td>Проста</td>
+							</tr>
+							<tr>
+								<td><strong>DevTools</strong></td>
+								<td>Відмінні</td>
+								<td>Добрі</td>
+								<td>Базові</td>
+							</tr>
+							<tr>
+								<td><strong>Використання</strong></td>
+								<td>Великі проєкти</td>
+								<td>Середні проєкти</td>
+								<td>Малі проєкти</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Коли використовувати Redux -->
+				<section>
+					<h2 class="ztu-blue">КОЛИ ВИКОРИСТОВУВАТИ REDUX?</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.8em;">
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1.2em;">✓ Варто використовувати</h3>
+							<ul class="ztu-list" style="font-size: 0.9em;">
+								<li>Складна логіка стану</li>
+								<li>Багато компонентів використовують один стан</li>
+								<li>Потреба в передбачуваності</li>
+								<li>Часті оновлення стану</li>
+								<li>Велика команда розробників</li>
+								<li>Потреба в time-travel debugging</li>
+							</ul>
+						</div>
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1.2em;">✗ НЕ варто використовувати</h3>
+							<ul class="ztu-list" style="font-size: 0.9em;">
+								<li>Малий проєкт (до 10 компонентів)</li>
+								<li>Простий локальний стан</li>
+								<li>Стан використовується в 1-2 компонентах</li>
+								<li>Прототипування/MVP</li>
+								<li>Статичні дані</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<!-- Redux -->
+				<section>
+					<h2 class="ztu-blue">REDUX</h2>
+					<ul class="ztu-list">
+						<li>Автор – Ден Абрамов</li>
+						<li>Бібліотека для організації архітектури застосунку</li>
+						<li>Однонаправлений потік даних</li>
+						<li>Іммутабельний стан</li>
+					</ul>
+				</section>
+
+				<!-- Flux архітектура -->
+				<section>
+					<h2 class="ztu-blue">FLUX АРХІТЕКТУРА</h2>
+				</section>
+
+				<!-- Redux діаграма -->
+				<section>
+					<h2 class="ztu-blue">REDUX</h2>
+					<img src="https://redux.js.org/assets/images/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif" alt="Redux Flow" width="650" style="max-width: 80%; height: auto;" />
+				</section>
+
+				<!-- State -->
+				<section>
+					<h2 class="ztu-blue">STATE. СТАН.</h2>
+					<p class="ztu-orange">Місце, де зберігається весь стан застосунку.</p>
+				</section>
+
+				<!-- Action -->
+				<section>
+					<h2 class="ztu-blue">ACTION. ДІЯ.</h2>
+					<ul class="ztu-list">
+						<li>Стан неможливо змінювати напряму</li>
+						<li>Стан необхідно змінювати через дію</li>
+						<li>Те, "як" ми змінюємо дані</li>
+					</ul>
+				</section>
+
+				<!-- Dispatch -->
+				<section>
+					<h2 class="ztu-blue">DISPATCH. ДІСПЕТЧЕР.</h2>
+					<ul class="ztu-list">
+						<li>Звертаємось до діспетчера</li>
+						<li>Передаємо дію</li>
+						<li>Той, "хто" ми змінюємо дані</li>
+					</ul>
+				</section>
+
+				<!-- Reducer -->
+				<section>
+					<h2 class="ztu-blue">REDUCER. РЕДЮСЕР.</h2>
+					<ul class="ztu-list">
+						<li>Система, через яку проходить взаємодія</li>
+						<li>Знаходиться вся логіка</li>
+						<li>Там, "де" працюють з даними</li>
+					</ul>
+				</section>
+
+				<!-- Встановлення -->
+				<section>
+					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ</h2>
+					<pre><code class="bash">npm i redux react-redux</code></pre>
+				</section>
+
+				<!-- Store - createStore і Provider -->
+				<section>
+					<h2 class="ztu-blue">STORE</h2>
+					<p class="ztu-orange">createStore і Provider</p>
+					<pre><code class="javascript" data-line-numbers>import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+const defaultState = {
+  counter: 0
+}
+
+const counterReducer = (state = defaultState, action) => {
+  switch (action.type) {
+    case "INCREASE_COUNTER":
+      return {...state, counter: state.counter + Number(action.payload)};
+    case "DECREASE_COUNTER":
+      return {...state, counter: state.counter - Number(action.payload)};
+    default:
+      return state;
+  }
+}
+
+const store = createStore(counterReducer);
+
+root.render(
+  &lt;React.StrictMode&gt;
+    &lt;Provider store={store}&gt;
+      &lt;App /&gt;
+    &lt;/Provider&gt;
+  &lt;/React.StrictMode&gt;
+);</code></pre>
+				</section>
+
+				<!-- useDispatch, useSelector -->
+				<section>
+					<h2 class="ztu-blue">ВИКОРИСТАННЯ</h2>
+					<p class="ztu-orange">useDispatch, useSelector</p>
+					<pre><code class="javascript" data-line-numbers>import { useDispatch, useSelector } from "react-redux";
+
+const Lesson10 = () => {
+  const dispatch = useDispatch();
+  const counter = useSelector(state => state.counter);
+
+  const increase = () => {
+    dispatch({type: "INCREASE_COUNTER", payload: 5})
+  }
+
+  const decrease = () => {
+    dispatch({type: "DECREASE_COUNTER", payload: 5})
+  }
+
+  return (
+    &lt;div&gt;
+      Counter: {counter}
+      &lt;button onClick={increase}&gt;Increase counter&lt;/button&gt;
+      &lt;button onClick={decrease}&gt;Decrease counter&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}</code></pre>
+				</section>
+
+				<!-- Redux Hooks -->
+				<section>
+					<h2 class="ztu-blue">REDUX HOOKS</h2>
+					<p style="font-size: 0.7em; color: #666;">https://react-redux.js.org/api/hooks</p>
+					<ul class="ztu-list" style="font-size: 0.85em;">
+						<li><strong>useDispatch</strong> - повертає функцію dispatch для відправки actions</li>
+						<li><strong>useSelector</strong> - витягує дані зі store, автоматично підписується на зміни</li>
+						<li><strong>useStore</strong> - повертає весь store (рідко використовується)</li>
+					</ul>
+					<pre style="margin-top: 20px;"><code class="javascript" data-line-numbers>const dispatch = useDispatch();
+const counter = useSelector(state => state.counter);
+const store = useStore();</code></pre>
+				</section>
+
+				<!-- store.subscribe -->
+				<section>
+					<h2 class="ztu-blue">STORE.SUBSCRIBE</h2>
+					<p class="ztu-orange">Підписка на зміни стану</p>
+					<pre><code class="javascript" data-line-numbers>const store = createStore(counterReducer);
+
+// Підписка на зміни
+const unsubscribe = store.subscribe(() => {
+  console.log('State changed:', store.getState());
+});
+
+// Відписка
+unsubscribe();</code></pre>
+					<p style="font-size: 0.7em; color: #666; margin-top: 20px;">
+						Примітка: У React-застосунках зазвичай використовуються хуки (useSelector) замість прямої підписки
+					</p>
+				</section>
+
+				<!-- Структура -->
+				<section>
+					<h2 class="ztu-blue">СТРУКТУРА</h2>
+					<ul class="ztu-list">
+						<li>Тека store</li>
+						<li>Всередині index.js</li>
+						<li>Тека reducers</li>
+						<li>Тека actions</li>
+					</ul>
+				</section>
+
+				<!-- Best Practices - Структура файлів -->
+				<section>
+					<h2 class="ztu-blue">BEST PRACTICES: СТРУКТУРА</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; font-size: 0.75em;">
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1.1em;">Ducks Pattern</h3>
+							<pre style="font-size: 0.85em;"><code class="plaintext">src/
+  store/
+    counter/
+      index.js (actions + reducer)
+    users/
+      index.js (actions + reducer)
+    index.js (store config)</code></pre>
+							<p style="font-size: 0.9em; margin-top: 10px;">Всі дії та редюсер в одному файлі</p>
+						</div>
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1.1em;">Feature-based</h3>
+							<pre style="font-size: 0.85em;"><code class="plaintext">src/
+  features/
+    counter/
+      counterSlice.js
+      Counter.jsx
+    users/
+      usersSlice.js
+      UserList.jsx
+  store.js</code></pre>
+							<p style="font-size: 0.9em; margin-top: 10px;">Redux Toolkit рекомендує цей підхід</p>
+						</div>
+					</div>
+				</section>
+
+				<!-- Best Practices - Загальні -->
+				<section>
+					<h2 class="ztu-blue">BEST PRACTICES</h2>
+					<ul class="ztu-list" style="font-size: 0.85em;">
+						<li><strong>Нормалізація даних</strong> - зберігайте дані в плоскому вигляді, як в БД</li>
+						<li><strong>Використовуйте селектори</strong> - створюйте функції для вибірки даних</li>
+						<li><strong>Мемоізація</strong> - використовуйте reselect для оптимізації</li>
+						<li><strong>Не зберігайте все в Redux</strong> - локальний UI стан залишайте в компонентах</li>
+						<li><strong>Іменування actions</strong> - використовуйте формат "domain/eventName"</li>
+						<li><strong>Redux Toolkit</strong> - використовуйте RTK замість plain Redux</li>
+					</ul>
+				</section>
+
+				<!-- Нормалізація даних -->
+				<section>
+					<h2 class="ztu-blue">НОРМАЛІЗАЦІЯ ДАНИХ</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.7em;">
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1em;">✗ Погано (вкладені дані)</h3>
+							<pre><code class="javascript">{
+  posts: [
+    {
+      id: 1,
+      title: "Post 1",
+      author: {
+        id: 1,
+        name: "John"
+      }
+    }
+  ]
+}</code></pre>
+						</div>
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1em;">✓ Добре (нормалізовано)</h3>
+							<pre><code class="javascript">{
+  posts: {
+    byId: {
+      1: { id: 1, title: "Post 1", authorId: 1 }
+    },
+    allIds: [1]
+  },
+  authors: {
+    byId: {
+      1: { id: 1, name: "John" }
+    }
+  }
+}</code></pre>
+						</div>
+					</div>
+				</section>
+
+				<!-- combineReducers -->
+				<section>
+					<h2 class="ztu-blue">COMBINEREDUCER</h2>
+					<p class="ztu-orange">Поєднання декількох редьюсерів в одне ціле</p>
+					<pre><code class="javascript" data-line-numbers>import { combineReducers, createStore } from "redux";
+import { counterReducer } from "./reducers/counterReducer";
+import { usersReducer } from "./reducers/usersReducer";
+
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  users: usersReducer
+})
+
+export const store = createStore(rootReducer);</code></pre>
+				</section>
+
+				<!-- DevTools -->
+				<section>
+					<h2 class="ztu-blue">DEVTOOLS</h2>
+					<p style="font-size: 0.6em; color: #666;">https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=ru</p>
+					<pre><code class="bash">npm i @redux-devtools/extension</code></pre>
+					<pre><code class="javascript" data-line-numbers>import { composeWithDevTools } from "redux-devtools-extension";
+
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  users: usersReducer
+})
+
+export const store = createStore(
+  rootReducer,
+  composeWithDevTools()
+);</code></pre>
+				</section>
+
+				<!-- Action Creators -->
+				<section>
+					<h2 class="ztu-blue">ACTION CREATORS</h2>
+					<pre><code class="javascript" data-line-numbers>export const addUserAction = (payload) =>
+  ({type: ADD_USER, payload});
+
+export const removeUserAction = (payload) =>
+  ({type: REMOVE_USER, payload});
+
+const removeUser = (id) => {
+  dispatch(removeUserAction(id));
+}</code></pre>
+				</section>
+
+				<!-- Middleware - що це -->
+				<section>
+					<h2 class="ztu-blue">MIDDLEWARE</h2>
+					<p class="ztu-orange">Проміжний шар між dispatch і reducer</p>
+					<ul class="ztu-list" style="font-size: 0.85em;">
+						<li>Перехоплює actions перед тим, як вони потраплять до reducer</li>
+						<li>Може змінювати, затримувати, або блокувати actions</li>
+						<li>Використовується для async логіки, логування, аналітики</li>
+						<li>Middleware викликаються в ланцюжку</li>
+					</ul>
+				</section>
+
+				<!-- Middleware - як працює -->
+				<section>
+					<h2 class="ztu-blue">ЯК ПРАЦЮЄ MIDDLEWARE</h2>
+					<img src="https://redux.js.org/assets/images/ReduxAsyncDataFlowDiagram-d97ff38a0f4da0f327163170ccc13e80.gif" width="650" alt="Redux Middleware Flow" style="max-width: 85%; height: auto;" />
+				</section>
+
+				<!-- Приклад власного middleware -->
+				<section>
+					<h2 class="ztu-blue">ВЛАСНИЙ MIDDLEWARE (LOGGER)</h2>
+					<pre><code class="javascript" data-line-numbers>const loggerMiddleware = (store) => (next) => (action) => {
+  console.log('Dispatching:', action);
+  console.log('State before:', store.getState());
+
+  const result = next(action);
+
+  console.log('State after:', store.getState());
+  return result;
+};
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(loggerMiddleware)
+);</code></pre>
+				</section>
+
+				<!-- Redux Thunk -->
+				<section>
+					<h2 class="ztu-blue">REDUX THUNK</h2>
+					<pre><code class="bash">npm i redux-thunk</code></pre>
+					<pre><code class="javascript" data-line-numbers>export const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);</code></pre>
+				</section>
+
+				<!-- Асинхронна логіка -->
+				<section>
+					<h2 class="ztu-blue">АСИНХРОННА ЛОГІКА</h2>
+					<pre><code class="javascript" data-line-numbers>import { addUsersAction } from "../reducers/usersReducer"
+
+export const fetchUsers = () => {
+  return (dispatch) => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(json => dispatch(addUsersAction(json)))
+  }
+}</code></pre>
+				</section>
+
+				<!-- Async патерни - стани -->
+				<section>
+					<h2 class="ztu-blue">ПАТЕРНИ ASYNC ОПЕРАЦІЙ</h2>
+					<p class="ztu-orange">Три стани: loading / success / error</p>
+					<pre><code class="javascript" data-line-numbers>const initialState = {
+  users: [],
+  loading: false,
+  error: null
+};
+
+const usersReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'FETCH_USERS_REQUEST':
+      return { ...state, loading: true, error: null };
+    case 'FETCH_USERS_SUCCESS':
+      return { ...state, loading: false, users: action.payload };
+    case 'FETCH_USERS_FAILURE':
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};</code></pre>
+				</section>
+
+				<!-- Async патерни - action creator -->
+				<section>
+					<h2 class="ztu-blue">ASYNC ACTION CREATOR</h2>
+					<pre><code class="javascript" data-line-numbers>export const fetchUsers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: 'FETCH_USERS_REQUEST' });
+
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/users'
+      );
+      const data = await response.json();
+
+      dispatch({
+        type: 'FETCH_USERS_SUCCESS',
+        payload: data
+      });
+    } catch (error) {
+      dispatch({
+        type: 'FETCH_USERS_FAILURE',
+        payload: error.message
+      });
+    }
+  };
+};</code></pre>
+				</section>
+
+				<!-- Використання в компоненті -->
+				<section>
+					<h2 class="ztu-blue">ВИКОРИСТАННЯ В КОМПОНЕНТІ</h2>
+					<pre><code class="javascript" data-line-numbers>const UsersList = () => {
+  const dispatch = useDispatch();
+  const { users, loading, error } = useSelector(state => state.users);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  if (loading) return &lt;div&gt;Завантаження...&lt;/div&gt;;
+  if (error) return &lt;div&gt;Помилка: {error}&lt;/div&gt;;
+
+  return (
+    &lt;ul&gt;
+      {users.map(user => &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- Redux Saga -->
+				<section>
+					<h2 class="ztu-blue">REDUX SAGA</h2>
+					<pre><code class="bash">npm i redux-saga</code></pre>
+					<ul class="ztu-list" style="font-size: 0.85em;">
+						<li>Потужне middleware для складної async логіки</li>
+						<li>Побудоване на генераторах ES6</li>
+						<li>Декларативний підхід до side effects</li>
+						<li>Легко тестувати</li>
+						<li>Підтримка складних сценаріїв (cancel, debounce, race)</li>
+					</ul>
+				</section>
+
+				<!-- Redux Saga - Effects -->
+				<section>
+					<h2 class="ztu-blue">REDUX SAGA: EFFECTS</h2>
+					<p class="ztu-orange">Основні ефекти для роботи з async операціями</p>
+					<ul class="ztu-list" style="font-size: 0.8em;">
+						<li><strong>call</strong> - викликає функцію (async або sync)</li>
+						<li><strong>put</strong> - dispatch action</li>
+						<li><strong>takeEvery</strong> - слухає кожну action</li>
+						<li><strong>takeLatest</strong> - слухає тільки останню action (скасовує попередні)</li>
+						<li><strong>select</strong> - отримує дані зі state</li>
+						<li><strong>fork</strong> - запускає паралельну задачу</li>
+						<li><strong>cancel</strong> - скасовує задачу</li>
+					</ul>
+				</section>
+
+				<!-- Redux Saga - приклад -->
+				<section>
+					<h2 class="ztu-blue">REDUX SAGA: ПРИКЛАД</h2>
+					<pre><code class="javascript" data-line-numbers>import { call, put, takeEvery } from 'redux-saga/effects';
+
+// Worker saga
+function* fetchUsersSaga() {
+  try {
+    yield put({ type: 'FETCH_USERS_REQUEST' });
+
+    const response = yield call(fetch,
+      'https://jsonplaceholder.typicode.com/users'
+    );
+    const users = yield call([response, 'json']);
+
+    yield put({ type: 'FETCH_USERS_SUCCESS', payload: users });
+  } catch (error) {
+    yield put({ type: 'FETCH_USERS_FAILURE', payload: error.message });
+  }
+}
+
+// Watcher saga
+function* watchFetchUsers() {
+  yield takeEvery('FETCH_USERS', fetchUsersSaga);
+}
+
+export default watchFetchUsers;</code></pre>
+				</section>
+
+				<!-- Redux Saga - конфігурація -->
+				<section>
+					<h2 class="ztu-blue">REDUX SAGA: КОНФІГУРАЦІЯ</h2>
+					<pre><code class="javascript" data-line-numbers>import { createStore, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import rootReducer from './reducers';
+import watchFetchUsers from './sagas/usersSaga';
+
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(sagaMiddleware)
+);
+
+sagaMiddleware.run(watchFetchUsers);
+
+export default store;</code></pre>
+				</section>
+
+				<!-- Redux Saga vs Redux Thunk -->
+				<section>
+					<h2 class="ztu-blue">REDUX SAGA VS REDUX THUNK</h2>
+					<table style="font-size: 0.65em; width: 100%;">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Redux Thunk</th>
+								<th>Redux Saga</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Складність</strong></td>
+								<td>Проста</td>
+								<td>Складніша</td>
+							</tr>
+							<tr>
+								<td><strong>Підхід</strong></td>
+								<td>Імперативний</td>
+								<td>Декларативний</td>
+							</tr>
+							<tr>
+								<td><strong>Тестування</strong></td>
+								<td>Складніше (потрібні моки)</td>
+								<td>Легше (без моків)</td>
+							</tr>
+							<tr>
+								<td><strong>Cancelation</strong></td>
+								<td>Вручну</td>
+								<td>Вбудовано</td>
+							</tr>
+							<tr>
+								<td><strong>Debounce/Throttle</strong></td>
+								<td>Додаткові бібліотеки</td>
+								<td>Вбудовано</td>
+							</tr>
+							<tr>
+								<td><strong>Використання</strong></td>
+								<td>Прості async операції</td>
+								<td>Складна async логіка</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Redux Toolkit -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<pre><code class="bash">npm i @reduxjs/toolkit react-redux</code></pre>
+					<ul class="ztu-list">
+						<li>Надбудова над редакс</li>
+						<li>Автори – розробники редакс</li>
+						<li>Вбудований відразу DevTools, redux-thunk</li>
+						<li>Емулює мутації</li>
+					</ul>
+				</section>
+
+				<!-- Чому RTK -->
+				<section>
+					<h2 class="ztu-blue">ЧОМУ REDUX TOOLKIT?</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; font-size: 0.75em;">
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1.1em;">Plain Redux</h3>
+							<ul style="list-style: none; padding: 0;">
+								<li>✗ Багато boilerplate коду</li>
+								<li>✗ Складна конфігурація store</li>
+								<li>✗ Ручне додавання middleware</li>
+								<li>✗ Потрібна обережність з іммутабельністю</li>
+								<li>✗ Багато окремих пакетів</li>
+							</ul>
+						</div>
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1.1em;">Redux Toolkit</h3>
+							<ul style="list-style: none; padding: 0;">
+								<li>✓ Мінімум boilerplate</li>
+								<li>✓ configureStore з налаштуваннями</li>
+								<li>✓ DevTools і thunk вбудовані</li>
+								<li>✓ Immer для "мутацій"</li>
+								<li>✓ Все в одному пакеті</li>
+							</ul>
+						</div>
+					</div>
+					<p style="font-size: 0.7em; margin-top: 20px; color: #666;">
+						Redux Toolkit - офіційно рекомендований спосіб використання Redux
+					</p>
+				</section>
+
+				<!-- Immer -->
+				<section>
+					<h2 class="ztu-blue">IMMER - "МУТАЦІЇ"</h2>
+					<p class="ztu-orange">RTK використовує Immer для спрощення роботи зі станом</p>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.7em;">
+						<div>
+							<h3 style="font-size: 1em;">Без Immer (Plain Redux)</h3>
+							<pre><code class="javascript">case 'ADD_TODO':
+  return {
+    ...state,
+    todos: [
+      ...state.todos,
+      action.payload
+    ]
+  };</code></pre>
+						</div>
+						<div>
+							<h3 style="font-size: 1em;">З Immer (RTK)</h3>
+							<pre><code class="javascript">addTodo: (state, action) => {
+  state.todos.push(action.payload);
+}</code></pre>
+						</div>
+					</div>
+					<p style="font-size: 0.8em; margin-top: 15px;">
+						Immer автоматично створює новий іммутабельний стан
+					</p>
+				</section>
+
+				<!-- configureStore -->
+				<section>
+					<h2 class="ztu-blue">CONFIGURESTORE</h2>
+					<p class="ztu-orange">Спрощена конфігурація store</p>
+					<pre><code class="javascript" data-line-numbers>import { configureStore } from '@reduxjs/toolkit';
+import counterReducer from './features/counter/counterSlice';
+import usersReducer from './features/users/usersSlice';
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+    users: usersReducer
+  }
+  // DevTools та thunk вже налаштовані автоматично!
+});</code></pre>
+				</section>
+
+				<!-- createReducer, createAction -->
+				<section>
+					<h2 class="ztu-blue">CREATEREDUCER, CREATEACTION</h2>
+					<pre><code class="javascript" data-line-numbers>import { createAction, createReducer } from "@reduxjs/toolkit"
+
+const defaultState = { counter: 0 }
+
+const increase = createAction("INCREASE_COUNTER")
+const decrease = createAction("DECREASE_COUNTER")
+
+export default createReducer(defaultState, {
+  [increase]: (state, action) =>
+    state.counter = state.counter + action.payload,
+  [decrease]: (state, action) =>
+    state.counter = state.counter - action.payload
+})</code></pre>
+				</section>
+
+				<!-- createSlice -->
+				<section>
+					<h2 class="ztu-blue">CREATESLICE</h2>
+					<pre><code class="javascript" data-line-numbers>import { createSlice } from '@reduxjs/toolkit';
+
+const toolkitSlice = createSlice({
+  name: "toolkit",
+  initialState: { counter: 0 },
+  reducers: {
+    increment(state) {
+      state.counter = state.counter + 1
+    },
+    decrement(state) {
+      state.counter = state.counter - 1
+    }
+  }
+});</code></pre>
+				</section>
+
+				<!-- createAsyncThunk -->
+				<section>
+					<h2 class="ztu-blue">CREATEASYNCTHUNK</h2>
+					<pre><code class="javascript" data-line-numbers>import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+export const fetchUsers = createAsyncThunk(
+  'users/fetchUsers',
+  async () => {
+    const response = await fetch(
+      'https://jsonplaceholder.typicode.com/users'
+    );
+    return response.json();
+  }
+);
+
+const usersSlice = createSlice({
+  name: 'users',
+  initialState: { users: [], status: 'idle' },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.users = action.payload;
+      })
+  }
+});</code></pre>
+				</section>
+
+				<!-- RTK Query -->
+				<section>
+					<h2 class="ztu-blue">RTK QUERY</h2>
+					<p class="ztu-orange">Потужний інструмент для роботи з API</p>
+					<ul class="ztu-list" style="font-size: 0.85em;">
+						<li>Автоматичне кешування даних</li>
+						<li>Автоматична повторна вибірка даних</li>
+						<li>Оптимістичні оновлення</li>
+						<li>Автоматична генерація hooks</li>
+						<li>Зменшує boilerplate на 90%</li>
+					</ul>
+					<p style="font-size: 0.7em; margin-top: 20px; color: #666;">
+						RTK Query - альтернатива react-query, SWR для Redux
+					</p>
+				</section>
+
+				<!-- RTK Query - створення API -->
+				<section>
+					<h2 class="ztu-blue">RTK QUERY: СТВОРЕННЯ API</h2>
+					<pre><code class="javascript" data-line-numbers>import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+export const usersApi = createApi({
+  reducerPath: 'usersApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://jsonplaceholder.typicode.com'
+  }),
+  endpoints: (builder) => ({
+    getUsers: builder.query({
+      query: () => '/users',
+    }),
+    getUserById: builder.query({
+      query: (id) => `/users/${id}`,
+    }),
+    addUser: builder.mutation({
+      query: (newUser) => ({
+        url: '/users',
+        method: 'POST',
+        body: newUser,
+      }),
+    }),
+  }),
+});
+
+export const { useGetUsersQuery, useGetUserByIdQuery, useAddUserMutation } = usersApi;</code></pre>
+				</section>
+
+				<!-- RTK Query - конфігурація store -->
+				<section>
+					<h2 class="ztu-blue">RTK QUERY: КОНФІГУРАЦІЯ STORE</h2>
+					<pre><code class="javascript" data-line-numbers>import { configureStore } from '@reduxjs/toolkit';
+import { usersApi } from './services/usersApi';
+
+export const store = configureStore({
+  reducer: {
+    [usersApi.reducerPath]: usersApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(usersApi.middleware),
+});</code></pre>
+				</section>
+
+				<!-- RTK Query - використання в компоненті -->
+				<section>
+					<h2 class="ztu-blue">RTK QUERY: ВИКОРИСТАННЯ</h2>
+					<pre><code class="javascript" data-line-numbers>import { useGetUsersQuery, useAddUserMutation } from './services/usersApi';
+
+const UsersList = () => {
+  const { data: users, isLoading, isError, error } = useGetUsersQuery();
+  const [addUser, { isLoading: isAdding }] = useAddUserMutation();
+
+  const handleAddUser = async () => {
+    await addUser({ name: 'New User', email: 'user@example.com' });
+  };
+
+  if (isLoading) return &lt;div&gt;Завантаження...&lt;/div&gt;;
+  if (isError) return &lt;div&gt;Помилка: {error.message}&lt;/div&gt;;
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={handleAddUser} disabled={isAdding}&gt;
+        Додати користувача
+      &lt;/button&gt;
+      &lt;ul&gt;
+        {users?.map(user => &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;)}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- RTK Query - переваги -->
+				<section>
+					<h2 class="ztu-blue">RTK QUERY: ПЕРЕВАГИ</h2>
+					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.7em;">
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1em;">createAsyncThunk (41 рядків)</h3>
+							<pre style="font-size: 0.75em;"><code class="javascript">// actions
+const fetchUsers = createAsyncThunk(...)
+const addUser = createAsyncThunk(...)
+
+// slice
+const usersSlice = createSlice({
+  initialState: {
+    users: [],
+    loading: false,
+    error: null
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, ...)
+      .addCase(fetchUsers.fulfilled, ...)
+      .addCase(fetchUsers.rejected, ...)
+      .addCase(addUser.pending, ...)
+      // ...
+  }
+})
+
+// component
+const { users, loading } = useSelector(...)
+const dispatch = useDispatch()
+useEffect(() => {
+  dispatch(fetchUsers())
+}, [])</code></pre>
+						</div>
+						<div>
+							<h3 class="ztu-orange" style="font-size: 1em;">RTK Query (15 рядків)</h3>
+							<pre style="font-size: 0.75em;"><code class="javascript">// API
+const api = createApi({
+  endpoints: (builder) => ({
+    getUsers: builder.query({
+      query: () => '/users'
+    }),
+    addUser: builder.mutation({
+      query: (user) => ({
+        url: '/users',
+        method: 'POST',
+        body: user
+      })
+    })
+  })
+})
+
+// component
+const { data: users, isLoading } =
+  useGetUsersQuery()
+const [addUser] = useAddUserMutation()</code></pre>
+						</div>
+					</div>
+					<p style="font-size: 0.8em; margin-top: 15px; text-align: center;">
+						<strong>RTK Query автоматично:</strong> кешує дані, обробляє loading/error стани,
+						повторно завантажує при необхідності, синхронізує дані між компонентами
+					</p>
+				</section>
+
+				<!-- Поширені помилки -->
+				<section>
+					<h2 class="ztu-blue">ПОШИРЕНІ ПОМИЛКИ</h2>
+					<ul class="ztu-list" style="font-size: 0.8em;">
+						<li><strong>Мутація стану напряму</strong> - завжди повертайте новий об'єкт (або використовуйте RTK)</li>
+						<li><strong>Занадто багато даних в store</strong> - не зберігайте форми, UI стан</li>
+						<li><strong>Відсутність нормалізації</strong> - вкладені дані ускладнюють оновлення</li>
+						<li><strong>Великі редюсери</strong> - розбивайте на менші з combineReducers</li>
+						<li><strong>Синхронна логіка в reducers</strong> - використовуйте middleware для async</li>
+						<li><strong>Прямий dispatch без action creators</strong> - створюйте функції для дій</li>
+					</ul>
+				</section>
+
+				<!-- Тестування Redux -->
+				<section>
+					<h2 class="ztu-blue">ТЕСТУВАННЯ REDUX</h2>
+					<div style="font-size: 0.75em;">
+						<h3 class="ztu-orange" style="font-size: 1em;">Тестування Reducers</h3>
+						<pre style="font-size: 0.85em;"><code class="javascript" data-line-numbers>test('should handle increment', () => {
+  const previousState = { counter: 0 };
+  expect(counterReducer(previousState, increment())).toEqual({
+    counter: 1
+  });
+});</code></pre>
+						<h3 class="ztu-orange" style="font-size: 1em; margin-top: 15px;">Тестування Async Thunks</h3>
+						<pre style="font-size: 0.85em;"><code class="javascript" data-line-numbers>test('should fetch users', async () => {
+  const dispatch = jest.fn();
+  const thunk = fetchUsers();
+  await thunk(dispatch, () => {}, undefined);
+
+  expect(dispatch).toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'users/fetchUsers/fulfilled' })
+  );
+});</code></pre>
+					</div>
+				</section>
+
+				<!-- Корисні ресурси -->
+				<section>
+					<h2 class="ztu-blue">КОРИСНІ РЕСУРСИ</h2>
+					<ul class="ztu-list" style="font-size: 0.75em;">
+						<li><strong>Документація Redux:</strong> <span style="color: #666;">https://redux.js.org/</span></li>
+						<li><strong>Redux Toolkit:</strong> <span style="color: #666;">https://redux-toolkit.js.org/</span></li>
+						<li><strong>React Redux:</strong> <span style="color: #666;">https://react-redux.js.org/</span></li>
+						<li><strong>Redux DevTools:</strong> <span style="color: #666;">Chrome/Firefox extension</span></li>
+						<li><strong>Офіційні туторіали:</strong> <span style="color: #666;">Redux Essentials, Redux Fundamentals</span></li>
+						<li><strong>Reselect (мемоізація):</strong> <span style="color: #666;">https://github.com/reduxjs/reselect</span></li>
+					</ul>
+				</section>
+
+				<!-- Final slide -->
+				<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 12</h1>
+					<p class="ztu-orange">REDUX, REDUX TOOLKIT</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				progress: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
