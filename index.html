@@ -19,142 +19,213 @@
 			<div class="footer-conference-logo"></div>
 			<div class="footer-beerjs-logo"></div>
 			<div class="slides">
-				<!-- 1. Титул -->
+				<!-- Title -->
 				<section>
-					<h1 class="ztu-blue">Компонентно-орієнтоване програмування</h1>
-					<p class="ztu-orange">Фронтенд. Загальні концепти</p>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 2</h1>
+					<p class="ztu-orange">REACT · NODE.JS · VIRTUAL DOM · КОМПОНЕНТИ · JSX</p>
 				</section>
 
-				<!-- 2. З чого складається інтерфейс -->
+				<!-- Фронтенд екосистема -->
 				<section>
-					<h2>З чого складається інтерфейс?</h2>
+					<h2 class="ztu-blue">ФРОНТЕНД ЕКОСИСТЕМА</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Будь-яка сторінка — це набір візуальних блоків</li>
-						<li class="fragment fade-in-then-semi-out">Шапка, меню, картка, кнопка, форма, футер</li>
-						<li class="fragment fade-in-then-semi-out">Однакові блоки повторюються (список схожих карток)</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Інтерфейс = конструктор із частин</li>
+						<li class="fragment fade-in-then-semi-out">Фреймворк. Ангуляр</li>
+						<li class="fragment fade-in-then-semi-out">Бібліотека. Реакт</li>
+						<li class="fragment fade-in-then-semi-out">Бібліотека. Вью</li>
+						<li class="fragment fade-in-then-semi-out">Підхід. Свелте</li>
+						<li class="fragment fade-in-then-semi-out">Бібліотека. SolidJS</li>
 					</ul>
 				</section>
 
-				<!-- 3. Головна проблема: синхронізація UI та даних -->
+				<!-- Яку проблему вирішують фреймворки -->
 				<section>
-					<h2>Головна проблема фронтенду</h2>
+					<h2 class="ztu-blue">ЯКУ ПРОБЛЕМУ ВИРІШУЮТЬ ФРОНТЕНД ФРЕЙМВОРКИ?</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out ztu-orange">Дані постійно змінюються. Як тримати екран синхронним?</li>
-						<li class="fragment fade-in-then-semi-out">Прийшли нові дані — треба оновити потрібні блоки</li>
-						<li class="fragment fade-in-then-semi-out">«Було»: вручну знайти елемент і змінити його</li>
-						<li class="fragment fade-in-then-semi-out">Багато елементів → багато ручних оновлень → помилки</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Яку проблему вирішує КОП?</h2>
-            		<img src="examples/assets/image8.png" width="500" style="padding-left: 20px" alt="">
-				</section>
-
-				<!-- 4. Що таке компонент -->
-				<section>
-					<h2>Що таке компонент?</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Самостійний шматок інтерфейсу</li>
-						<li class="fragment fade-in-then-semi-out">Містить усе своє разом: розмітку, вигляд і поведінку</li>
-						<li class="fragment fade-in-then-semi-out">Має назву й може перевикористовуватись</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Аналогія: деталь конструктора</li>
+						<li class="fragment fade-in-then-semi-out">Проблема контролю та синхронізації даних та їх відображення</li>
+						<li class="fragment fade-in-then-semi-out">Швидкий рендеринг DOM (бажано 60fps)</li>
 					</ul>
 				</section>
 
-				<!-- 5. Композиція -->
+				<!-- Що таке React -->
 				<section>
-					<h2>Композиція: складне з простого</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Малі компоненти складаються у більші</li>
-						<li class="fragment fade-in-then-semi-out">Сторінка — це дерево компонентів</li>
-						<li class="fragment fade-in-then-semi-out">Кнопка → Картка → Список → Сторінка</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Один компонент — багато місць</li>
-					</ul>
-				</section>
-
-				<!-- 6. Декларативність vs імперативність -->
-				<section>
-					<h2>Декларативно, а не імперативно</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Імперативно: описуємо КОЖЕН крок «як» зробити</li>
-						<li class="fragment fade-in-then-semi-out">Декларативно: описуємо ЩО має бути на екрані</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Аналогія: «відвези додому» vs покрокова навігація</li>
-						<li class="fragment fade-in-then-semi-out">Ми описуємо результат — решту робить фреймворк</li>
-					</ul>
-				</section>
-
-				<!-- 7. Реактивність -->
-				<section>
-					<h2>Реактивність</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Змінилися дані → інтерфейс оновлюється сам</li>
-						<li class="fragment fade-in-then-semi-out">DOM вручну не чіпаємо</li>
-						<li class="fragment fade-in-then-semi-out">Джерело правди — дані; UI це їх відображення</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">UI = функція від даних</li>
-					</ul>
-				</section>
-
-				<!-- 8. Під капотом (оглядово) -->
-				<section>
-					<h2>Як це працює під капотом <span class="ztu-orange">(оглядово)</span></h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Фреймворк сам вираховує, що саме змінилось</li>
-						<li class="fragment fade-in-then-semi-out">Оновлює лише потрібні частини екрана</li>
-						<li class="fragment fade-in-then-semi-out">Мета — швидко й плавно (бажано 60fps)</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Деталі (Virtual DOM) — наступна лекція</li>
-					</ul>
-				</section>
-
-				<!-- 9. Задачі КОП -->
-				<section>
-					<h2>Задачі КОП та фронтенд</h2>
+					<h2 class="ztu-blue">ЩО ТАКЕ РЕАКТ?</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Трансформація даних у розмітку</li>
-						<li class="fragment fade-in-then-semi-out">Перемальовування при зміні даних</li>
-						<li class="fragment fade-in-then-semi-out">Open source екосистема (система бібліотек)</li>
+						<li class="fragment fade-in-then-semi-out">Перемальовування даних</li>
+						<li class="fragment fade-in-then-semi-out">Open source бібліотека для створення веб-інтерфейсів</li>
 					</ul>
 				</section>
 
-				<!-- 10. Принципи КОП -->
+				<!-- Офіційна документація -->
 				<section>
-					<h2>Принципи КОП та фронтенд</h2>
+					<h2 class="ztu-blue">ОФІЦІЙНА ДОКУМЕНТАЦІЯ</h2>
+					<p class="fragment fade-in-then-semi-out">The library for web and native user interfaces</p>
+					<p class="ztu-orange fragment fade-in-then-semi-out">react.dev</p>
+				</section>
+
+				<!-- Де використовується React -->
+				<section>
+					<h2 class="ztu-blue">ДЕ ВИКОРИСТОВУЄТЬСЯ РЕАКТ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Декларативність</li>
+						<li class="fragment fade-in-then-semi-out">SSR server</li>
+						<li class="fragment fade-in-then-semi-out">react — web</li>
+						<li class="fragment fade-in-then-semi-out">react-native — iOS, Android apps</li>
+					</ul>
+				</section>
+
+				<!-- Принципи React -->
+				<section>
+					<h2 class="ztu-blue">ПРИНЦИПИ РЕАКТ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Декларативний</li>
 						<li class="fragment fade-in-then-semi-out">Контроль даних, а не розмітки</li>
 						<li class="fragment fade-in-then-semi-out">Базується на компонентах</li>
 					</ul>
 				</section>
 
-				<!-- 11. Екосистема: типи рішень -->
+				<!-- Розділ: Установка та старт -->
 				<section>
-					<h2>Екосистема: три типи рішень</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out"><span class="ztu-orange">Фреймворк</span> — задає повний каркас і правила</li>
-						<li class="fragment fade-in-then-semi-out"><span class="ztu-orange">Бібліотека</span> — вирішує одну задачу, збираєш сам</li>
-						<li class="fragment fade-in-then-semi-out"><span class="ztu-orange">Підхід</span> — спосіб мислення, а не інструмент</li>
-					</ul>
+					<h2 class="ztu-blue">УСТАНОВКА ТА СТАРТ</h2>
 				</section>
+
+				<!-- Node.js -->
 				<section>
-					<h2>Екосистема: приклади</h2>
+					<h2 class="ztu-blue">NODE.JS</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Angular — фреймворк</li>
-						<li class="fragment fade-in-then-semi-out">React, SolidJS — бібліотеки</li>
-						<li class="fragment fade-in-then-semi-out">Vue — фреймворк</li>
-						<li class="fragment fade-in-then-semi-out">Svelte — компілятор</li>
-						<li class="fragment fade-in-then-semi-out">htmx — підхід</li>
+						<li class="fragment fade-in-then-semi-out">Середовище виконання JavaScript на основі рушія V8 (Google)</li>
+						<li class="fragment fade-in-then-semi-out">Розробник — Раян Дал, 2009 р.</li>
+						<li class="fragment fade-in-then-semi-out">Безплатне, кросплатформне, з відкритим кодом</li>
+						<li class="fragment fade-in-then-semi-out">Сервери, вебзастосунки, CLI-інструменти та скрипти</li>
 					</ul>
 				</section>
 
-				<!-- 12. Підсумок -->
+				<!-- npm / npx -->
 				<section>
-					<h2>Що запамʼятати</h2>
+					<h2 class="ztu-blue">NODE.JS</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Інтерфейс будуємо з компонентів</li>
-						<li class="fragment fade-in-then-semi-out">Описуємо ЩО показати, а не ЯК</li>
-						<li class="fragment fade-in-then-semi-out">Змінюються дані → UI оновлюється сам</li>
-						<li class="fragment fade-in-then-semi-out ztu-orange">Далі: props, state, потік даних, Virtual DOM</li>
+						<li class="fragment fade-in-then-semi-out">npm (Node Package Manager) — встановлює пакети та їх залежності</li>
+						<li class="fragment fade-in-then-semi-out">npx (Node Package Executor) — встановлює пакети та запускає їх</li>
 					</ul>
+				</section>
+
+				<!-- Документація по встановленню -->
+				<section>
+					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ РЕАКТ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Для локальної розробки потрібен Node.js</li>
+						<li class="fragment fade-in-then-semi-out">Можна додати React у наявний проєкт</li>
+					</ul>
+					<p class="ztu-orange fragment fade-in-then-semi-out">react.dev/learn/installation</p>
+				</section>
+
+				<!-- Create React App -->
+				<section>
+					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ РЕАКТ: CREATE-REACT-APP</h2>
+					<p class="ztu-orange">npm-пакет від компанії Meta</p>
+					<pre><code class="bash">npx create-react-app my-app
+cd my-app
+npm start</code></pre>
+				</section>
+
+				<!-- Базові команди -->
+				<section>
+					<h2 class="ztu-blue">БАЗОВІ КОМАНДИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">npm run dev</li>
+						<li class="fragment fade-in-then-semi-out">npm run build</li>
+						<li class="fragment fade-in-then-semi-out">npm run start</li>
+						<li class="fragment fade-in-then-semi-out">npm run lint</li>
+					</ul>
+				</section>
+
+				<!-- Vite -->
+				<section>
+					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ РЕАКТ: VITE</h2>
+					<pre><code class="bash">npm create vite@latest</code></pre>
+				</section>
+
+				<!-- Рендеринг -->
+				<section>
+					<h2 class="ztu-blue">РЕНДЕРИНГ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">DOM (Document Object Model)</li>
+						<li class="fragment fade-in-then-semi-out">DOM-документ є деревом</li>
+						<li class="fragment fade-in-then-semi-out">Гілки дерева оновлюються повністю</li>
+					</ul>
+				</section>
+
+				<!-- Virtual DOM -->
+				<section>
+					<h2 class="ztu-blue">VIRTUAL DOM</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">React-DOM працює з віртуальним DOM</li>
+						<li class="fragment fade-in-then-semi-out">Віртуальний DOM зберігається в памʼяті і синхронізується з DOM</li>
+						<li class="fragment fade-in-then-semi-out">Процес узгодження (reconciliation)</li>
+					</ul>
+				</section>
+
+				<!-- Як React використовує Virtual DOM -->
+				<section>
+					<h2 class="ztu-blue">ЯК РЕАКТ ВИКОРИСТОВУЄ VIRTUAL DOM?</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">React спостерігає (Observer) за станами компонентів</li>
+						<li class="fragment fade-in-then-semi-out">При зміні стану компонента оновлює VDOM</li>
+						<li class="fragment fade-in-then-semi-out">Порівняння VDOM з попередньою версією (diffing)</li>
+						<li class="fragment fade-in-then-semi-out">Оновлення переносяться в реальний DOM пакетно (batch)</li>
+					</ul>
+				</section>
+
+				<!-- React Fiber -->
+				<section>
+					<h2 class="ztu-blue">REACT FIBER</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">React використовує React Fiber як механізм узгодження</li>
+					</ul>
+				</section>
+
+				<!-- Компоненти -->
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Найменша атомарна одиниця в React</li>
+						<li class="fragment fade-in-then-semi-out">Розроблені для повторного використання</li>
+						<li class="fragment fade-in-then-semi-out">Містять props, які приймають дані через параметри</li>
+						<li class="fragment fade-in-then-semi-out">Описуються станом state, що зберігає дані властивостей</li>
+						<li class="fragment fade-in-then-semi-out">Містять props &amp; state</li>
+						<li class="fragment fade-in-then-semi-out">Функціональні та класові компоненти</li>
+					</ul>
+				</section>
+
+				<!-- Функціональний компонент -->
+				<section>
+					<h2 class="ztu-blue">ФУНКЦІОНАЛЬНИЙ КОМПОНЕНТ</h2>
+					<pre><code class="javascript">function Welcome(props) {
+  return &lt;h1&gt;Привіт, {props.name}&lt;/h1&gt;;
+}
+
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;Welcome name="Аліса" /&gt;
+      &lt;Welcome name="Богдан" /&gt;
+      &lt;Welcome name="Остап" /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- JSX -->
+				<section>
+					<h2 class="ztu-blue">JSX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Розширення мови JavaScript</li>
+						<li class="fragment fade-in-then-semi-out">Дозволяє використовувати HTML-подібний синтаксис</li>
+					</ul>
+				</section>
+
+				<!-- Запитання -->
+				<section>
+					<h2 class="ztu-blue">ЗАПИТАННЯ</h2>
 				</section>
 			</div>
 		</div>
