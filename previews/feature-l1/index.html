@@ -19,64 +19,141 @@
 			<div class="footer-conference-logo"></div>
 			<div class="footer-beerjs-logo"></div>
 			<div class="slides">
+				<!-- 1. Титул -->
 				<section>
 					<h1 class="ztu-blue">Компонентно-орієнтоване програмування</h1>
 					<p class="ztu-orange">Фронтенд. Загальні концепти</p>
 				</section>
-				
+
+				<!-- 2. З чого складається інтерфейс -->
 				<section>
-					<h1>Фронтенд екосистема</h1>
+					<h2>З чого складається інтерфейс?</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Фреймворк. Ангуляр</li>
-						<li class="fragment fade-in-then-semi-out">Бібліотека. Реакт</li>
-						<li class="fragment fade-in-then-semi-out">Бібліотека. Вью</li>
-						<li class="fragment fade-in-then-semi-out">Підхід. Свелте</li>
-						<li class="fragment fade-in-then-semi-out">Бібліотека. htmlx</li>
-						<li class="fragment fade-in-then-semi-out">Бібліотека. solidjs</li>
+						<li class="fragment fade-in-then-semi-out">Будь-яка сторінка — це набір візуальних блоків</li>
+						<li class="fragment fade-in-then-semi-out">Шапка, меню, картка, кнопка, форма, футер</li>
+						<li class="fragment fade-in-then-semi-out">Однакові блоки повторюються (список схожих карток)</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">Інтерфейс = конструктор із частин</li>
+					</ul>
+				</section>
+
+				<!-- 3. Головна проблема: синхронізація UI та даних -->
+				<section>
+					<h2>Головна проблема фронтенду</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out ztu-orange">Дані постійно змінюються. Як тримати екран синхронним?</li>
+						<li class="fragment fade-in-then-semi-out">Прийшли нові дані — треба оновити потрібні блоки</li>
+						<li class="fragment fade-in-then-semi-out">«Було»: вручну знайти елемент і змінити його</li>
+						<li class="fragment fade-in-then-semi-out">Багато елементів → багато ручних оновлень → помилки</li>
 					</ul>
 				</section>
 				<section>
-					<h1>Фронтенд екосистема</h1>
-					<ul class="ztu-list">
-						<li class="">Фреймворк</li>
-						<li class="">Бібліотека</li>
-						<li class="">Підхід</li>
-					</ul>
-				</section>
-				<section>
-					<h1>Відповідність екосистеми</h1>
-					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Бібліотека. Вью</li>
-						<li class="fragment fade-in-then-semi-out">Підхід. Свелте</li>
-						<li class="fragment fade-in-then-semi-out">Бібліотека. htmlx</li>
-						<li class="fragment fade-in-then-semi-out">Бібліотека. solidjs</li>
-					</ul>
-				</section>
-				<section>
-					<h2>Яку проблему вирішують фронтенд фреймворки?</h2>
+					<h2>Яку проблему вирішує КОП?</h2>
             		<img src="examples/assets/image8.png" width="500" style="padding-left: 20px" alt="">
 				</section>
+
+				<!-- 4. Що таке компонент -->
 				<section>
-					<h1>Яку проблему вирішують фронтенд фреймворки?</h1>
+					<h2>Що таке компонент?</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Проблема контролю та синхронізації данних та їх відображення</li>
-						<li class="fragment fade-in-then-semi-out">Швидкий рендерінг DOM (бажано 60fps)</li>
-							</ul>
+						<li class="fragment fade-in-then-semi-out">Самостійний шматок інтерфейсу</li>
+						<li class="fragment fade-in-then-semi-out">Містить усе своє разом: розмітку, вигляд і поведінку</li>
+						<li class="fragment fade-in-then-semi-out">Має назву й може перевикористовуватись</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">Аналогія: деталь конструктора</li>
+					</ul>
 				</section>
+
+				<!-- 5. Композиція -->
 				<section>
-					<h1>Задачі КОП та фронтенд</h1>
+					<h2>Композиція: складне з простого</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Трансформація данних в розмітку</li>
-						<li class="fragment fade-in-then-semi-out">Перемальовування данних</li>
+						<li class="fragment fade-in-then-semi-out">Малі компоненти складаються у більші</li>
+						<li class="fragment fade-in-then-semi-out">Сторінка — це дерево компонентів</li>
+						<li class="fragment fade-in-then-semi-out">Кнопка → Картка → Список → Сторінка</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">Один компонент — багато місць</li>
+					</ul>
+				</section>
+
+				<!-- 6. Декларативність vs імперативність -->
+				<section>
+					<h2>Декларативно, а не імперативно</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Імперативно: описуємо КОЖЕН крок «як» зробити</li>
+						<li class="fragment fade-in-then-semi-out">Декларативно: описуємо ЩО має бути на екрані</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">Аналогія: «відвези додому» vs покрокова навігація</li>
+						<li class="fragment fade-in-then-semi-out">Ми описуємо результат — решту робить фреймворк</li>
+					</ul>
+				</section>
+
+				<!-- 7. Реактивність -->
+				<section>
+					<h2>Реактивність</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Змінилися дані → інтерфейс оновлюється сам</li>
+						<li class="fragment fade-in-then-semi-out">DOM вручну не чіпаємо</li>
+						<li class="fragment fade-in-then-semi-out">Джерело правди — дані; UI це їх відображення</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">UI = функція від даних</li>
+					</ul>
+				</section>
+
+				<!-- 8. Під капотом (оглядово) -->
+				<section>
+					<h2>Як це працює під капотом <span class="ztu-orange">(оглядово)</span></h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Фреймворк сам вираховує, що саме змінилось</li>
+						<li class="fragment fade-in-then-semi-out">Оновлює лише потрібні частини екрана</li>
+						<li class="fragment fade-in-then-semi-out">Мета — швидко й плавно (бажано 60fps)</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">Деталі (Virtual DOM) — наступна лекція</li>
+					</ul>
+				</section>
+
+				<!-- 9. Задачі КОП -->
+				<section>
+					<h2>Задачі КОП та фронтенд</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Трансформація даних у розмітку</li>
+						<li class="fragment fade-in-then-semi-out">Перемальовування при зміні даних</li>
 						<li class="fragment fade-in-then-semi-out">Open source екосистема (система бібліотек)</li>
 					</ul>
-				</section>				
+				</section>
+
+				<!-- 10. Принципи КОП -->
 				<section>
-					<h1>Принципи КОП та фронтенд</h1>
+					<h2>Принципи КОП та фронтенд</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Декларативний</li>
-						<li class="fragment fade-in-then-semi-out">Контроль данних, а не розмітки</li>
+						<li class="fragment fade-in-then-semi-out">Декларативність</li>
+						<li class="fragment fade-in-then-semi-out">Контроль даних, а не розмітки</li>
 						<li class="fragment fade-in-then-semi-out">Базується на компонентах</li>
+					</ul>
+				</section>
+
+				<!-- 11. Екосистема: типи рішень -->
+				<section>
+					<h2>Екосистема: три типи рішень</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><span class="ztu-orange">Фреймворк</span> — задає повний каркас і правила</li>
+						<li class="fragment fade-in-then-semi-out"><span class="ztu-orange">Бібліотека</span> — вирішує одну задачу, збираєш сам</li>
+						<li class="fragment fade-in-then-semi-out"><span class="ztu-orange">Підхід</span> — спосіб мислення, а не інструмент</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Екосистема: приклади</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Angular — фреймворк</li>
+						<li class="fragment fade-in-then-semi-out">React, SolidJS — бібліотеки</li>
+						<li class="fragment fade-in-then-semi-out">Vue — фреймворк</li>
+						<li class="fragment fade-in-then-semi-out">Svelte — компілятор</li>
+						<li class="fragment fade-in-then-semi-out">htmx — підхід</li>
+					</ul>
+				</section>
+
+				<!-- 12. Підсумок -->
+				<section>
+					<h2>Що запамʼятати</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Інтерфейс будуємо з компонентів</li>
+						<li class="fragment fade-in-then-semi-out">Описуємо ЩО показати, а не ЯК</li>
+						<li class="fragment fade-in-then-semi-out">Змінюються дані → UI оновлюється сам</li>
+						<li class="fragment fade-in-then-semi-out ztu-orange">Далі: props, state, потік даних, Virtual DOM</li>
 					</ul>
 				</section>
 			</div>
