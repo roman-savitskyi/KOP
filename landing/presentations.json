@@ -1,0 +1,140 @@
+{
+  "_comment": "Метадані для карток порталу. slug = ім'я папки в gh-pages/previews/. Нові гілки, яких тут нема, зʼявляються автоматично у групі 'other' з назвою за slug — додайте їх сюди для гарної назви/опису. Сортування в межах групи — за 'order'.",
+  "groups": [
+    { "id": "lectures", "title": "Лекції курсу", "title_en": "Course lectures" },
+    { "id": "extra", "title": "Додаткові матеріали", "title_en": "Additional materials" },
+    { "id": "other", "title": "Інші презентації", "title_en": "Other presentations" }
+  ],
+  "presentations": [
+    {
+      "slug": "feature-l0",
+      "group": "lectures",
+      "order": 0,
+      "badge": "Лекція 0",
+      "title": "Вступ до курсу",
+      "title_en": "Course introduction",
+      "desc": "Про що курс, робота на порталі, академічна доброчесність, огляд програми.",
+      "desc_en": "What the course is about, working on the portal, academic integrity, syllabus overview."
+    },
+    {
+      "slug": "feature-l1",
+      "group": "lectures",
+      "order": 1,
+      "badge": "Лекція 1",
+      "title": "Вступ у фронтенд",
+      "title_en": "Introduction to frontend",
+      "desc": "З чого складається інтерфейс, головна проблема фронтенду, яку проблему вирішує КОП.",
+      "desc_en": "What a UI is made of, the core frontend problem, and the problem component-oriented programming solves."
+    },
+    {
+      "slug": "feature-l2",
+      "group": "lectures",
+      "order": 2,
+      "badge": "Лекція 2",
+      "title": "React: фронтенд-екосистема",
+      "title_en": "React: the frontend ecosystem",
+      "desc": "Фронтенд-екосистема, які проблеми вирішують фреймворки, знайомство з React.",
+      "desc_en": "The frontend ecosystem, what frameworks solve, and a first look at React."
+    },
+    {
+      "slug": "feature-l4",
+      "group": "lectures",
+      "order": 3,
+      "badge": "Лекція 3",
+      "title": "React: життєвий цикл",
+      "title_en": "React: component lifecycle",
+      "desc": "Roadmap та методи життєвого циклу компонентів.",
+      "desc_en": "Roadmap and the component lifecycle methods."
+    },
+    {
+      "slug": "feature-l5",
+      "group": "lectures",
+      "order": 4,
+      "badge": "Лекція 4",
+      "title": "React: хуки",
+      "title_en": "React: hooks",
+      "desc": "Загальне про хуки, мотивація та проблеми, які вони вирішують.",
+      "desc_en": "Hooks in general, the motivation, and the problems they address."
+    },
+    {
+      "slug": "feature-l6",
+      "group": "lectures",
+      "order": 6,
+      "badge": "Лекція 6",
+      "title": "React: форми",
+      "title_en": "React: forms",
+      "desc": "Робота з формами: базові та контрольовані форми.",
+      "desc_en": "Working with forms: basic and controlled forms."
+    },
+    {
+      "slug": "feature-l7",
+      "group": "lectures",
+      "order": 7,
+      "badge": "Лекція 7",
+      "title": "React: власні хуки",
+      "title_en": "React: custom hooks",
+      "desc": "Створення власних (custom) хуків.",
+      "desc_en": "Building your own (custom) hooks."
+    },
+    {
+      "slug": "feature-l9",
+      "group": "lectures",
+      "order": 9,
+      "badge": "Лекція 9",
+      "title": "React Router",
+      "title_en": "React Router",
+      "desc": "Маршрутизація в React, React Router v7.",
+      "desc_en": "Routing in React, React Router v7."
+    },
+    {
+      "slug": "feature-l10",
+      "group": "lectures",
+      "order": 10,
+      "badge": "Лекція 10",
+      "title": "React Context",
+      "title_en": "React Context",
+      "desc": "Проблема prop drilling, React Context, createContext.",
+      "desc_en": "The prop drilling problem, React Context, createContext."
+    },
+    {
+      "slug": "feature-l11",
+      "group": "lectures",
+      "order": 12,
+      "badge": "Лекція 12",
+      "title": "Redux та менеджери стану",
+      "title_en": "Redux and state managers",
+      "desc": "Яку проблему вирішує Redux, менеджери стану, порівняння.",
+      "desc_en": "The problem Redux solves, state managers, and a comparison."
+    },
+    {
+      "slug": "feature-start-in-it",
+      "group": "extra",
+      "order": 1,
+      "badge": "Гостьова",
+      "title": "Шлях в ІТ",
+      "title_en": "A path into IT",
+      "desc": "Гостьова презентація: TIETO, можливості та кар'єрні перспективи для студентів.",
+      "desc_en": "Guest talk: TIETO, opportunities and career prospects for students."
+    },
+    {
+      "slug": "feature-l0-qa",
+      "group": "extra",
+      "order": 2,
+      "badge": "Q&A",
+      "title": "Вступ до курсу — сесія Q&A",
+      "title_en": "Course introduction — Q&A session",
+      "desc": "Розширена вступна лекція із сесією запитань і відповідей.",
+      "desc_en": "Extended introductory lecture with a Q&A session."
+    },
+    {
+      "slug": "feature-l1-frontend",
+      "group": "extra",
+      "order": 3,
+      "badge": "Альтернативна",
+      "title": "Фронтенд: розширений вступ",
+      "title_en": "Frontend: extended introduction",
+      "desc": "Альтернативна вступна презентація з акцентом на фронтенд.",
+      "desc_en": "An alternative introductory presentation focused on frontend."
+    }
+  ]
+}

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!--
+  ⚠️  Не редагуйте index.html у корені gh-pages вручну — його генерує landing/build.mjs.
+      Джерело: landing/index.template.html  +  landing/presentations.json
+-->
+<html lang="uk">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-ua="Компонентно-орієнтоване програмування — презентації курсу"
+        data-en="Component-Oriented Programming — course presentations">Компонентно-орієнтоване програмування —
+        презентації курсу</title>
+    <meta name="description"
+        content="Презентації лекцій курсу «Компонентно-орієнтоване програмування» — Державний університет «Житомирська політехніка».">
+
+    <style>
+        :root {
+            --ztu-blue: #224a98;
+            --ztu-orange: #ee781c;
+            --ztu-green: #4cad3b;
+            --ztu-red: #e5341f;
+            --ink: #1f2733;
+            --muted: #667085;
+            --line: #e6e9f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            color: var(--ink);
+            background: #f4f6fb;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 28px 20px 72px;
+        }
+
+        /* ---- Language switch ---- */
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 18px;
+        }
+
+        .lang {
+            display: inline-flex;
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 999px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+        }
+
+        .lang button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 0.82em;
+            font-weight: 600;
+            letter-spacing: .03em;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+
+        .lang button.active {
+            background: var(--ztu-blue);
+            color: #fff;
+        }
+
+        .lang button:not(.active):hover {
+            color: var(--ztu-blue);
+        }
+
+        /* ---- Logo row ---- */
+        .logos {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 26px;
+            padding: 8px 0 26px;
+        }
+
+        .logos img {
+            height: 62px;
+            width: auto;
+            display: block;
+        }
+
+        /* ---- Header title ---- */
+        header {
+            text-align: center;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 26px;
+            margin-bottom: 34px;
+        }
+
+        header h1 {
+            font-size: 1.5em;
+            line-height: 1.25;
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        header h1 .accent {
+            color: var(--ztu-blue);
+        }
+
+        header .tagline {
+            color: var(--muted);
+            font-size: 0.95em;
+            margin-top: 8px;
+        }
+
+        /* ---- Section ---- */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.12em;
+            font-weight: 700;
+            color: var(--ztu-blue);
+            margin: 34px 0 18px;
+        }
+
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(34, 74, 152, 0.22), transparent);
+        }
+
+        /* ---- Cards ---- */
+        .cards {
+            list-style: none;
+            display: grid;
+            gap: 16px;
+        }
+
+        .card {
+            display: block;
+            position: relative;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--ztu-blue);
+            border-radius: 12px;
+            padding: 20px 56px 20px 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 28px rgba(34, 74, 152, 0.14);
+            transform: translateY(-2px);
+            border-left-color: var(--ztu-orange);
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .card-head h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .badge {
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: var(--muted);
+            background: rgba(102, 112, 133, 0.1);
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .badge.num {
+            color: #fff;
+            background: var(--ztu-blue);
+        }
+
+        .card p {
+            font-size: 0.9em;
+            color: var(--muted);
+        }
+
+        .card .arrow {
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ztu-blue);
+            font-size: 1.4em;
+            transition: transform .2s ease, color .2s ease;
+        }
+
+        .card:hover .arrow {
+            transform: translateY(-50%) translateX(4px);
+            color: var(--ztu-orange);
+        }
+
+        /* ---- Footer ---- */
+        footer {
+            margin-top: 52px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.82em;
+            border-top: 1px solid var(--line);
+            padding-top: 22px;
+        }
+
+        footer a {
+            color: var(--ztu-blue);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 560px) {
+            .logos {
+                gap: 16px;
+            }
+
+            .logos img {
+                height: 44px;
+            }
+
+            header h1 {
+                font-size: 1.25em;
+            }
+
+            .card {
+                padding: 18px 44px 18px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <div class="lang" role="group" aria-label="Мова / Language">
+                <button type="button" data-lang="ua">УКР</button>
+                <button type="button" data-lang="en">ENG</button>
+            </div>
+        </div>
+
+        <header>
+            <div class="logos">
+                <img src="assets/ztu-logo.png"
+                    alt="Державний університет «Житомирська політехніка»">
+            </div>
+
+            <h1 data-ua-html="Компонентно-орієнтоване <span class='accent'>програмування</span>"
+                data-en-html="Component-Oriented <span class='accent'>Programming</span>">
+                Компонентно-орієнтоване <span class="accent">програмування</span>
+            </h1>
+            <p class="tagline" data-ua="Презентації лекцій курсу"
+                data-en="Course lecture presentations">Презентації лекцій курсу</p>
+        </header>
+
+        <main>
+            <!--SECTIONS-->
+        </main>
+
+        <footer>
+            <span data-ua="© 2026 Компонентно-орієнтоване програмування"
+                data-en="© 2026 Component-Oriented Programming">© 2026 Компонентно-орієнтоване програмування</span>
+            · <a href="https://ztu.edu.ua" target="_blank" rel="noopener">ztu.edu.ua</a>
+        </footer>
+    </div>
+
+    <script>
+        (function () {
+            var STORE = 'kop-lang';
+            function get() {
+                try { return localStorage.getItem(STORE) || 'ua'; } catch (e) { return 'ua'; }
+            }
+            function save(v) {
+                try { localStorage.setItem(STORE, v); } catch (e) { }
+            }
+            function apply(lang) {
+                document.documentElement.lang = (lang === 'ua') ? 'uk' : 'en';
+                document.querySelectorAll('[data-ua]').forEach(function (el) {
+                    var v = el.getAttribute('data-' + lang);
+                    if (v !== null) el.textContent = v;
+                });
+                document.querySelectorAll('[data-ua-html]').forEach(function (el) {
+                    var v = el.getAttribute('data-' + lang + '-html');
+                    if (v !== null) el.innerHTML = v;
+                });
+                document.querySelectorAll('.lang button').forEach(function (b) {
+                    b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+                });
+            }
+            document.querySelectorAll('.lang button').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var lang = b.getAttribute('data-lang');
+                    save(lang);
+                    apply(lang);
+                });
+            });
+            apply(get());
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+name: Deploy Portal (landing)
+
+# Публікує титульну сторінку-портал у корінь gh-pages зі списком усіх
+# опублікованих презентацій (папки previews/*). Перегенеровується:
+#   • при зміні джерела порталу на main (landing/**);
+#   • автоматично після кожного успішного "Deploy Feature Previews";
+#   • вручну (workflow_dispatch).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "landing/**"
+      - ".github/workflows/deploy-portal.yml"
+  workflow_run:
+    workflows: ["Deploy Feature Previews"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Серіалізуємо публікації, щоб паралельні деплої не конфліктували на gh-pages.
+concurrency:
+  group: deploy-portal
+  cancel-in-progress: false
+
+jobs:
+  build-portal:
+    runs-on: ubuntu-latest
+    # Для workflow_run — тільки якщо деплой прев'ю завершився успішно.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      # 1. Джерело порталу (шаблон, маніфест, генератор, assets) з main
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      # 2. Поточний стан gh-pages — щоб дізнатися список опублікованих прев'ю
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: _ghp
+
+      # 3. Node для запуску генератора (без залежностей — лише вбудовані модулі)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 4. Генеруємо index.html + переносимо assets у теку публікації
+      - name: Build portal page
+        run: |
+          mkdir -p out
+          node landing/build.mjs --previews _ghp/previews --out out/index.html
+          cp -r landing/assets out/assets
+
+      # 5. Публікуємо ТІЛЬКИ корінь (index.html + assets); previews/ зберігаємо
+      - name: Deploy portal to gh-pages root
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          destination_dir: .
+          keep_files: true
+          enable_jekyll: false
