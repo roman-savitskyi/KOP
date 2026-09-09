@@ -30,10 +30,10 @@
       "group": "lectures",
       "order": 2,
       "badge": "Лекція 2",
-      "title": "React: фронтенд-екосистема",
-      "title_en": "React: the frontend ecosystem",
-      "desc": "Фронтенд-екосистема, які проблеми вирішують фреймворки, знайомство з React.",
-      "desc_en": "The frontend ecosystem, what frameworks solve, and a first look at React."
+      "title": "React: знайомство та інструментарій",
+      "title_en": "React: introduction and tooling",
+      "desc": "Знайомство з React, Node.js та npm, встановлення (CRA/Vite), Virtual DOM і Fiber, JSX.",
+      "desc_en": "Getting to know React, Node.js and npm, setup (CRA/Vite), Virtual DOM and Fiber, JSX."
     },
     {
       "slug": "feature-l3",
