@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 370" font-family="-apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#EE781C"/>
+    </marker>
+  </defs>
+
+  <!-- ============ Попередній VDOM ============ -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2">
+    <line x1="220" y1="86" x2="140" y2="170"/>
+    <line x1="220" y1="86" x2="300" y2="170"/>
+  </g>
+  <g>
+    <rect x="160" y="40" width="120" height="46" rx="9" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+    <text x="220" y="69" text-anchor="middle" font-size="20" font-weight="700" fill="#224A98">&lt;div&gt;</text>
+
+    <rect x="80" y="170" width="120" height="46" rx="9" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+    <text x="140" y="199" text-anchor="middle" font-size="20" font-weight="700" fill="#224A98">&lt;h1&gt;</text>
+
+    <rect x="240" y="170" width="120" height="46" rx="9" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+    <text x="300" y="199" text-anchor="middle" font-size="20" font-weight="700" fill="#224A98">&lt;ul&gt;</text>
+  </g>
+  <text x="220" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#667085">Попередній VDOM</text>
+
+  <!-- ============ diffing arrow ============ -->
+  <line x1="405" y1="150" x2="555" y2="150" stroke="#EE781C" stroke-width="3.5" marker-end="url(#arrow)"/>
+  <text x="480" y="138" text-anchor="middle" font-size="17" font-weight="700" fill="#EE781C">diffing</text>
+
+  <!-- ============ Новий VDOM ============ -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2">
+    <line x1="740" y1="86" x2="660" y2="170"/>
+    <line x1="740" y1="86" x2="820" y2="170"/>
+  </g>
+  <g>
+    <rect x="680" y="40" width="120" height="46" rx="9" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+    <text x="740" y="69" text-anchor="middle" font-size="20" font-weight="700" fill="#224A98">&lt;div&gt;</text>
+
+    <rect x="600" y="170" width="120" height="46" rx="9" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+    <text x="660" y="199" text-anchor="middle" font-size="20" font-weight="700" fill="#224A98">&lt;h1&gt;</text>
+
+    <!-- змінений вузол -->
+    <rect x="760" y="170" width="120" height="46" rx="9" fill="#FDEBD8" stroke="#E5341F" stroke-width="3"/>
+    <text x="820" y="199" text-anchor="middle" font-size="20" font-weight="700" fill="#E5341F">&lt;ul&gt;</text>
+    <text x="820" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#E5341F">змінено</text>
+  </g>
+  <text x="740" y="258" text-anchor="middle" font-size="18" font-weight="700" fill="#667085">Новий VDOM</text>
+
+  <!-- ============ caption ============ -->
+  <text x="480" y="322" text-anchor="middle" font-size="17" fill="#1f2733">React порівнює нове дерево зі старим</text>
+  <text x="480" y="348" text-anchor="middle" font-size="17" fill="#1f2733">і оновлює в реальному DOM <tspan font-weight="700" fill="#4CAD3B">лише змінений вузол</tspan></text>
+</svg>
