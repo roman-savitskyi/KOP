@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 370" font-family="-apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="fa" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#224A98"/>
+    </marker>
+    <marker id="fr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#EE781C"/>
+    </marker>
+    <marker id="fg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#4CAD3B"/>
+    </marker>
+  </defs>
+
+  <!-- child pointer (parent -> first child) -->
+  <line x1="190" y1="112" x2="190" y2="228" stroke="#224A98" stroke-width="3" marker-end="url(#fa)"/>
+  <text x="150" y="175" text-anchor="middle" font-size="15" font-weight="700" fill="#224A98">child</text>
+
+  <!-- return pointer (child -> parent), dashed -->
+  <line x1="240" y1="228" x2="240" y2="112" stroke="#EE781C" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#fr)"/>
+  <text x="290" y="175" text-anchor="middle" font-size="15" font-weight="700" fill="#EE781C">return</text>
+
+  <!-- sibling pointer (child1 -> child2) -->
+  <line x1="300" y1="262" x2="430" y2="262" stroke="#4CAD3B" stroke-width="3" marker-end="url(#fg)"/>
+  <text x="365" y="248" text-anchor="middle" font-size="15" font-weight="700" fill="#4CAD3B">sibling</text>
+
+  <!-- parent fiber -->
+  <rect x="115" y="56" width="170" height="56" rx="10" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+  <text x="200" y="82" text-anchor="middle" font-size="16" font-weight="700" fill="#224A98">Fiber</text>
+  <text x="200" y="102" text-anchor="middle" font-size="15" fill="#667085">&lt;div&gt;</text>
+
+  <!-- child fiber -->
+  <rect x="115" y="228" width="170" height="56" rx="10" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+  <text x="200" y="254" text-anchor="middle" font-size="16" font-weight="700" fill="#224A98">Fiber</text>
+  <text x="200" y="274" text-anchor="middle" font-size="15" fill="#667085">&lt;h1&gt;</text>
+
+  <!-- sibling fiber -->
+  <rect x="430" y="228" width="170" height="56" rx="10" fill="#fff" stroke="#224A98" stroke-width="2.5"/>
+  <text x="515" y="254" text-anchor="middle" font-size="16" font-weight="700" fill="#224A98">Fiber</text>
+  <text x="515" y="274" text-anchor="middle" font-size="15" fill="#667085">&lt;p&gt;</text>
+
+  <!-- notes -->
+  <g>
+    <circle cx="672" cy="92" r="4" fill="#EE781C"/>
+    <text x="688" y="97" font-size="17" font-weight="700" fill="#1f2733">Вузол = одиниця роботи</text>
+    <text x="688" y="121" font-size="15" fill="#667085">(unit of work)</text>
+
+    <circle cx="672" cy="176" r="4" fill="#EE781C"/>
+    <text x="688" y="181" font-size="17" font-weight="700" fill="#1f2733">Інкрементний рендеринг</text>
+    <text x="688" y="205" font-size="15" fill="#667085">роботу можна переривати</text>
+    <text x="688" y="225" font-size="15" fill="#667085">й відновлювати</text>
+
+    <circle cx="672" cy="266" r="4" fill="#EE781C"/>
+    <text x="688" y="271" font-size="17" font-weight="700" fill="#1f2733">Пріоритезація оновлень</text>
+  </g>
+</svg>
