@@ -2,7 +2,6 @@
   "_comment": "Метадані для карток порталу. slug = ім'я папки в gh-pages/previews/. Нові гілки, яких тут нема, зʼявляються автоматично у групі 'other' з назвою за slug — додайте їх сюди для гарної назви/опису. Сортування в межах групи — за 'order'.",
   "groups": [
     { "id": "lectures", "title": "Лекції курсу", "title_en": "Course lectures" },
-    { "id": "extra", "title": "Додаткові матеріали", "title_en": "Additional materials" },
     { "id": "other", "title": "Інші презентації", "title_en": "Other presentations" }
   ],
   "presentations": [
@@ -105,36 +104,6 @@
       "title_en": "Redux and state managers",
       "desc": "Яку проблему вирішує Redux, менеджери стану, порівняння.",
       "desc_en": "The problem Redux solves, state managers, and a comparison."
-    },
-    {
-      "slug": "feature-start-in-it",
-      "group": "extra",
-      "order": 1,
-      "badge": "Гостьова",
-      "title": "Шлях в ІТ",
-      "title_en": "A path into IT",
-      "desc": "Гостьова презентація: TIETO, можливості та кар'єрні перспективи для студентів.",
-      "desc_en": "Guest talk: TIETO, opportunities and career prospects for students."
-    },
-    {
-      "slug": "feature-l0-qa",
-      "group": "extra",
-      "order": 2,
-      "badge": "Q&A",
-      "title": "Вступ до курсу — сесія Q&A",
-      "title_en": "Course introduction — Q&A session",
-      "desc": "Розширена вступна лекція із сесією запитань і відповідей.",
-      "desc_en": "Extended introductory lecture with a Q&A session."
-    },
-    {
-      "slug": "feature-l1-frontend",
-      "group": "extra",
-      "order": 3,
-      "badge": "Альтернативна",
-      "title": "Фронтенд: розширений вступ",
-      "title_en": "Frontend: extended introduction",
-      "desc": "Альтернативна вступна презентація з акцентом на фронтенд.",
-      "desc_en": "An alternative introductory presentation focused on frontend."
     }
   ]
 }
