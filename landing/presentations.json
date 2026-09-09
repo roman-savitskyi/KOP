@@ -36,10 +36,20 @@
       "desc_en": "The frontend ecosystem, what frameworks solve, and a first look at React."
     },
     {
-      "slug": "feature-l4",
+      "slug": "feature-l3",
       "group": "lectures",
       "order": 3,
       "badge": "Лекція 3",
+      "title": "React: компоненти, props, state, події",
+      "title_en": "React: components, props, state, events",
+      "desc": "JSX, компоненти та їх типи, внутрішній стан і його особливості, props і props.children, події та SyntheticEvent.",
+      "desc_en": "JSX, components and their types, internal state and its specifics, props and props.children, events and SyntheticEvent."
+    },
+    {
+      "slug": "feature-l4",
+      "group": "lectures",
+      "order": 4,
+      "badge": "Лекція 4",
       "title": "React: життєвий цикл",
       "title_en": "React: component lifecycle",
       "desc": "Roadmap та методи життєвого циклу компонентів.",
@@ -48,8 +58,8 @@
     {
       "slug": "feature-l5",
       "group": "lectures",
-      "order": 4,
-      "badge": "Лекція 4",
+      "order": 5,
+      "badge": "Лекція 5",
       "title": "React: хуки",
       "title_en": "React: hooks",
       "desc": "Загальне про хуки, мотивація та проблеми, які вони вирішують.",
@@ -58,8 +68,8 @@
     {
       "slug": "feature-l6",
       "group": "lectures",
-      "order": 6,
-      "badge": "Лекція 6",
+      "order": 7,
+      "badge": "Лекція 7",
       "title": "React: форми",
       "title_en": "React: forms",
       "desc": "Робота з формами: базові та контрольовані форми.",
@@ -68,8 +78,8 @@
     {
       "slug": "feature-l7",
       "group": "lectures",
-      "order": 7,
-      "badge": "Лекція 7",
+      "order": 8,
+      "badge": "Лекція 8",
       "title": "React: власні хуки",
       "title_en": "React: custom hooks",
       "desc": "Створення власних (custom) хуків.",
@@ -78,8 +88,8 @@
     {
       "slug": "feature-l9",
       "group": "lectures",
-      "order": 9,
-      "badge": "Лекція 9",
+      "order": 10,
+      "badge": "Лекція 10",
       "title": "React Router",
       "title_en": "React Router",
       "desc": "Маршрутизація в React, React Router v7.",
@@ -88,8 +98,8 @@
     {
       "slug": "feature-l10",
       "group": "lectures",
-      "order": 10,
-      "badge": "Лекція 10",
+      "order": 11,
+      "badge": "Лекція 11",
       "title": "React Context",
       "title_en": "React Context",
       "desc": "Проблема prop drilling, React Context, createContext.",
@@ -98,8 +108,8 @@
     {
       "slug": "feature-l11",
       "group": "lectures",
-      "order": 12,
-      "badge": "Лекція 12",
+      "order": 13,
+      "badge": "Лекція 13",
       "title": "Redux та менеджери стану",
       "title_en": "Redux and state managers",
       "desc": "Яку проблему вирішує Redux, менеджери стану, порівняння.",
