@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>КОП</title>
+
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="reveal.css">
+		<link rel="stylesheet" href="theme/ztu.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="footer-ztu-logo"></div>
+			<div class="footer-conference-logo"></div>
+			<div class="footer-beerjs-logo"></div>
+			<div class="slides">
+				<!-- Title -->
+				<section>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
+					<p class="ztu-orange">COMPONENTS · PROPS · STATE · EVENTS · JSX</p>
+				</section>
+
+				<!-- JSX -->
+				<section>
+					<h2 class="ztu-blue">JSX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Розширення мови JavaScript</li>
+						<li class="fragment fade-in-then-semi-out">Дозволяє використовувати HTML-подібний синтаксис</li>
+					</ul>
+				</section>
+
+				<!-- Вступ до JSX -->
+				<section>
+					<h2 class="ztu-blue">ВСТУП ДО JSX</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Writing Markup with JSX</li>
+						<li class="fragment fade-in-then-semi-out">JavaScript in JSX with Curly Braces</li>
+						<li class="fragment fade-in-then-semi-out">Розглянемо оголошення змінної</li>
+					</ul>
+					<p class="ztu-orange fragment fade-in-then-semi-out">react.dev</p>
+				</section>
+
+				<!-- Основні поняття -->
+				<section>
+					<h2 class="ztu-blue">ОСНОВНІ ПОНЯТТЯ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Рендеринг елементів</li>
+						<li class="fragment fade-in-then-semi-out">Компоненти і пропси</li>
+						<li class="fragment fade-in-then-semi-out">Стан та життєвий цикл</li>
+						<li class="fragment fade-in-then-semi-out">Обробка подій</li>
+						<li class="fragment fade-in-then-semi-out">Умовний рендеринг</li>
+						<li class="fragment fade-in-then-semi-out">Списки та ключі</li>
+						<li class="fragment fade-in-then-semi-out">Форми · Підйом стану · Композиція проти наслідування</li>
+					</ul>
+				</section>
+
+				<!-- Компоненти -->
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Перевикористання</li>
+						<li class="fragment fade-in-then-semi-out">Інкапсуляція</li>
+						<li class="fragment fade-in-then-semi-out">Читабельність</li>
+						<li class="fragment fade-in-then-semi-out">Тестування</li>
+					</ul>
+				</section>
+
+				<!-- Компоненти: інкапсуляція -->
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТИ: ІНКАПСУЛЯЦІЯ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>import { useState } from 'react';
+
+export function Price(props) {
+  const { price } = props;
+  const [color, setColor] = useState('yellow');
+
+  const style = { backgroundColor: color };
+
+  const changeColor = () =&gt; {
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    setColor(randomColor);
+  };
+
+  return (
+    &lt;div style={style}&gt;
+      {price}
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Компоненти: читабельність -->
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТИ: ЧИТАБЕЛЬНІСТЬ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>export function Product(props) {
+  const { tag, text, price } = props.product;
+  const [unit, setUnit] = useState('$');
+  const id = Math.random().toString(16).slice(2);
+
+  return (
+    &lt;div id={id}&gt;
+      &lt;Title tag={tag}&gt;{text}&lt;/Title&gt;
+      &lt;Price price={price} unit={unit} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Типи компонентів -->
+				<section>
+					<h2 class="ztu-blue">ТИПИ КОМПОНЕНТІВ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Stateless — без внутрішнього стану</li>
+						<li class="fragment fade-in-then-semi-out">Stateful — зі внутрішнім станом</li>
+					</ul>
+				</section>
+
+				<!-- Stateless -->
+				<section>
+					<h2 class="ztu-blue">STATELESS</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>export function Count(props) {
+  const { count } = props;
+
+  return &lt;p&gt;Наявна кількість: {count}&lt;/p&gt;;
+}</code></pre>
+				</section>
+
+				<!-- Stateful -->
+				<section>
+					<h2 class="ztu-blue">STATEFUL</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>export function Product(props) {
+  const { tag, text, price } = props.product;
+  const [unit, setUnit] = useState('$');
+  const id = Math.random().toString(16).slice(2);
+
+  return (
+    &lt;div id={id}&gt;
+      &lt;Title tag={tag}&gt;{text}&lt;/Title&gt;
+      &lt;Price price={price} unit={unit} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Внутрішній стан -->
+				<section>
+					<h2 class="ztu-blue">ВНУТРІШНІЙ СТАН</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Лише стан (state) спричиняє ре-рендер</li>
+						<li class="fragment fade-in-then-semi-out">State має використовуватись під час рендеру сторінки</li>
+						<li class="fragment fade-in-then-semi-out">Props не змінюється, на відміну від state</li>
+					</ul>
+				</section>
+
+				<!-- Як створити компонент зі станом -->
+				<section>
+					<h2 class="ztu-blue">ЯК СТВОРИТИ КОМПОНЕНТ ЗІ СТАНОМ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>import { useState } from 'react';
+
+export function Price(props) {
+  const { price } = props;
+  const [color, setColor] = useState('yellow');
+
+  const changeColor = () =&gt; {
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    setColor(randomColor);
+  };
+
+  return (
+    &lt;div style={{ backgroundColor: color }}&gt;
+      {price}
+      &lt;button onClick={changeColor}&gt;Change color {color}&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Особливості state -->
+				<section>
+					<h2 class="ztu-blue">ОСОБЛИВОСТІ STATE</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Не потрібно присвоювати значення напряму</li>
+						<li class="fragment fade-in-then-semi-out">Не потрібно змінювати стан в асинхронних функціях</li>
+						<li class="fragment fade-in-then-semi-out">React групує виклики setState (batching)</li>
+					</ul>
+				</section>
+
+				<!-- Batching приклад -->
+				<section>
+					<h2 class="ztu-blue">ОСОБЛИВОСТІ STATE: BATCHING</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>const changeColor = () =&gt; {
+  const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  setColor(randomColor);
+  setColor(randomColor); // React згрупує це в один ре-рендер
+};</code></pre>
+				</section>
+
+				<!-- Як передати дані до компонента -->
+				<section>
+					<h2 class="ztu-blue">ЯК ПЕРЕДАТИ ДАНІ ДО КОМПОНЕНТА?</h2>
+				</section>
+
+				<!-- Props / Events: фази -->
+				<section>
+					<h2 class="ztu-blue">ПОТІК ПОДІЙ (PROPS / EVENTS)</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Capture Phase (1) — від Window вниз до цілі</li>
+						<li class="fragment fade-in-then-semi-out">Target Phase (2) — сам елемент-ціль</li>
+						<li class="fragment fade-in-then-semi-out">Bubbling Phase (3) — від цілі вгору до Window</li>
+					</ul>
+				</section>
+
+				<!-- Особливості props -->
+				<section>
+					<h2 class="ztu-blue">ОСОБЛИВОСТІ PROPS</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Лише для читання (read-only)</li>
+						<li class="fragment fade-in-then-semi-out">Працюють як чисті функції</li>
+					</ul>
+				</section>
+
+				<!-- Як передати props -->
+				<section>
+					<h2 class="ztu-blue">ЯК ПЕРЕДАТИ PROPS</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">За допомогою атрибутів</li>
+						<li class="fragment fade-in-then-semi-out">Як вкладені компоненти</li>
+						<li class="fragment fade-in-then-semi-out">Строка, число, булеве, масив, об'єкт, функція, інший JSX-елемент</li>
+					</ul>
+				</section>
+
+				<!-- props.children -->
+				<section>
+					<h2 class="ztu-blue">PROPS.CHILDREN</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>export function Title(props) {
+  const { tag } = props;
+
+  return (
+    &lt;&gt;
+      {tag === 'h1'
+        ? &lt;h1&gt;{props.children}&lt;/h1&gt;
+        : &lt;p&gt;{props.children}&lt;/p&gt;}
+    &lt;/&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- props.children: використання -->
+				<section>
+					<h2 class="ztu-blue">PROPS.CHILDREN: ВИКОРИСТАННЯ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>export function Product(props) {
+  const { tag, text, price, count } = props.product;
+  const [unit, setUnit] = useState('$');
+  const id = Math.random().toString(16).slice(2);
+
+  return (
+    &lt;div id={id}&gt;
+      &lt;Title tag={tag}&gt;{text}&lt;/Title&gt;
+      &lt;Price price={price} unit={unit} /&gt;
+      &lt;Count count={count} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- Події -->
+				<section>
+					<h2 class="ztu-blue">ПОДІЇ</h2>
+				</section>
+
+				<!-- Особливості подій -->
+				<section>
+					<h2 class="ztu-blue">ОСОБЛИВОСТІ ПОДІЙ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Прив'язка у атрибутах компонентів</li>
+						<li class="fragment fade-in-then-semi-out">CamelCase нотація (onClick, onChange)</li>
+						<li class="fragment fade-in-then-semi-out">Передача функції, а не рядка</li>
+						<li class="fragment fade-in-then-semi-out">preventDefault</li>
+					</ul>
+				</section>
+
+				<!-- SyntheticEvent -->
+				<section>
+					<h2 class="ztu-blue">SYNTHETICEVENT</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Кросбраузерна обгортка над нативною подією</li>
+						<li class="fragment fade-in-then-semi-out">nativeEvent</li>
+						<li class="fragment fade-in-then-semi-out">Пул подій, persist</li>
+					</ul>
+					<p class="ztu-orange fragment fade-in-then-semi-out">react.dev/reference/react-dom/components/common</p>
+				</section>
+
+				<!-- Запитання -->
+				<section>
+					<h2 class="ztu-blue">ЗАПИТАННЯ</h2>
+				</section>
+			</div>
+		</div>
+
+		<script src="reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				progress: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>

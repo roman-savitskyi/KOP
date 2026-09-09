@@ -1,0 +1,724 @@
+/**
+ * ZTU (Zhytomyr Polytechnic State University) theme for reveal.js
+ * Based on university brand guidelines
+ */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap");
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("../examples/fonts/OpenDyslexic-Regular.woff2") format("woff2"), url("../examples/fonts/OpenDyslexic-Regular.woff") format("woff"), url("../examples/fonts/OpenDyslexic-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("../examples/fonts/OpenDyslexic-Bold.woff2") format("woff2"), url("../examples/fonts/OpenDyslexic-Bold.woff") format("woff"), url("../examples/fonts/OpenDyslexic-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("../examples/fonts/OpenDyslexic-Italic.woff2") format("woff2"), url("../examples/fonts/OpenDyslexic-Italic.woff") format("woff"), url("../examples/fonts/OpenDyslexic-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
+section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
+  color: #fff;
+}
+
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+:root {
+  --r-background-color: #fff;
+  --r-main-font: Montserrat, Arial, sans-serif;
+  --r-main-font-size: 32px;
+  --r-main-color: #222;
+  --r-block-margin: 20px;
+  --r-heading-margin: 0 0 20px 0;
+  --r-heading-font: Montserrat, Arial, sans-serif;
+  --r-heading-color: #224A98;
+  --r-heading-line-height: 1.2;
+  --r-heading-letter-spacing: normal;
+  --r-heading-text-transform: none;
+  --r-heading-text-shadow: none;
+  --r-heading-font-weight: 700;
+  --r-heading1-text-shadow: none;
+  --r-heading1-size: 1.8em;
+  --r-heading2-size: 1.5em;
+  --r-heading3-size: 1.2em;
+  --r-heading4-size: 1em;
+  --r-code-font: monospace;
+  --r-link-color: #224A98;
+  --r-link-color-dark: #1a3a7a;
+  --r-link-color-hover: #E53E23;
+  --r-selection-background-color: #224A98;
+  --r-selection-color: #fff;
+  --r-overlay-element-bg-color: 0, 0, 0;
+  --r-overlay-element-fg-color: 240, 240, 240;
+  /* ZTU brand colors */
+  --ztu-blue: #224A98;
+  --ztu-red: #E53E23;
+  --ztu-orange: #EE781C;
+  --ztu-green: #4CAD3B;
+}
+
+.reveal-viewport {
+  background: #fff;
+  background-color: var(--r-background-color);
+  position: relative;
+}
+
+/* Corner logos */
+.reveal-viewport::before {
+  content: "";
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 30;
+  opacity: 0.8;
+  top: 20px;
+  right: 20px;
+  background-image: url("../examples/assets/photo_5435867797486957681_x.jpg");
+}
+
+/* Footer background */
+.reveal-viewport::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(135deg, var(--ztu-blue) 0%, #1a3a7a 100%) !important;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Footer ZTU logo */
+.reveal .footer-ztu-logo {
+  position: fixed;
+  bottom: 25px;
+  left: 20px;
+  height: 62px;
+  width: auto;
+  z-index: 55;
+  background-image: url("../examples/assets/ztu-logo-white.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 150px;
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  font-weight: 400;
+  color: var(--r-main-color);
+}
+
+.reveal ::selection {
+  color: var(--r-selection-color);
+  background: var(--r-selection-background-color);
+  text-shadow: none;
+}
+
+.reveal ::-moz-selection {
+  color: var(--r-selection-color);
+  background: var(--r-selection-background-color);
+  text-shadow: none;
+}
+
+.reveal .slides section,
+.reveal .slides section > section {
+  line-height: 1.3;
+  font-weight: inherit;
+  padding-bottom: 120px; /* Add space for footer */
+}
+
+/* Conference logo in footer center */
+.reveal .footer-conference-logo {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 72px;
+  width: auto;
+  z-index: 55;
+  background-image: url("../examples/assets/TIETO.HE_BIG.D.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 120px;
+}
+
+/* BeerJS logo in footer right */
+.reveal .footer-beerjs-logo {
+  position: fixed;
+  bottom: 14px;
+  right: 10px;
+  height: 72px;
+  width: auto;
+  z-index: 55;
+  background-image: url("../examples/assets/beerjs.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 120px;
+}
+
+/*********************************************
+ * HEADERS
+ *********************************************/
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  margin: var(--r-heading-margin);
+  color: var(--r-heading-color);
+  font-family: var(--r-heading-font);
+  font-weight: var(--r-heading-font-weight);
+  line-height: var(--r-heading-line-height);
+  letter-spacing: var(--r-heading-letter-spacing);
+  text-transform: var(--r-heading-text-transform);
+  text-shadow: var(--r-heading-text-shadow);
+  word-wrap: break-word;
+}
+
+.reveal h1 {
+  font-size: var(--r-heading1-size);
+  text-shadow: var(--r-heading1-text-shadow);
+}
+
+.reveal h2 {
+  font-size: var(--r-heading2-size);
+  color: var(--ztu-blue);
+}
+
+.reveal h3 {
+  font-size: var(--r-heading3-size);
+  color: var(--ztu-orange);
+}
+
+.reveal h4 {
+  font-size: var(--r-heading4-size);
+  color: var(--ztu-green);
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  font-weight: 700;
+}
+
+/*********************************************
+ * OTHER
+ *********************************************/
+.reveal p {
+  margin: var(--r-block-margin) 0;
+  line-height: 1.3;
+}
+
+.reveal h1:last-child,
+.reveal h2:last-child,
+.reveal h3:last-child,
+.reveal h4:last-child,
+.reveal h5:last-child,
+.reveal h6:last-child {
+  margin-bottom: 0;
+}
+
+.reveal img,
+.reveal video,
+.reveal iframe {
+  max-width: 95%;
+  max-height: 95%;
+}
+
+.reveal strong,
+.reveal b {
+  font-weight: 700;
+  color: var(--ztu-blue);
+}
+
+.reveal em {
+  font-style: italic;
+  color: var(--ztu-orange);
+}
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+  display: inline-block;
+  text-align: left;
+  margin: 0 0 0 1em;
+}
+
+.reveal ol {
+  list-style-type: decimal;
+}
+
+.reveal ul {
+  list-style-type: disc;
+}
+
+.reveal ul ul {
+  list-style-type: square;
+}
+
+.reveal ul ul ul {
+  list-style-type: circle;
+}
+
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+  display: block;
+  margin-left: 40px;
+}
+
+.reveal dt {
+  font-weight: 700;
+  color: var(--ztu-blue);
+}
+
+.reveal dd {
+  margin-left: 40px;
+}
+
+.reveal blockquote {
+  display: block;
+  position: relative;
+  width: 70%;
+  margin: var(--r-block-margin) auto;
+  padding: 5px;
+  font-style: italic;
+  background: rgba(34, 74, 152, 0.05);
+  border-left: 4px solid var(--ztu-blue);
+}
+
+.reveal blockquote p:first-child,
+.reveal blockquote p:last-child {
+  display: inline-block;
+}
+
+.reveal q {
+  font-style: italic;
+}
+
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: var(--r-block-margin) auto;
+  text-align: left;
+  font-size: 0.65em;
+  font-family: var(--r-code-font);
+  line-height: 1.3em;
+  word-wrap: break-word;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.reveal code {
+  font-family: var(--r-code-font);
+  text-transform: none;
+  tab-size: 2;
+  background: rgba(34, 74, 152, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.reveal pre code {
+  display: block;
+  padding: 5px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal;
+  background: rgba(34, 74, 152, 0.05);
+}
+
+.reveal .code-wrapper {
+  white-space: normal;
+}
+
+.reveal .code-wrapper code {
+  white-space: pre;
+}
+
+.reveal table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.reveal table th {
+  font-weight: 700;
+  background-color: var(--ztu-blue);
+  color: white;
+}
+
+.reveal table th,
+.reveal table td {
+  text-align: left;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border-bottom: 1px solid rgba(34, 74, 152, 0.2);
+}
+
+.reveal table th[align=center],
+.reveal table td[align=center] {
+  text-align: center;
+}
+
+.reveal table th[align=right],
+.reveal table td[align=right] {
+  text-align: right;
+}
+
+.reveal table tbody tr:last-child th,
+.reveal table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.reveal sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+.reveal sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.reveal small {
+  display: inline-block;
+  font-size: 0.7em;
+  line-height: 1.3em;
+  vertical-align: top;
+}
+
+.reveal small * {
+  vertical-align: top;
+}
+
+.reveal img {
+  margin: var(--r-block-margin) 0;
+}
+
+/*********************************************
+ * LINKS
+ *********************************************/
+.reveal a {
+  color: var(--r-link-color);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.reveal a:hover {
+  color: var(--r-link-color-hover);
+  text-shadow: none;
+  border: none;
+}
+
+.reveal .roll span:after {
+  color: #fff;
+  background: var(--r-link-color-dark);
+}
+
+/*********************************************
+ * Frame helper
+ *********************************************/
+.reveal .r-frame {
+  border: 4px solid var(--r-main-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.reveal a .r-frame {
+  transition: all 0.15s linear;
+}
+
+.reveal a:hover .r-frame {
+  border-color: var(--r-link-color);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
+}
+
+/*********************************************
+ * NAVIGATION CONTROLS
+ *********************************************/
+.reveal .controls {
+  color: var(--ztu-blue);
+}
+
+/*********************************************
+ * PROGRESS BAR
+ *********************************************/
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--ztu-green);
+}
+
+/*********************************************
+ * PRINT BACKGROUND
+ *********************************************/
+@media print {
+  .backgrounds {
+    background-color: var(--r-background-color);
+  }
+}
+/*********************************************
+ * ACCENT CLASSES
+ *********************************************/
+.ztu-blue {
+  color: var(--ztu-blue) !important;
+}
+
+.ztu-red {
+  color: var(--ztu-red) !important;
+}
+
+.ztu-orange {
+  color: var(--ztu-orange) !important;
+}
+
+.ztu-green {
+  color: var(--ztu-green) !important;
+}
+
+.bg-ztu-blue {
+  background-color: var(--ztu-blue) !important;
+  color: white !important;
+}
+
+.bg-ztu-red {
+  background-color: var(--ztu-red) !important;
+  color: white !important;
+}
+
+.bg-ztu-orange {
+  background-color: var(--ztu-orange) !important;
+  color: white !important;
+}
+
+.bg-ztu-green {
+  background-color: var(--ztu-green) !important;
+  color: white !important;
+}
+
+/*********************************************
+ * COGNITIVE ACCESSIBILITY
+ *********************************************/
+.cognitive-font {
+  font-family: "OpenDyslexic", Arial, sans-serif !important;
+  background-color: #f9f7f4 !important;
+  color: #2d2d2d !important;
+  padding: 40px !important;
+  border-radius: 10px;
+}
+
+.cognitive-font h1,
+.cognitive-font h2,
+.cognitive-font h3,
+.cognitive-font h4,
+.cognitive-font h5,
+.cognitive-font h6 {
+  font-family: "OpenDyslexic", Arial, sans-serif !important;
+  color: #1a4480 !important;
+}
+
+.cognitive-font p,
+.cognitive-font li,
+.cognitive-font small {
+  font-family: "OpenDyslexic", Arial, sans-serif !important;
+  color: #2d2d2d !important;
+  line-height: 1.6 !important;
+}
+
+.cognitive-font ul {
+  text-align: left !important;
+  margin: 20px auto !important;
+}
+
+.cognitive-font li {
+  margin-bottom: 8px !important;
+  font-size: 1.1em !important;
+}
+
+/*********************************************
+ * TEXT SIMPLIFICATION SLIDE
+ *********************************************/
+.text-simplification ul {
+  list-style: none !important;
+  padding: 0;
+  margin: 30px auto;
+  max-width: 900px;
+}
+
+.text-simplification li {
+  background: rgba(34, 74, 152, 0.05);
+  border-left: 5px solid var(--ztu-orange);
+  margin: 15px 0;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-simplification li .category {
+  font-weight: 700;
+  font-size: 1.2em;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.text-simplification small {
+  display: block;
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/*********************************************
+ * IDEAS SLIDES
+ *********************************************/
+.ideas-slide ul {
+  list-style: none !important;
+  padding: 0;
+  margin: 30px auto;
+  max-width: 900px;
+}
+
+.ideas-slide li {
+  background: rgba(34, 74, 152, 0.05);
+  border-left: 5px solid var(--ztu-green);
+  margin: 15px 0;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.1em;
+  line-height: 1.4;
+}
+
+/*********************************************
+ * ALGORITHMS DIAGRAM
+ *********************************************/
+.algorithms-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 15px;
+  max-width: 95%;
+  height: 400px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.algorithm-block {
+  background: linear-gradient(135deg, var(--ztu-blue) 0%, #1a3a7a 100%);
+  color: white;
+  padding: 15px 10px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(34, 74, 152, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.algorithm-block:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(34, 74, 152, 0.4);
+}
+
+.algorithm-block .algorithm-title {
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ztu-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.algorithm-block .algorithm-method {
+  font-size: 0.85em;
+  line-height: 1.3;
+  opacity: 0.95;
+}
+
+.algorithm-block::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: var(--ztu-orange);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(238, 120, 28, 0.5);
+}
+
+/* Grid positioning for better fit */
+.algorithm-block:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.algorithm-block:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.algorithm-block:nth-child(3) {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.algorithm-block:nth-child(4) {
+  grid-column: 1/3;
+  grid-row: 2;
+}
+
+.algorithm-block:nth-child(5) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.reveal .flex {
+  display: flex;
+}
+
+.reveal .flex img {
+  border: none;
+  box-shadow: none;
+}
+
+.reveal .flex.flex-jb {
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*********************************************
+ * ZTU LIST STYLING
+ *********************************************/
+.reveal .ztu-list {
+  display: block;
+  margin: 20px auto;
+  text-align: left;
+  width: 80%;
+}
+
+.reveal .ztu-list li::marker {
+  color: var(--ztu-blue);
+}
