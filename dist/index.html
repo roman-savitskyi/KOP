@@ -87,13 +87,14 @@
 					<p class="ztu-orange fragment fade-in-then-semi-out">react.dev/learn/installation</p>
 				</section>
 
-				<!-- Create React App -->
+				<!-- Vite -->
 				<section>
-					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ РЕАКТ: CREATE-REACT-APP</h2>
-					<p class="ztu-orange">npm-пакет від компанії Meta</p>
-					<pre><code class="bash">npx create-react-app my-app
+					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ РЕАКТ: VITE</h2>
+					<p class="ztu-orange">Сучасний стандарт (create-react-app застарів)</p>
+					<pre><code class="bash">npm create vite@latest my-app -- --template react
 cd my-app
-npm start</code></pre>
+npm install
+npm run dev</code></pre>
 				</section>
 
 				<!-- Базові команди -->
@@ -102,15 +103,9 @@ npm start</code></pre>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">npm run dev</li>
 						<li class="fragment fade-in-then-semi-out">npm run build</li>
-						<li class="fragment fade-in-then-semi-out">npm run start</li>
+						<li class="fragment fade-in-then-semi-out">npm run preview</li>
 						<li class="fragment fade-in-then-semi-out">npm run lint</li>
 					</ul>
-				</section>
-
-				<!-- Vite -->
-				<section>
-					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ РЕАКТ: VITE</h2>
-					<pre><code class="bash">npm create vite@latest</code></pre>
 				</section>
 
 				<!-- Рендеринг -->
@@ -121,6 +116,7 @@ npm start</code></pre>
 						<li class="fragment fade-in-then-semi-out">DOM-документ є деревом</li>
 						<li class="fragment fade-in-then-semi-out">Гілки дерева оновлюються повністю</li>
 					</ul>
+					<!-- DOM-дерево: Wikimedia Commons "Simpe HTML page DOM.svg", автор Ramac, Public Domain -->
 					<img src="examples/assets/dom-tree.svg" alt="DOM-дерево HTML-документа"
 						class="fragment" style="max-height:330px;max-width:70%;margin-top:16px;border:1px solid #e6e9f0;border-radius:10px;background:#fff;padding:12px;box-shadow:none;">
 				</section>
