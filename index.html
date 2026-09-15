@@ -390,6 +390,30 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 					<h2 class="ztu-blue">ПОДІЇ</h2>
 				</section>
 
+				<!-- Подія: створення та використання -->
+				<section>
+					<h2 class="ztu-blue">ПОДІЇ: СТВОРЕННЯ ТА ВИКОРИСТАННЯ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>function SearchBox({ onSearch }) {
+  const [query, setQuery] = useState('');
+
+  // обробник зміни поля
+  const handleChange = (event) =&gt; setQuery(event.target.value);
+
+  // обробник відправки форми
+  const handleSubmit = (event) =&gt; {
+    event.preventDefault();      // скасувати перезавантаження
+    onSearch(query);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input value={query} onChange={handleChange} placeholder="Пошук…" /&gt;
+      &lt;button type="submit"&gt;Знайти&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+				</section>
+
 				<!-- Особливості подій -->
 				<section>
 					<h2 class="ztu-blue">ОСОБЛИВОСТІ ПОДІЙ</h2>
