@@ -190,6 +190,22 @@ export function Price(props) {
 }</code></pre>
 				</section>
 
+				<!-- Сигнатура useState та зміна стану -->
+				<section>
+					<h2 class="ztu-blue">USESTATE: СИГНАТУРА ТА ЗМІНА СТАНУ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>// створення стану
+const [state, setState] = useState(initialValue);
+
+// переприсвоєння стану — лише через сеттер
+setState(newValue);              // нове значення
+setState(prev =&gt; prev + 1);      // на основі попереднього</code></pre>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><code>state</code> — поточне значення, <code>setState</code> — сеттер</li>
+						<li class="fragment fade-in-then-semi-out"><code>useState(initialValue)</code> — початкове значення (лише 1-й рендер)</li>
+						<li class="fragment fade-in-then-semi-out">Пряме <code>state = ...</code> не працює — тільки сеттер планує ре-рендер</li>
+					</ul>
+				</section>
+
 				<!-- Особливості state -->
 				<section>
 					<h2 class="ztu-blue">ОСОБЛИВОСТІ STATE</h2>
