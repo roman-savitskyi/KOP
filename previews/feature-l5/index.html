@@ -270,6 +270,63 @@ export function Price(props) {
 }</code></pre>
 				</section>
 
+				<!-- useEffect коли не потрібен -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Коли ефект НЕ потрібен</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Похідні дані рахуй <strong>під час рендера</strong>, а не в ефекті</li>
+						<li class="fragment fade-in-then-semi-out">Не дублюй props у стан через <code>useEffect</code></li>
+						<li class="fragment fade-in-then-semi-out">Трансформацію для відображення роби прямо в рендері</li>
+						<li class="fragment fade-in-then-semi-out">Ефект — лише для роботи із <strong>зовнішнім світом</strong>: мережа, DOM, підписки, таймери</li>
+					</ul>
+				</section>
+
+				<!-- useEffect антипатерн derived state -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Похідний стан — без ефекту</p>
+					<pre><code class="javascript" data-line-numbers="|1-5|7-8|">// ❌ зайвий ефект + зайвий стан + зайвий ре-рендер
+const [fullName, setFullName] = useState('');
+useEffect(() => {
+  setFullName(first + ' ' + last);
+}, [first, last]);
+
+// ✅ просто порахувати при рендері
+const fullName = first + ' ' + last;</code></pre>
+					<p class="fragment fade-in ztu-orange">Найчастіша помилка — класти в <code>useEffect</code> те, що не є справжнім side effect</p>
+				</section>
+
+				<!-- useEffect філософія -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECT</h2>
+					<p class="ztu-orange">Хуки — це патерн, а не синтаксис</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><code>useEffect</code> — найчастіше <strong>неправильно</strong> вживаний хук</li>
+						<li class="fragment fade-in-then-semi-out">Не роби з нього «універсальний інструмент» на всі випадки</li>
+						<li class="fragment fade-in-then-semi-out">Розділяй логіку від UI → більшість логіки тестується без рендера</li>
+						<li class="fragment fade-in-then-semi-out">React рухається до data-driven: Server Components, <code>use()</code>, серверні дії</li>
+					</ul>
+				</section>
+
+				<!-- useEffectEvent -->
+				<section>
+					<h2 class="ztu-blue">USEEFFECTEVENT</h2>
+					<p class="ztu-orange">Свіжі значення без роздування залежностей</p>
+					<pre><code class="javascript" data-line-numbers="|2-4|6-10|9|">function Chat({ roomId, theme }) {
+  const onConnected = useEffectEvent(() => {
+    showToast('Connected!', theme); // завжди свіжий theme
+  });
+
+  useEffect(() => {
+    const conn = connect(roomId);
+    conn.on('connected', () => onConnected());
+    return () => conn.close();
+  }, [roomId]); // theme НЕ у залежностях → без зайвих перепідключень
+}</code></pre>
+					<p class="fragment fade-in ztu-orange">«Бачить» останні props/state, але сам не перезапускає ефект. Поки експериментальний.</p>
+				</section>
+
 				<section>
 					<h2 class="ztu-blue">USEREF</h2>
 					<ul class="ztu-list">
@@ -626,6 +683,8 @@ function Counter() {
 						<li class="fragment fade-in-then-semi-out">Повторне використання логіки між компонентами</li>
 						<li class="fragment fade-in-then-semi-out">Можуть використовувати інші хуки</li>
 						<li class="fragment fade-in-then-semi-out">Слідують правилам хуків</li>
+						<li class="fragment fade-in-then-semi-out">Інкапсулюють <strong>доменну</strong> логіку, відділяючи її від UI</li>
+						<li class="fragment fade-in-then-semi-out">Логіку можна тестувати <strong>без рендера</strong> компонентів</li>
 					</ul>
 				</section>
 
@@ -664,9 +723,155 @@ function App() {
 }</code></pre>
 				</section>
 
-				<!-- Додаткові можливості -->
+				<!-- Додаткові хуки -->
 				<section>
-					<h2 class="ztu-blue">ДОДАТКОВІ МОЖЛИВОСТІ</h2>
+					<h2 class="ztu-blue">ДОДАТКОВІ ХУКИ</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>useId</strong> — стабільні id для доступності</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useImperativeHandle</strong> — власний ref-API компонента</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useTransition / useDeferredValue</strong> — конкурентні оновлення</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useSyncExternalStore</strong> — підписка на зовнішні сховища</li>
+						<li class="fragment fade-in-then-semi-out"><strong>useActionState, use</strong> — форми й дані (React 19)</li>
+					</ul>
+				</section>
+
+				<!-- useId -->
+				<section>
+					<h2 class="ztu-blue">USEID</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Генерує стабільний унікальний id</li>
+						<li class="fragment fade-in-then-semi-out">Однаковий на сервері й клієнті (SSR без розбіжностей)</li>
+						<li class="fragment fade-in-then-semi-out">Для звʼязку <code>label ↔ input</code>, ARIA-атрибутів</li>
+						<li class="fragment fade-in-then-semi-out">НЕ для ключів у списках</li>
+					</ul>
+					<pre><code class="javascript" data-line-numbers="|2|4-5|">function Field() {
+  const id = useId();
+  return (
+    &lt;label htmlFor={id}&gt;Email
+      &lt;input id={id} type="email" /&gt;
+    &lt;/label&gt;
+  );
+}</code></pre>
+				</section>
+
+				<!-- useImperativeHandle -->
+				<section>
+					<h2 class="ztu-blue">USEIMPERATIVEHANDLE</h2>
+					<p class="ztu-orange">Кастомний API для батьківського ref</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-6|9|">function TextInput({ ref }) {          // React 19: ref як звичайний проп
+  const inputRef = useRef(null);
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current.focus(),
+    clear: () => { inputRef.current.value = ''; },
+  }));
+  return &lt;input ref={inputRef} /&gt;;
+}
+// батько бачить лише focus() і clear(), а не весь DOM-вузол</code></pre>
+				</section>
+
+				<!-- useTransition -->
+				<section>
+					<h2 class="ztu-blue">USETRANSITION</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Позначає оновлення як несрочне (transition)</li>
+						<li class="fragment fade-in-then-semi-out">UI лишається чуйним під час дорогого ре-рендера</li>
+						<li class="fragment fade-in-then-semi-out"><code>isPending</code> — показати індикатор завантаження</li>
+					</ul>
+					<pre><code class="javascript" data-line-numbers="|1|4|5-7|">const [isPending, startTransition] = useTransition();
+
+function onChange(e) {
+  setQuery(e.target.value);              // срочно: поле вводу
+  startTransition(() => {
+    setResults(filter(e.target.value));  // несрочно: важкий список
+  });
+}</code></pre>
+				</section>
+
+				<!-- useDeferredValue -->
+				<section>
+					<h2 class="ztu-blue">USEDEFERREDVALUE</h2>
+					<p class="ztu-orange">Відкладене значення для дорогого UI</p>
+					<pre><code class="javascript" data-line-numbers="|2|3-5|">function Search({ query }) {
+  const deferredQuery = useDeferredValue(query);
+  const list = useMemo(
+    () => filter(deferredQuery), [deferredQuery]
+  );
+  return &lt;Results items={list} /&gt;;
+}</code></pre>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Поле оновлюється миттєво, список — трохи згодом</li>
+						<li class="fragment fade-in-then-semi-out">Схоже на debounce, але кероване самим React</li>
+					</ul>
+				</section>
+
+				<!-- useSyncExternalStore -->
+				<section>
+					<h2 class="ztu-blue">USESYNCEXTERNALSTORE</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Підписка на зовнішнє сховище чи браузерні API</li>
+						<li class="fragment fade-in-then-semi-out">Синхронні оновлення без «розривів» (tearing)</li>
+						<li class="fragment fade-in-then-semi-out">Основа для Redux, Zustand та інших сторів</li>
+					</ul>
+					<pre><code class="javascript" data-line-numbers="|2-8|3-5|6|7|">function useOnlineStatus() {
+  return useSyncExternalStore(
+    (cb) => {                       // subscribe
+      window.addEventListener('online', cb);
+      return () => window.removeEventListener('online', cb);
+    },
+    () => navigator.onLine,         // snapshot на клієнті
+    () => true                      // snapshot на сервері
+  );
+}</code></pre>
+				</section>
+
+				<!-- useActionState -->
+				<section>
+					<h2 class="ztu-blue">USEACTIONSTATE</h2>
+					<p class="ztu-orange">Стан форми через дію (React 19)</p>
+					<pre><code class="javascript" data-line-numbers="|1|2-5|6|9|">const [error, submitAction, isPending] = useActionState(
+  async (prevState, formData) => {
+    const res = await save(formData.get('name'));
+    return res.error ?? null;       // стає новим станом
+  },
+  null                              // початковий стан
+);
+
+return &lt;form action={submitAction}&gt;...&lt;/form&gt;;</code></pre>
+					<p class="fragment fade-in ztu-orange">Керує pending та результатом дії без ручного <code>useState</code></p>
+				</section>
+
+				<!-- use -->
+				<section>
+					<h2 class="ztu-blue">ХУК USE</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Читає ресурс: <strong>Promise</strong> або <strong>Context</strong></li>
+						<li class="fragment fade-in-then-semi-out">З Promise працює разом із <code>Suspense</code></li>
+						<li class="fragment fade-in-then-semi-out">Можна викликати <strong>умовно</strong> — на відміну від інших хуків</li>
+					</ul>
+					<pre><code class="javascript" data-line-numbers="|2|7-9|">function Message({ promise }) {
+  const text = use(promise);   // призупиняє рендер до resolve
+  return &lt;p&gt;{text}&lt;/p&gt;;
+}
+
+// use можна навіть в умові
+if (isLoggedIn) {
+  const theme = use(ThemeContext);
+}</code></pre>
+				</section>
+
+				<!-- Повний перелік хуків -->
+				<section>
+					<h2 class="ztu-blue">ПОВНИЙ ПЕРЕЛІК ХУКІВ</h2>
+					<p class="ztu-orange">React 19</p>
+					<ul class="ztu-list" style="font-size: 0.8em;">
+						<li class="fragment fade-in-then-semi-out"><strong>Стан:</strong> useState, useReducer</li>
+						<li class="fragment fade-in-then-semi-out"><strong>Контекст:</strong> useContext</li>
+						<li class="fragment fade-in-then-semi-out"><strong>Рефи:</strong> useRef, useImperativeHandle</li>
+						<li class="fragment fade-in-then-semi-out"><strong>Ефекти:</strong> useEffect, useLayoutEffect, useInsertionEffect</li>
+						<li class="fragment fade-in-then-semi-out"><strong>Продуктивність:</strong> useMemo, useCallback, useTransition, useDeferredValue</li>
+						<li class="fragment fade-in-then-semi-out"><strong>Інше:</strong> useId, useSyncExternalStore, useDebugValue</li>
+						<li class="fragment fade-in-then-semi-out"><strong>React 19:</strong> useOptimistic, useActionState, use, useFormStatus <em>(react-dom)</em></li>
+					</ul>
 				</section>
 
 				
@@ -690,6 +895,8 @@ function App() {
 						<li class="fragment fade-in-then-semi-out">Слідкуйте за залежностями useEffect</li>
 						<li class="fragment fade-in-then-semi-out">Не зловживайте useMemo/useCallback</li>
 						<li class="fragment fade-in-then-semi-out">Розділяйте state по логічних групах</li>
+						<li class="fragment fade-in-then-semi-out">Похідний стан — у рендері, ефекти лише для side effects</li>
+						<li class="fragment fade-in-then-semi-out">Композиція з малих, вузькоспеціалізованих хуків</li>
 					</ul>
 				</section>
 
