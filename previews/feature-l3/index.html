@@ -257,6 +257,42 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 						<li class="fragment fade-in-then-semi-out">Target Phase (2) — сам елемент-ціль</li>
 						<li class="fragment fade-in-then-semi-out">Bubbling Phase (3) — від цілі вгору до Window</li>
 					</ul>
+					<svg viewBox="0 0 900 470" style="width: 60%; max-height: 400px; margin-top: 8px;" xmlns="http://www.w3.org/2000/svg">
+						<defs>
+							<marker id="cap" markerWidth="14" markerHeight="14" refX="6" refY="10" orient="auto">
+								<path d="M1,1 L6,10 L11,1" fill="none" stroke="#E24A4A" stroke-width="2.5"/>
+							</marker>
+							<marker id="bub" markerWidth="14" markerHeight="14" refX="6" refY="4" orient="auto">
+								<path d="M1,13 L6,4 L11,13" fill="none" stroke="#3FA34D" stroke-width="2.5"/>
+							</marker>
+						</defs>
+						<g font-size="22" text-anchor="middle" font-family="monospace" fill="#1b2a4a">
+							<rect x="360" y="20"  width="180" height="46" rx="8" fill="#eef2fb" stroke="#224A98" stroke-width="2"/>
+							<text x="450" y="50">Window</text>
+							<rect x="360" y="106" width="180" height="46" rx="8" fill="#eef2fb" stroke="#224A98" stroke-width="2"/>
+							<text x="450" y="136">Document</text>
+							<rect x="360" y="192" width="180" height="46" rx="8" fill="#eef2fb" stroke="#224A98" stroke-width="2"/>
+							<text x="450" y="222">&lt;body&gt;</text>
+							<rect x="360" y="278" width="180" height="46" rx="8" fill="#eef2fb" stroke="#224A98" stroke-width="2"/>
+							<text x="450" y="308">&lt;div&gt;</text>
+							<rect x="360" y="364" width="180" height="46" rx="8" fill="#eef2fb" stroke="#224A98" stroke-width="2"/>
+							<text x="450" y="394">&lt;button&gt;</text>
+						</g>
+						<g>
+							<line x1="325" y1="40" x2="325" y2="386" stroke="#E24A4A" stroke-width="3" marker-end="url(#cap)"/>
+							<text x="175" y="205" font-size="22" fill="#E24A4A" text-anchor="middle" font-weight="bold">Capture</text>
+							<text x="175" y="233" font-size="20" fill="#E24A4A" text-anchor="middle">Phase (1)</text>
+						</g>
+						<g>
+							<rect x="350" y="356" width="200" height="62" rx="10" fill="none" stroke="#E8871E" stroke-width="3"/>
+							<text x="450" y="446" font-size="22" fill="#E8871E" text-anchor="middle" font-weight="bold">Target Phase (2)</text>
+						</g>
+						<g>
+							<line x1="575" y1="386" x2="575" y2="40" stroke="#3FA34D" stroke-width="3" marker-end="url(#bub)"/>
+							<text x="725" y="205" font-size="22" fill="#3FA34D" text-anchor="middle" font-weight="bold">Bubbling</text>
+							<text x="725" y="233" font-size="20" fill="#3FA34D" text-anchor="middle">Phase (3)</text>
+						</g>
+					</svg>
 				</section>
 
 				<!-- Особливості props -->
