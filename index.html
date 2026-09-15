@@ -177,11 +177,30 @@ const listItems = numbers.map((number) =>
 					</ul>
 				</section>
 
+				<!-- Ключ на елементі, а не на тегу -->
+				<section>
+					<h2 class="ztu-blue">КЛЮЧІ: НА ЕЛЕМЕНТІ, А НЕ НА ТЕГУ</h2>
+					<pre><code class="javascript" data-line-numbers="|1-4|5|7-10|">// ❌ key на внутрішньому тегу — не на елементі масиву
+function ProductItem({ product }) {
+  return &lt;li key={product.id}&gt;{product.title}&lt;/li&gt;; // марно
+}
+products.map((product) =&gt; &lt;ProductItem product={product} /&gt;);
+
+// ✅ key на елементі масиву — на тому, що повертає map()
+products.map((product) =&gt;
+  &lt;ProductItem key={product.id} product={product} /&gt;
+);</code></pre>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Ключ ставимо на елемент, який <strong>безпосередньо повертає</strong> <code>map()</code></li>
+						<li class="fragment fade-in-then-semi-out">Це може бути компонент, а не лише тег</li>
+					</ul>
+				</section>
+
 				<!-- Index as key article -->
 				<section>
 					<h2 class="ztu-blue">ЧИ ВИКОРИСТОВУВАТИ ІНДЕКС ЯК КЛЮЧ Є ГАРНОЮ ІДЕЄЮ?</h2>
-					<p style="font-size: 0.7em; color: #666;">https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318</p>
-				<iframe data-src="https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318" data-preload width="800" height="600"></iframe>
+					<p style="font-size: 0.7em; color: #666;">https://reactpatterns.js.org/docs/indexes-as-a-key-is-an-anti-pattern/</p>
+				<iframe data-src="https://reactpatterns.js.org/docs/indexes-as-a-key-is-an-anti-pattern/" data-preload width="800" height="600"></iframe>
 				</section>
 				<!-- Віртуалізований список -->
 				<section>
