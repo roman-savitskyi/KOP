@@ -314,6 +314,43 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 					</ul>
 				</section>
 
+				<!-- Кілька параметрів -->
+				<section>
+					<h2 class="ztu-blue">PROPS: КІЛЬКА ПАРАМЕТРІВ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>function ProductCard({ title, price, currency, inStock }) {
+  return (
+    &lt;div&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;p&gt;{price} {currency}&lt;/p&gt;
+      &lt;p&gt;{inStock ? 'В наявності' : 'Немає'}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// передаємо кілька пропсів різних типів
+&lt;ProductCard title="Кава" price={120} currency="₴" inStock={true} /&gt;</code></pre>
+				</section>
+
+				<!-- Компонент як prop і як children -->
+				<section>
+					<h2 class="ztu-blue">КОМПОНЕНТ ЯК PROP І ЯК CHILDREN</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>function Card({ header, children }) {
+  return (
+    &lt;div className="card"&gt;
+      &lt;div className="card__header"&gt;{header}&lt;/div&gt;
+      &lt;div className="card__body"&gt;{children}&lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+
+// компонент як властивість (prop)
+&lt;Card header={&lt;Title tag="h1"&gt;Кошик&lt;/Title&gt;}&gt;
+  {/* компоненти як children */}
+  &lt;Product product={item1} /&gt;
+  &lt;Product product={item2} /&gt;
+&lt;/Card&gt;</code></pre>
+				</section>
+
 				<!-- props.children -->
 				<section>
 					<h2 class="ztu-blue">PROPS.CHILDREN</h2>
