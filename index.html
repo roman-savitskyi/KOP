@@ -206,6 +206,24 @@ setState(prev =&gt; prev + 1);      // на основі попередньог�
 					</ul>
 				</section>
 
+				<!-- Початкове значення як функція (ліниве обчислення) -->
+				<section>
+					<h2 class="ztu-blue">USESTATE: ПОЧАТКОВЕ ЗНАЧЕННЯ ЯК ФУНКЦІЯ</h2>
+					<pre><code class="javascript" data-trim data-line-numbers>// звичайне початкове значення
+const [color, setColor] = useState('yellow');
+
+// ліниве обчислення — функція виконається лише на 1-му рендері
+const [color, setColor] = useState(() =&gt; getInitialColor());
+
+// ❌ так функція викликається на КОЖНОМУ рендері
+const [color, setColor] = useState(getInitialColor());</code></pre>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">Передаємо <strong>функцію</strong>, а не її виклик</li>
+						<li class="fragment fade-in-then-semi-out">React викличе її лише один раз — при монтуванні</li>
+						<li class="fragment fade-in-then-semi-out">Корисно для дорогих початкових обчислень</li>
+					</ul>
+				</section>
+
 				<!-- Особливості state -->
 				<section>
 					<h2 class="ztu-blue">ОСОБЛИВОСТІ STATE</h2>
