@@ -394,34 +394,39 @@ export function Ref() {
 				<!-- useMemo приклад -->
 				<section>
 					<h2 class="ztu-blue">USEMEMO</h2>
-					<p class="ztu-orange">Приклад</p>
-					<pre><code class="javascript" data-line-numbers="|3-5|7-11|14-16|18-20|22-26|">import {useState, useMemo} from "react";
+					<p class="ztu-orange">Приклад — важка фільтрація + незалежний стан</p>
+					<pre><code class="javascript" data-line-numbers="|3-11|14-15|17-21|25-26|27-28|">import {useState, useMemo} from "react";
 
-function randomNumber() {
-  return Math.floor(Math.random()*100, 1);
+// Штучно повільна функція (~200 мс на виклик)
+function filterTodos(todos, tab) {
+  console.log('🔄 filterTodos...');
+  const start = performance.now();
+  while (performance.now() - start &lt; 200) {}
+  return todos.filter(t =&gt;
+    tab === 'all' || (tab === 'done' ? t.done : !t.done)
+  );
 }
 
-function complex(value) {
-  let i = 0;
-  while (i < 1000000000) i++;
-  return value * 2;
-}
+export function TodoList({todos}) {
+  const [tab, setTab] = useState('all');   // впливає
+  const [dark, setDark] = useState(false); // НЕ впливає
 
-export function Memo() {
-  const [value, setValue] = useState(0);
-  const [anotherNumber, setAnotherNumber] = useState(0);
-
-  // Без мемоїзації - буде викликатися при кожному ререндері
-  // const recalculate = complex(value);
-  const recalculate = useMemo(() => complex(value), [value]);
+  // Без useMemo — перерахунок на КОЖЕН рендер:
+  // const visible = filterTodos(todos, tab);
+  const visible = useMemo(
+    () =&gt; filterTodos(todos, tab), [todos, tab]
+  );
 
   return (
-    <div>
-      <input onChange={(e) => setValue(+e.target.value)} value={value} />
-      <button onClick={() => setAnotherNumber(Math.random())}>Random</button>
-      <p>Calculated: {recalculate}</p>
-      <p>Another: {anotherNumber}</p>
-    </div>
+    &lt;div className={dark ? 'dark' : 'light'}&gt;
+      &lt;button onClick={() =&gt; setTab('all')}&gt;Усі&lt;/button&gt;
+      &lt;button onClick={() =&gt; setTab('done')}&gt;Готові&lt;/button&gt;
+      {/* ререндер, але БЕЗ виклику filterTodos */}
+      &lt;button onClick={() =&gt; setDark(d =&gt; !d)}&gt;Тема&lt;/button&gt;
+      &lt;ul&gt;
+        {visible.map(t =&gt; &lt;li key={t.id}&gt;{t.text}&lt;/li&gt;)}
+      &lt;/ul&gt;
+    &lt;/div&gt;
   );
 }</code></pre>
 				</section>
@@ -527,35 +532,69 @@ const expensiveResult = useMemo(() => heavyCalculation(data), [data]);</code></p
 				<section>
 					<h2 class="ztu-blue">USECONTEXT</h2>
 					<ul class="ztu-list">
-						<li class="">Отримання значення з Context без Provider wrapper</li>
-						<li class="">Більш чистий та читабельний код</li>
-						<li class="">Автоматичний ререндер при зміні context</li>
+						<li class="fragment fade-in-then-semi-out">Передає дані глибоко в дерево <strong>без prop drilling</strong></li>
+						<li class="fragment fade-in-then-semi-out">Три кроки: createContext → Provider → useContext</li>
+						<li class="fragment fade-in-then-semi-out">Компонент читає значення <strong>найближчого</strong> Provider вище по дереву</li>
+						<li class="fragment fade-in-then-semi-out">Без Provider повертається значення за замовчуванням з createContext</li>
+						<li class="fragment fade-in-then-semi-out">Зміна value → ререндер <strong>усіх</strong> споживачів контексту</li>
 					</ul>
 				</section>
 
-				<!-- useContext приклад -->
+				<!-- useContext проблема -->
 				<section>
 					<h2 class="ztu-blue">USECONTEXT</h2>
-					<p class="ztu-orange">Приклад</p>
-					<pre><code class="javascript" data-line-numbers="|1-2|4-6|7-12|14-18|">import {createContext, useContext, useState} from "react";
-const ThemeContext = createContext();
+					<p class="ztu-orange">Проблема — prop drilling</p>
+					<pre><code class="javascript" data-line-numbers="|1-4|6-14|16-19|">function App() {
+  const [user, setUser] = useState(currentUser);
+  return &lt;Layout user={user} /&gt;;
+}
 
-function ThemeProvider({children}) {
-  const [theme, setTheme] = useState('light');
+// user тут не потрібен — лише передає далі
+function Layout({user}) {
+  return &lt;Header user={user} /&gt;;
+}
+
+// і тут не потрібен
+function Header({user}) {
+  return &lt;nav&gt;&lt;Logo /&gt;&lt;Avatar user={user} /&gt;&lt;/nav&gt;;
+}
+
+// потрібен лише тут!
+function Avatar({user}) {
+  return &lt;img src={user.avatar} alt={user.name} /&gt;;
+}</code></pre>
+				</section>
+
+				<!-- useContext рішення -->
+				<section>
+					<h2 class="ztu-blue">USECONTEXT</h2>
+					<p class="ztu-orange">Рішення — контекст + власний хук</p>
+					<pre><code class="javascript" data-line-numbers="|3-4|13-21|23-27|6-11|">import {createContext, useContext, useState} from "react";
+
+// 1. Створюємо контекст (null — якщо немає Provider)
+const UserContext = createContext(null);
+
+// 2. Власний хук — захищає від використання поза Provider
+function useUser() {
+  const ctx = useContext(UserContext);
+  if (!ctx) throw new Error('useUser() поза Provider');
+  return ctx;
+}
+
+// 3. Provider на верхньому рівні
+function App() {
+  const [user, setUser] = useState(currentUser);
   return (
-    <ThemeContext.Provider value={{theme, setTheme}}>
-      {children}
-    </ThemeContext.Provider>
+    &lt;UserContext.Provider value={{user, setUser}}&gt;
+      &lt;Layout /&gt; {/* жодних props */}
+    &lt;/UserContext.Provider&gt;
   );
 }
 
-function Button() {
-  const {theme, setTheme} = useContext(ThemeContext);
-  return (
-    <button className={theme} onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-      Switch to {theme === 'light' ? 'dark' : 'light'} theme
-    </button>
-  );
+// 4. Споживач на будь-якій глибині
+function Avatar() {
+  const {user} = useUser();
+  return &lt;img src={user.avatar} alt={user.name} /&gt;;
 }</code></pre>
 				</section>
 
@@ -640,38 +679,66 @@ function Counter() {
 				<section>
 					<h2 class="ztu-blue">USEOPTIMISTIC</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Оптимістичні UI оновлення (React 19)</li>
-						<li class="fragment fade-in-then-semi-out">Показує результат перед серверною відповіддю</li>
-						<li class="fragment fade-in-then-semi-out">Автоматичний rollback при помилці</li>
-						<li class="fragment fade-in-then-semi-out">Покращена UX для асинхронних операцій</li>
+						<li class="fragment fade-in-then-semi-out">Показує очікуваний результат <strong>одразу</strong>, до відповіді сервера (React 19)</li>
+						<li class="fragment fade-in-then-semi-out">Оптимістичний стан живе лише <strong>поки триває action / transition</strong></li>
+						<li class="fragment fade-in-then-semi-out">Після завершення action React повертається до <strong>реального</strong> state</li>
+						<li class="fragment fade-in-then-semi-out">Успіх → реальний state вже містить дані; помилка → тимчасовий елемент просто зникає</li>
+					</ul>
+				</section>
+
+				<!-- useOptimistic: песимістичний vs оптимістичний -->
+				<section>
+					<h2 class="ztu-blue">USEOPTIMISTIC</h2>
+					<p class="ztu-orange">Песимістичний vs оптимістичний UI</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out"><strong>Песимістичний:</strong> «Надіслати» → спінер → чекаємо 1–2 с → повідомлення з'являється</li>
+						<li class="fragment fade-in-then-semi-out"><strong>Оптимістичний:</strong> «Надіслати» → повідомлення <em>одразу</em> з позначкою «надсилається…»</li>
+						<li class="fragment fade-in-then-semi-out">Сервер підтвердив → позначка зникає, повідомлення стає звичайним</li>
+						<li class="fragment fade-in-then-semi-out">Сервер відхилив → повідомлення зникає + показуємо помилку</li>
 					</ul>
 				</section>
 
 				<!-- useOptimistic приклад -->
 				<section>
 					<h2 class="ztu-blue">USEOPTIMISTIC</h2>
-					<p class="ztu-orange">Приклад - додавання коментаря</p>
-					<pre><code class="javascript">function Comments({comments}) {
-  const [optimisticComments, addOptimisticComment] = useOptimistic(
-    comments,
-    (state, newComment) => [...state, {id: 'temp', ...newComment}]
+					<p class="ztu-orange">Приклад — чат</p>
+					<pre><code class="javascript" data-line-numbers="|4-8|10-13|14-16|17-21|26-30|33|">import {useState, useOptimistic} from "react";
+
+function Chat() {
+  const [messages, setMessages] = useState([]); // з сервера
+  const [optimisticMessages, addOptimistic] = useOptimistic(
+    messages,
+    (state, msg) =&gt; [...state, {...msg, sending: true}]
   );
 
-  const submitComment = async (text) => {
-    addOptimisticComment({text, author: 'Me'});
+  // form action автоматично виконується як transition
+  async function sendAction(formData) {
+    const text = formData.get('text');
+    addOptimistic({id: crypto.randomUUID(), text}); // 1.
     try {
-      await saveComment(text);
-    } catch (error) {
-      // Автоматичний rollback
+      const saved = await sendMessage(text); // 2.
+      setMessages(m =&gt; [...m, saved]);       // 3.
+    } catch {
+      // rollback не потрібен — це зробить React
+      showToast('Не вдалося надіслати');
     }
-  };
+  } // 4. action завершено → optimisticMessages === messages
 
   return (
-    <div>
-      {optimisticComments.map(comment =>
-        <div key={comment.id}>{comment.text}</div>
-      )}
-    </div>
+    &lt;&gt;
+      &lt;ul&gt;
+        {optimisticMessages.map(m =&gt;
+          &lt;li key={m.id}&gt;
+            {m.text}
+            {m.sending &amp;&amp; &lt;small&gt; надсилається…&lt;/small&gt;}
+          &lt;/li&gt;
+        )}
+      &lt;/ul&gt;
+      &lt;form action={sendAction}&gt;
+        &lt;input name="text" /&gt;
+        &lt;button&gt;Надіслати&lt;/button&gt;
+      &lt;/form&gt;
+    &lt;/&gt;
   );
 }</code></pre>
 				</section>
