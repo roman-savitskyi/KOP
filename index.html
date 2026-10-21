@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="uk">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>React Router V6. React.lazy. Suspense</title>
+		<title>React Router V7. React.lazy. Suspense</title>
 
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/ztu.css">
@@ -24,37 +24,95 @@
 					<p class="ztu-orange">REACT ROUTER V7. REACT.LAZY. SUSPENSE</p>
 				</section>
 
-				<!-- React Router -->
+				<!-- Motivation: MPA vs SPA -->
 				<section>
-					<h2 class="ztu-blue">REACT ROUTER</h2>
-					<p>https://reactrouter.com/en/main</p>
-					<iframe src="https://reactrouter.com/en/main" width="800" height="600"></iframe>
+					<h2 class="ztu-blue">НАВІГАЦІЯ: MPA vs SPA</h2>
+					<table style="font-size: 0.8em;">
+						<thead>
+							<tr><th></th><th>MPA</th><th>SPA</th></tr>
+						</thead>
+						<tbody>
+							<tr class="fragment fade-in"><td>Клік на посилання</td><td>Запит нового HTML на сервер</td><td>JS змінює вміст сторінки</td></tr>
+							<tr class="fragment fade-in"><td>Перезавантаження</td><td>Так, щоразу</td><td>Ні</td></tr>
+							<tr class="fragment fade-in"><td>Стан JS (форми, кеш)</td><td>Втрачається</td><td>Зберігається</td></tr>
+							<tr class="fragment fade-in"><td>Хто вирішує, що показати</td><td>Сервер</td><td>Клієнт</td></tr>
+						</tbody>
+					</table>
 				</section>
 
-				<!-- Installation -->
+				<!-- Motivation: URL is state -->
 				<section>
-					<h2 class="ztu-blue">REACT ROUTER V7</h2>
-					<pre><code class="bash" data-line-numbers>npm install react-router</code></pre>
-				</section>
-
-				<!-- Packages -->
-				<section>
-					<h2 class="ztu-blue">REACT ROUTER V7</h2>
-					<p class="ztu-orange">Unified Package Structure</p>
+					<h2 class="ztu-blue">SPA БЕЗ РОУТИНГУ</h2>
+					<p class="ztu-orange">Один URL на весь застосунок</p>
 					<ul class="ztu-list">
-						<li class="fragment fade-in">react-router (основний пакет)</li>
-						<li class="fragment fade-in">react-router/dom (для веб)</li>
-						<li class="fragment fade-in">react-router/native (для React Native)</li>
+						<li class="fragment fade-in">Не можна поділитися посиланням на конкретну сторінку</li>
+						<li class="fragment fade-in">Кнопка «Назад» виходить із застосунку</li>
+						<li class="fragment fade-in">Оновлення сторінки → знову стартовий екран</li>
+						<li class="fragment fade-in">Закладки та історія браузера не працюють</li>
 					</ul>
+					<p class="fragment fade-in ztu-orange">Висновок: URL — це теж стан застосунку</p>
 				</section>
 
-				<!-- Features -->
+				<!-- Motivation: History API -->
+				<section>
+					<h2 class="ztu-blue">HISTORY API</h2>
+					<p class="ztu-orange">Змінити URL без перезавантаження сторінки</p>
+					<pre><code class="javascript" data-line-numbers="|1-2|4-7">// додає запис в історію, сторінка НЕ перезавантажується
+history.pushState({}, "", "/articles/7");
+
+// кнопки «Назад» / «Вперед» браузера
+window.addEventListener("popstate", () =&gt; {
+  console.log(location.pathname); // "/articles/7"
+});</code></pre>
+				</section>
+
+				<!-- Motivation: Mini router -->
+				<section>
+					<h2 class="ztu-blue">МІНІ-РОУТЕР СВОЇМИ РУКАМИ</h2>
+					<pre><code class="jsx" data-line-numbers="|1|4|6-10|12-15|17-18">const routes = { "/": Home, "/about": About };
+
+function Router() {
+  const [path, setPath] = useState(location.pathname);
+
+  useEffect(() =&gt; {
+    const onPop = () =&gt; setPath(location.pathname);
+    window.addEventListener("popstate", onPop);
+    return () =&gt; window.removeEventListener("popstate", onPop);
+  }, []);
+
+  const navigate = (to) =&gt; {
+    history.pushState({}, "", to);
+    setPath(to);
+  };
+
+  const Page = routes[path] ?? NotFound;
+  return &lt;Page navigate={navigate} /&gt;;
+}</code></pre>
+				</section>
+
+				<!-- Motivation: Router is a component -->
+				<section>
+					<h2 class="ztu-blue">РОУТЕР — ЦЕ КОМПОНЕНТ</h2>
+					<p class="ztu-orange">URL → стан → який компонент рендерити</p>
+					<p class="fragment fade-in">Чого бракує нашому міні-роутеру:</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Вкладені маршрути та спільні layout-и</li>
+						<li class="fragment fade-in">Параметри в URL (/articles/:id)</li>
+						<li class="fragment fade-in">Завантаження даних та обробка помилок</li>
+						<li class="fragment fade-in">Code splitting сторінок</li>
+					</ul>
+					<p class="fragment fade-in ztu-orange">Усе це дає React Router</p>
+				</section>
+
+				<!-- React Router V7 -->
 				<section>
 					<h2 class="ztu-blue">REACT ROUTER V7</h2>
+					<p><a href="https://reactrouter.com/" target="_blank">https://reactrouter.com/</a></p>
+					<pre><code class="bash">npm install react-router</code></pre>
 					<ul class="ztu-list">
-						<li class="fragment fade-in">SPA navigation</li>
-						<li class="fragment fade-in">Enhanced TypeScript support</li>
-						<li class="fragment fade-in">React 19 integration</li>
+						<li class="fragment fade-in">react-router — основний пакет, усі API імпортуються звідси</li>
+						<li class="fragment fade-in">react-router/dom — лише RouterProvider для DOM (з flushSync)</li>
+						<li class="fragment fade-in">react-router-dom — залишений лише для міграції (re-export)</li>
 					</ul>
 				</section>
 
@@ -63,10 +121,11 @@
 					<h2 class="ztu-blue">V7 НОВІ ОСОБЛИВОСТІ</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in">Уніфікація імпортів</li>
+						<li class="fragment fade-in">Підтримка React 19</li>
 						<li class="fragment fade-in">startTransition за замовчуванням</li>
-						<li class="fragment fade-in">Автогенерація типів</li>
-						<li class="fragment fade-in">Server-side rendering</li>
-						<li class="fragment fade-in">Static pre-rendering</li>
+						<li class="fragment fade-in">Автогенерація типів (framework mode)</li>
+						<li class="fragment fade-in">Server-side rendering (framework mode)</li>
+						<li class="fragment fade-in">Static pre-rendering (framework mode)</li>
 					</ul>
 				</section>
 
@@ -83,23 +142,38 @@ import { BrowserRouter, Routes, Route }
   from 'react-router';</code></pre>
 				</section>
 
+				<!-- V7 Modes -->
+				<section>
+					<h2 class="ztu-blue">ТРИ РЕЖИМИ V7</h2>
+					<p class="ztu-orange">У лекції — data mode</p>
+					<table style="font-size: 0.65em;">
+						<thead>
+							<tr><th>Режим</th><th>Як підключається</th><th>Що дає</th></tr>
+						</thead>
+						<tbody>
+							<tr class="fragment fade-in"><td>Declarative</td><td>&lt;BrowserRouter&gt; + &lt;Routes&gt;</td><td>URL → компонент, Link, params</td></tr>
+							<tr class="fragment fade-in"><td>Data</td><td>createBrowserRouter + &lt;RouterProvider&gt;</td><td>+ loader, action, errorElement, lazy, pending UI</td></tr>
+							<tr class="fragment fade-in"><td>Framework</td><td>Vite-плагін @react-router/dev</td><td>+ SSR, pre-rendering, типи, file-based routes</td></tr>
+						</tbody>
+					</table>
+				</section>
+
 				<!-- Router Types -->
 				<section>
 					<h2 class="ztu-blue">ТИПИ РОУТЕРІВ</h2>
+					<p class="ztu-orange">Компоненти-роутери (declarative mode)</p>
 					<ul class="ztu-list">
 						<li class="fragment fade-in">BrowserRouter</li>
 						<li class="fragment fade-in">MemoryRouter</li>
 						<li class="fragment fade-in">HashRouter</li>
-						<li class="fragment fade-in">NativeRouter</li>
 						<li class="fragment fade-in">StaticRouter</li>
 					</ul>
 				</section>
 
-			
-
-				<!-- V6.4 Router Types -->
+				<!-- Data Router Types -->
 				<section>
-					<h2 class="ztu-blue">V6.4 ТИПИ РОУТЕРІВ</h2>
+					<h2 class="ztu-blue">DATA ROUTERS (з v6.4)</h2>
+					<p class="ztu-orange">Підтримують loader, action, errorElement</p>
 					<ul class="ztu-list">
 						<li class="fragment fade-in">createBrowserRouter</li>
 						<li class="fragment fade-in">createMemoryRouter</li>
@@ -111,22 +185,29 @@ import { BrowserRouter, Routes, Route }
 				<!-- createBrowserRouter Example -->
 				<section>
 					<h2 class="ztu-blue">CREATEBROWSERROUTER</h2>
-					<p class="ztu-orange">Приклад створення роутера</p>
-					<pre><code class="javascript" data-line-numbers="|2-4|6-7|10-11|12-16">import './App.css';
-import { Lesson1 } from './pages/Lesson1';
+					<p class="ztu-orange">Роутер створюється один раз — на рівні модуля, не в компоненті</p>
+					<pre><code class="javascript" data-line-numbers="|1-3|4-7|9-18|12|13-15|20-22">import { createBrowserRouter, createRoutesFromElements,
+         Route } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
+import { Layout } from './Layout';
 import { Home } from './pages/Home';
-import { PageNotFound } from './pages/404';
+import { Lesson1 } from './pages/Lesson1';
+import { Articles } from './pages/Articles';
 
-import { Routes, createRoutesFromElements, Route,
-         createBrowserRouter, RouterProvider } from 'react-router';
+// поза компонентом: інакше новий роутер на кожен рендер
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
+      &lt;Route index element={&lt;Home /&gt;} /&gt;
+      &lt;Route path="lesson1" element={&lt;Lesson1 /&gt;} /&gt;
+      &lt;Route path="articles/:id" element={&lt;Articles /&gt;} /&gt;
+    &lt;/Route&gt;
+  )
+);
 
 function App() {
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
-        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
-        &lt;Route path="/lesson1" element={&lt;Lesson1 /&gt;} /&gt;
-        &lt;Route path="/articles/:id" element={&lt;Articles /&gt;} /&gt;</code></pre>
+  return &lt;RouterProvider router={router} /&gt;;
+}</code></pre>
 				</section>
 
 				<!-- createBrowserRouter Benefits -->
@@ -135,13 +216,14 @@ function App() {
 					<ul class="ztu-list">
 						<li class="fragment fade-in">Рекомендований маршрутизатор</li>
 						<li class="fragment fade-in">Базується на DOM History API</li>
+						<li class="fragment fade-in">Відкриває loader, action, errorElement, lazy</li>
 					</ul>
 				</section>
 
 				<!-- Routes -->
 				<section>
 					<h2 class="ztu-blue">ROUTES</h2>
-					<p class="ztu-orange">Масив роутерів. Можливо використовувати, як структуру данних</p>
+					<p class="ztu-orange">Масив роутерів. Можна використовувати як структуру даних</p>
 					<pre><code class="javascript" data-line-numbers="|2-3|4|5|6-11">createBrowserRouter([
   {
     path: "/",
@@ -167,6 +249,17 @@ function App() {
 });</code></pre>
 				</section>
 
+				<!-- Outlet -->
+				<section>
+					<h2 class="ztu-blue">OUTLET</h2>
+					<p class="ztu-orange">Місце, куди батьківський маршрут рендерить дочірній</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Батьківський компонент — layout (header, nav, footer)</li>
+						<li class="fragment fade-in">Outlet рендерить дочірній маршрут, що збігся з URL</li>
+						<li class="fragment fade-in">Без Outlet дочірні маршрути не відобразяться</li>
+					</ul>
+				</section>
+
 				<!-- Nested Routes Example -->
 				<section>
 					<h2 class="ztu-blue">NESTED ROUTES</h2>
@@ -183,7 +276,9 @@ function App() {
 				<!-- Nested Routes with Outlet -->
 				<section>
 					<h2 class="ztu-blue">NESTED ROUTES + OUTLET</h2>
-					<pre><code class="jsx" data-line-numbers="|6">const Dashboard = () =&gt; {
+					<pre><code class="jsx" data-line-numbers="|1|8">import { Outlet } from "react-router";
+
+const Dashboard = () =&gt; {
   return (
     &lt;div&gt;
       &lt;h1&gt;Dashboard&lt;/h1&gt;
@@ -194,11 +289,36 @@ function App() {
 };</code></pre>
 				</section>
 
+				<!-- Route tree = component tree -->
+				<section>
+					<h2 class="ztu-blue">ДЕРЕВО МАРШРУТІВ = ДЕРЕВО КОМПОНЕНТІВ</h2>
+					<p class="ztu-orange">URL: /dashboard/profile/edit</p>
+					<div style="display: flex; gap: 40px; align-items: center; justify-content: center;">
+						<pre style="width: auto; margin: 0;"><code class="plaintext">dashboard     → &lt;Dashboard&gt;
+├─ (index)    → &lt;DashboardHome&gt;
+├─ settings   → &lt;Settings&gt;
+└─ profile    → &lt;Profile&gt;
+   └─ edit    → &lt;EditProfile&gt;</code></pre>
+						<div class="fragment fade-in" style="font-size: 0.55em; text-align: left; min-width: 340px;">
+							<div style="border: 3px solid var(--ztu-blue); padding: 10px 14px;">
+								&lt;Dashboard&gt; — h1, nav
+								<div style="border: 3px dashed var(--ztu-orange); padding: 10px 14px; margin-top: 8px;">
+									&lt;Outlet /&gt; → &lt;Profile&gt;
+									<div style="border: 3px dashed var(--ztu-green); padding: 10px 14px; margin-top: 8px;">
+										&lt;Outlet /&gt; → &lt;EditProfile&gt;
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<p class="fragment fade-in">Кожен рівень URL — рівень вкладеності компонентів</p>
+				</section>
+
 				<!-- Route -->
 				<section>
 					<h2 class="ztu-blue">ROUTE</h2>
 					<p class="ztu-orange">Конфігурація маршруту з усіма властивостями</p>
-					<pre><code class="javascript" data-line-numbers="|3-4|6-7|9-14|17-18">const router = createBrowserRouter([
+					<pre><code class="javascript" data-line-numbers="|3-4|6-7|9-15|17-21|23-24">const router = createBrowserRouter([
   {
     // it renders this element
     element: &lt;Team /&gt;,
@@ -215,17 +335,27 @@ function App() {
     },
 
     // performing this mutation when data is submitted to it
-    action: async ({ request }) =&gt; {</code></pre>
+    action: async ({ request, params }) =&gt; {
+      const formData = await request.formData();
+      return updateTeam(params.teamId, formData);
+    },
+
+    // and rendering this element in case something went wrong
+    errorElement: &lt;TeamError /&gt;,
+  },
+]);</code></pre>
 				</section>
 
 				<!-- Loader Example -->
 				<section>
 					<h2 class="ztu-blue">LOADER</h2>
 					<p class="ztu-orange">Завантаження даних перед рендерингом</p>
-					<pre><code class="javascript" data-line-numbers="|1-7|9-10">const teamLoader = async ({ params }) =&gt; {
+					<pre><code class="javascript" data-line-numbers="|1|3-9|5-7|11-12">import { data } from "react-router";
+
+const teamLoader = async ({ params }) =&gt; {
   const response = await fetch(`/api/teams/${params.teamId}`);
   if (!response.ok) {
-    throw new Response("Not Found", { status: 404 });
+    throw data("Team not found", { status: 404 });
   }
   return response.json();
 };
@@ -254,11 +384,12 @@ const Team = () =&gt; {
 				<section>
 					<h2 class="ztu-blue">ERRORELEMENT</h2>
 					<p class="ztu-orange">Обробка помилок у маршрутах</p>
-					<pre><code class="javascript" data-line-numbers="|5">{
+					<pre><code class="javascript" data-line-numbers="|5|6">{
   path: "teams/:teamId",
   element: &lt;Team /&gt;,
   loader: teamLoader,
-  errorElement: &lt;TeamError /&gt;
+  errorElement: &lt;TeamError /&gt;,
+  // або в v7: ErrorBoundary: TeamError
 }</code></pre>
 				</section>
 
@@ -266,13 +397,13 @@ const Team = () =&gt; {
 				<section>
 					<h2 class="ztu-blue">USEROUTEERROR</h2>
 					<p class="ztu-orange">Доступ до помилки в errorElement</p>
-					<pre><code class="jsx" data-line-numbers="|1|4|6-8">import { useRouteError } from "react-router";
+					<pre><code class="jsx" data-line-numbers="|1|4|6-8|10">import { useRouteError, isRouteErrorResponse } from "react-router";
 
 const TeamError = () =&gt; {
   const error = useRouteError();
 
-  if (error.status === 404) {
-    return &lt;h1&gt;Team not found&lt;/h1&gt;;
+  if (isRouteErrorResponse(error)) {
+    return &lt;h1&gt;{error.status}: {error.data}&lt;/h1&gt;;
   }
 
   return &lt;h1&gt;Something went wrong&lt;/h1&gt;;
@@ -283,21 +414,15 @@ const TeamError = () =&gt; {
 				<section>
 					<h2 class="ztu-blue">PATH</h2>
 					<p class="ztu-orange">Властивість. Шлях для маршрутизації</p>
-					<pre><code class="javascript" data-line-numbers>path: "teams/:teamId",</code></pre>
-				</section>
+					<pre><code class="javascript" data-line-numbers="|1-2|4-6|8-9">// статичний сегмент
+path: "teams",
 
-				<!-- Path Dynamic Segments -->
-				<section>
-					<h2 class="ztu-blue">PATH</h2>
-					<p class="ztu-orange">Динамічні сегменти. Не можуть бути частковими.</p>
-					<pre><code class="javascript" data-line-numbers>path: "teams/:teamId/product/:productId",</code></pre>
-				</section>
+// динамічні сегменти — лише цілий сегмент,
+// "teams/team-:id" не спрацює
+path: "teams/:teamId/product/:productId",
 
-				<!-- Catchall -->
-				<section>
-					<h2 class="ztu-blue">CATCHALL *</h2>
-					<p class="ztu-orange">Все після сегменту</p>
-					<pre><code class="javascript" data-line-numbers>path: "teams/:teamId/product/*",</code></pre>
+// catch-all: усе після сегменту
+path: "teams/:teamId/product/*",</code></pre>
 				</section>
 
 				<!-- Link -->
@@ -308,18 +433,9 @@ const TeamError = () =&gt; {
   &lt;Link to="/"&gt;Home&lt;/Link&gt;
   &lt;Link to="/lesson1"&gt;Lesson1&lt;/Link&gt;
   &lt;Link to="/sdfdfdsf"&gt;Incorrect&lt;/Link&gt;
-  &lt;Link to="/articles"&gt;Articles&lt;/Link&gt;
+  &lt;Link to="/articles/1"&gt;Articles&lt;/Link&gt;
 &lt;/header&gt;</code></pre>
-				</section>
-
-				<!-- Link Properties -->
-				<section>
-					<h2 class="ztu-blue">LINK</h2>
-					<ul class="ztu-list">
-						<li class="fragment fade-in">to</li>
-						<li class="fragment fade-in">relative</li>
-						<li class="fragment fade-in">preventScrollReset</li>
-					</ul>
+					<p class="fragment fade-in">Властивості: <code>to</code>, <code>replace</code>, <code>state</code>, <code>relative</code>, <code>preventScrollReset</code></p>
 				</section>
 
 				<!-- NavLink -->
@@ -333,10 +449,18 @@ const TeamError = () =&gt; {
 &lt;/header&gt;</code></pre>
 				</section>
 
-				<!-- Outlet -->
+				<!-- NavLink isActive -->
 				<section>
-					<h2 class="ztu-blue">OUTLET</h2>
-					<p class="ztu-orange">Місце, куди буде доданий весь контент</p>
+					<h2 class="ztu-blue">NAVLINK</h2>
+					<p class="ztu-orange">isActive та end</p>
+					<pre><code class="jsx" data-line-numbers="|3|4|8">&lt;NavLink
+  to="/"
+  end
+  className={({ isActive }) =&gt; (isActive ? "menu-active" : "")}
+&gt;
+  Home
+&lt;/NavLink&gt;
+&lt;NavLink to="/lesson1"&gt;Lesson1&lt;/NavLink&gt; {/* клас "active" за замовчуванням */}</code></pre>
 				</section>
 
 				<!-- Index -->
@@ -346,8 +470,8 @@ const TeamError = () =&gt; {
   createRoutesFromElements(
     &lt;Route path="/" element={&lt;Layout /&gt;}&gt;
       &lt;Route index element={&lt;Home /&gt;} /&gt;
-      &lt;Route path="/lesson1" element={&lt;Lesson1 /&gt;} /&gt;
-      &lt;Route path="/articles/:id" element={&lt;Articles /&gt;} /&gt;
+      &lt;Route path="lesson1" element={&lt;Lesson1 /&gt;} /&gt;
+      &lt;Route path="articles/:id" element={&lt;Articles /&gt;} /&gt;
       &lt;Route path="*" element={&lt;PageNotFound /&gt;} /&gt;
     &lt;/Route&gt;
   )
@@ -374,54 +498,158 @@ const Articles = () =&gt; {
 export { Articles };</code></pre>
 				</section>
 
+				<!-- Same instance, different params -->
+				<section>
+					<h2 class="ztu-blue">PARAMS ЗМІНИЛИСЬ — КОМПОНЕНТ ТОЙ САМИЙ</h2>
+					<p class="ztu-orange">/articles/1 → /articles/2</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Той самий Route → той самий екземпляр Articles</li>
+						<li class="fragment fade-in">Компонент не перемонтовується, state зберігається</li>
+						<li class="fragment fade-in">useEffect(..., []) не перезапуститься → застарілі дані</li>
+						<li class="fragment fade-in">Рішення: id у залежностях ефекту або key={id}</li>
+					</ul>
+				</section>
+
+				<!-- key={id} -->
+				<section>
+					<h2 class="ztu-blue">KEY ЯК СКИДАННЯ СТАНУ</h2>
+					<p class="ztu-orange">Новий key → новий екземпляр компонента</p>
+					<pre><code class="jsx" data-line-numbers="|3|4">const ArticlePage = () =&gt; {
+  const { id } = useParams();
+  // зміна id = unmount старої статті + mount нової
+  return &lt;Article key={id} id={id} /&gt;;
+};</code></pre>
+				</section>
+
 				<!-- useNavigate -->
 				<section>
 					<h2 class="ztu-blue">USENAVIGATE</h2>
 					<p class="ztu-orange">Можливість емуляції браузерної навігації</p>
-					<pre><code class="javascript" data-line-numbers="|2|6|9">import { useEffect, useState } from "react";
+					<pre><code class="javascript" data-line-numbers="|2|6|9-16|17|21">import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 
 const Articles = () =&gt; {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [data, setData] = useState({});
-
-  const goBack = () =&gt; navigate(-1);
+  const [data, setData] = useState(null);
 
   useEffect(() =&gt; {
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    const controller = new AbortController();
+    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`,
+      { signal: controller.signal })
       .then(response =&gt; response.json())
-      .then(json =&gt; setData(json));
-  }, []);</code></pre>
-				</section>
+      .then(setData)
+      .catch(err =&gt; { if (err.name !== "AbortError") console.error(err); });
+    return () =&gt; controller.abort();
+  }, [id]); // ← ефект залежить від id
 
-
-				<!-- useLocation Example -->
-				<section>
-					<h2 class="ztu-blue">USELOCATION</h2>
-					<p class="ztu-orange">Доступ до поточного URL та його стану</p>
-					<pre><code class="javascript" data-line-numbers="|1|4|6-10">import { useLocation } from "react-router";
-
-const Analytics = () =&gt; {
-  const location = useLocation();
-
-  useEffect(() =&gt; {
-    // Track page view
-    analytics.pageView(location.pathname);
-  }, [location]);
-
-  return &lt;Outlet /&gt;;
+  return (
+    &lt;article&gt;
+      &lt;button onClick={() =&gt; navigate(-1)}&gt;Назад&lt;/button&gt;
+      &lt;h1&gt;{data?.title}&lt;/h1&gt;
+    &lt;/article&gt;
+  );
 };</code></pre>
 				</section>
 
-				<!-- useLocation Properties -->
+
+				<!-- Effect fetch vs loader -->
+				<section>
+					<h2 class="ztu-blue">FETCH В ЕФЕКТІ vs LOADER</h2>
+					<p class="ztu-orange">Компонент відповідає за відображення, маршрут — за дані</p>
+					<table style="font-size: 0.7em;">
+						<thead>
+							<tr><th></th><th>useEffect + fetch</th><th>loader</th></tr>
+						</thead>
+						<tbody>
+							<tr class="fragment fade-in"><td>Коли стартує запит</td><td>Після рендеру компонента</td><td>Під час навігації, до рендеру</td></tr>
+							<tr class="fragment fade-in"><td>Вкладені маршрути</td><td>Waterfall: батько → дитина</td><td>Усі loader-и паралельно</td></tr>
+							<tr class="fragment fade-in"><td>Race condition</td><td>AbortController вручну</td><td>Скасування автоматично</td></tr>
+							<tr class="fragment fade-in"><td>Стан завантаження</td><td>useState у кожному компоненті</td><td>useNavigation — один на застосунок</td></tr>
+							<tr class="fragment fade-in"><td>Помилки</td><td>try/catch + стан</td><td>errorElement маршруту</td></tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Same example with loader -->
+				<section>
+					<h2 class="ztu-blue">ТОЙ САМИЙ ПРИКЛАД З LOADER</h2>
+					<p class="ztu-orange">id змінився → loader перезапуститься сам</p>
+					<pre><code class="jsx" data-line-numbers="|1-8|10-12|15-20">const articleLoader = async ({ params, request }) =&gt; {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${params.id}`,
+    { signal: request.signal }
+  );
+  if (!response.ok) throw data("Article not found", { status: 404 });
+  return response.json();
+};
+
+// { path: "articles/:id", element: &lt;Articles /&gt;, loader: articleLoader }
+const Articles = () =&gt; {
+  const article = useLoaderData();
+  const navigate = useNavigate();
+
+  return (
+    &lt;article&gt;
+      &lt;button onClick={() =&gt; navigate(-1)}&gt;Назад&lt;/button&gt;
+      &lt;h1&gt;{article.title}&lt;/h1&gt;
+    &lt;/article&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- useNavigation -->
+				<section>
+					<h2 class="ztu-blue">USENAVIGATION</h2>
+					<p class="ztu-orange">Глобальний pending UI: idle → loading → idle</p>
+					<pre><code class="jsx" data-line-numbers="|1|4-5|9|10-12">import { Outlet, useNavigation } from "react-router";
+
+const Layout = () =&gt; {
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
+
+  return (
+    &lt;&gt;
+      {isLoading &amp;&amp; &lt;ProgressBar /&gt;}
+      &lt;main style={{ opacity: isLoading ? 0.5 : 1 }}&gt;
+        &lt;Outlet /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- useLocation -->
 				<section>
 					<h2 class="ztu-blue">USELOCATION</h2>
-					<pre><code class="javascript" data-line-numbers="|1|2|3|4|5">location.pathname  // "/products/123"
+					<p class="ztu-orange">Доступ до поточного URL та його стану</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-6|8-10">const location = useLocation();
+
+location.pathname  // "/products/123"
 location.search    // "?sort=asc"
 location.hash      // "#details"
 location.state     // { from: "/home" }
-location.key       // "abc123"</code></pre>
+
+useEffect(() =&gt; {
+  analytics.pageView(location.pathname); // трекінг переходів
+}, [location]);</code></pre>
+				</section>
+
+				<!-- useSearchParams -->
+				<section>
+					<h2 class="ztu-blue">USESEARCHPARAMS</h2>
+					<p class="ztu-orange">Стан у URL: фільтри, сортування, пагінація</p>
+					<pre><code class="jsx" data-line-numbers="|1|4|5|7-8">import { useSearchParams } from "react-router";
+
+const Articles = () =&gt; {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sort = searchParams.get("sort") ?? "asc"; // /articles?sort=desc
+
+  const toggleSort = () =&gt;
+    setSearchParams({ sort: sort === "asc" ? "desc" : "asc" });
+
+  return &lt;button onClick={toggleSort}&gt;Сортування: {sort}&lt;/button&gt;;
+};</code></pre>
 				</section>
 
 				<!-- Navigate -->
@@ -452,20 +680,74 @@ location.key       // "abc123"</code></pre>
 				<section>
 					<h2 class="ztu-blue">PROTECTED ROUTE</h2>
 					<pre><code class="jsx" data-line-numbers="|2-6|3-5">&lt;Route path="/" element={&lt;Layout /&gt;}&gt;
-  &lt;Route path="/dashboard" element={
+  &lt;Route path="dashboard" element={
     &lt;ProtectedRoute&gt;
       &lt;Dashboard /&gt;
     &lt;/ProtectedRoute&gt;
   } /&gt;
-  &lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
+  &lt;Route path="login" element={&lt;Login /&gt;} /&gt;
 &lt;/Route&gt;</code></pre>
+					<p class="fragment fade-in ztu-orange">Проблема: обгортати доведеться кожен маршрут окремо</p>
+				</section>
+
+				<!-- Protected Layout Route -->
+				<section>
+					<h2 class="ztu-blue">PROTECTED ROUTE ЯК LAYOUT</h2>
+					<p class="ztu-orange">Один guard на групу маршрутів — композиція замість обгортання</p>
+					<pre><code class="jsx" data-line-numbers="|1-9|6|8|11-14|16-17">const RequireAuth = () =&gt; {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return &lt;Navigate to="/login" replace state={{ from: location }} /&gt;;
+  }
+  return &lt;Outlet /&gt;;
+};
+
+&lt;Route element={&lt;RequireAuth /&gt;}&gt;  {/* маршрут без path */}
+  &lt;Route path="dashboard" element={&lt;Dashboard /&gt;} /&gt;
+  &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;
+&lt;/Route&gt;
+
+// Login після входу:
+navigate(location.state?.from ?? "/", { replace: true });</code></pre>
+				</section>
+
+				<!-- Testing with createMemoryRouter -->
+				<section>
+					<h2 class="ztu-blue">ТЕСТУВАННЯ МАРШРУТІВ</h2>
+					<p class="ztu-orange">createMemoryRouter: історія в пам'яті, без браузера</p>
+					<pre><code class="jsx" data-line-numbers="|2|5-7|8-9">import { render, screen } from "@testing-library/react";
+import { createMemoryRouter, RouterProvider } from "react-router";
+
+test("показує сторінку статті за URL", async () =&gt; {
+  const router = createMemoryRouter(routes, { // ті самі routes, що й у App
+    initialEntries: ["/articles/1"],
+  });
+  render(&lt;RouterProvider router={router} /&gt;);
+  expect(await screen.findByRole("heading")).toBeInTheDocument();
+});</code></pre>
 				</section>
 
 				<!-- React.lazy -->
 				<section>
 					<h2 class="ztu-blue">REACT.LAZY</h2>
 					<p class="ztu-orange">Динамічне завантаження компонентів</p>
-					<pre><code class="javascript" data-line-numbers="|1">const Header = lazy(() => import('./components/Header'));</code></pre>
+					<pre><code class="javascript" data-line-numbers="|1|3-4">import { lazy } from "react";
+
+// на рівні модуля; pages/Dashboard.jsx має default export
+const Dashboard = lazy(() =&gt; import("./pages/Dashboard"));</code></pre>
+				</section>
+
+				<!-- React.lazy named export -->
+				<section>
+					<h2 class="ztu-blue">REACT.LAZY + NAMED EXPORT</h2>
+					<p class="ztu-orange">lazy очікує модуль з default export</p>
+					<pre><code class="javascript" data-line-numbers="|1|3-5">// pages/Articles.jsx:  export { Articles };
+
+const Articles = lazy(() =&gt;
+  import("./pages/Articles").then(module =&gt; ({ default: module.Articles }))
+);</code></pre>
 				</section>
 
 				<!-- React.Suspense -->
@@ -473,7 +755,7 @@ location.key       // "abc123"</code></pre>
 					<h2 class="ztu-blue">REACT.SUSPENSE</h2>
 					<p class="ztu-orange">Відображення fallback під час завантаження</p>
 					<pre><code class="jsx" data-line-numbers="|1-3">&lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
-  &lt;Header /&gt;
+  &lt;Dashboard /&gt;
 &lt;/Suspense&gt;</code></pre>
 				</section>
 
@@ -481,6 +763,12 @@ location.key       // "abc123"</code></pre>
 				<section>
 					<h2 class="ztu-blue">ERROR BOUNDARY</h2>
 					<p class="ztu-orange">Обробка помилок завантаження lazy компонентів</p>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Ловить помилки рендеру дочірніх компонентів</li>
+						<li class="fragment fade-in">Зокрема — збій завантаження chunk-а для lazy</li>
+						<li class="fragment fade-in">Лише класовий компонент (або бібліотека react-error-boundary)</li>
+						<li class="fragment fade-in">Не ловить помилки в обробниках подій та async-коді</li>
+					</ul>
 				</section>
 
 				<!-- Error Boundary Class -->
@@ -519,6 +807,55 @@ location.key       // "abc123"</code></pre>
     &lt;LazyComponent /&gt;
   &lt;/Suspense&gt;
 &lt;/ErrorBoundary&gt;</code></pre>
+				</section>
+
+				<!-- Where to put Suspense -->
+				<section>
+					<h2 class="ztu-blue">ДЕ СТАВИТИ SUSPENSE</h2>
+					<p class="ztu-orange">Межа навколо Outlet: меню лишається, змінюється лише контент</p>
+					<pre><code class="jsx" data-line-numbers="|3|4-8|6">const Layout = () =&gt; (
+  &lt;&gt;
+    &lt;Header /&gt;                {/* завжди видно */}
+    &lt;ErrorBoundary&gt;
+      &lt;Suspense fallback={&lt;PageSpinner /&gt;}&gt;
+        &lt;Outlet /&gt;            {/* lazy-сторінки */}
+      &lt;/Suspense&gt;
+    &lt;/ErrorBoundary&gt;
+  &lt;/&gt;
+);</code></pre>
+				</section>
+
+				<!-- Suspense boundaries -->
+				<section>
+					<h2 class="ztu-blue">МЕЖІ SUSPENSE</h2>
+					<ul class="ztu-list">
+						<li class="fragment fade-in">Одна межа над усім застосунком → зникає весь UI</li>
+						<li class="fragment fade-in">Межа навколо кожного дрібного компонента → «мерехтіння» спінерів</li>
+						<li class="fragment fade-in">v7 виконує навігацію через startTransition: поточний екран лишається, поки вантажиться новий</li>
+					</ul>
+				</section>
+
+				<!-- Route-level lazy -->
+				<section>
+					<h2 class="ztu-blue">LAZY НА РІВНІ МАРШРУТУ</h2>
+					<p class="ztu-orange">Data router сам завантажить chunk під час навігації</p>
+					<pre><code class="javascript" data-line-numbers="|7-13|9-10|11">const router = createBrowserRouter([
+  {
+    path: "/",
+    element: &lt;Layout /&gt;,
+    children: [
+      { index: true, element: &lt;Home /&gt; },
+      {
+        path: "dashboard",
+        lazy: async () =&gt; {
+          const { Dashboard, dashboardLoader } = await import("./pages/Dashboard");
+          return { Component: Dashboard, loader: dashboardLoader };
+        },
+      },
+    ],
+  },
+]);</code></pre>
+					<p class="fragment fade-in">Named export працює без обгортки, loader теж вантажиться ліниво</p>
 				</section>
 
 				<!-- Questions -->
