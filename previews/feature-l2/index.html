@@ -56,7 +56,7 @@
 				<section>
 					<h2 class="ztu-blue">ДЕ ВИКОРИСТОВУЄТЬСЯ РЕАКТ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">SSR server</li>
+						<li class="fragment fade-in-then-semi-out">SSR — серверний рендеринг (react-dom/server)</li>
 						<li class="fragment fade-in-then-semi-out">react — web</li>
 						<li class="fragment fade-in-then-semi-out">react-native — iOS, Android apps</li>
 					</ul>
@@ -111,10 +111,10 @@ npm run dev</code></pre>
 				<section>
 					<h2 class="ztu-blue">БАЗОВІ КОМАНДИ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">npm run dev</li>
-						<li class="fragment fade-in-then-semi-out">npm run build</li>
-						<li class="fragment fade-in-then-semi-out">npm run preview</li>
-						<li class="fragment fade-in-then-semi-out">npm run lint</li>
+						<li class="fragment fade-in-then-semi-out">npm run dev — dev-сервер з HMR</li>
+						<li class="fragment fade-in-then-semi-out">npm run build — production-збірка в dist/</li>
+						<li class="fragment fade-in-then-semi-out">npm run preview — локальний перегляд зібраного dist/ (після build)</li>
+						<li class="fragment fade-in-then-semi-out">npm run lint — перевірка коду ESLint</li>
 					</ul>
 				</section>
 
@@ -124,7 +124,7 @@ npm run dev</code></pre>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">DOM (Document Object Model)</li>
 						<li class="fragment fade-in-then-semi-out">DOM-документ є деревом</li>
-						<li class="fragment fade-in-then-semi-out">Гілки дерева оновлюються повністю</li>
+						<li class="fragment fade-in-then-semi-out">Зміни DOM дорогі: перерахунок стилів, layout, перемальовування</li>
 					</ul>
 					<!-- DOM-дерево: Wikimedia Commons "Simpe HTML page DOM.svg", автор Ramac, Public Domain -->
 					<img src="examples/assets/dom-tree.svg" alt="DOM-дерево HTML-документа"
@@ -147,7 +147,7 @@ npm run dev</code></pre>
 				<section>
 					<h2 class="ztu-blue">ЯК РЕАКТ ВИКОРИСТОВУЄ VIRTUAL DOM?</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">React спостерігає (Observer) за станами компонентів</li>
+						<li class="fragment fade-in-then-semi-out">Виклик сеттера стану повідомляє React про зміну</li>
 						<li class="fragment fade-in-then-semi-out">При зміні стану компонента оновлює VDOM</li>
 						<li class="fragment fade-in-then-semi-out">Порівняння VDOM з попередньою версією (diffing)</li>
 						<li class="fragment fade-in-then-semi-out">Оновлення переносяться в реальний DOM пакетно (batch)</li>
@@ -168,10 +168,10 @@ npm run dev</code></pre>
 				<section>
 					<h2 class="ztu-blue">КОМПОНЕНТИ</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Найменша атомарна одиниця в React</li>
+						<li class="fragment fade-in-then-semi-out">Базовий будівельний блок інтерфейсу в React</li>
 						<li class="fragment fade-in-then-semi-out">Розроблені для повторного використання</li>
 						<li class="fragment fade-in-then-semi-out">Містять props, які приймають дані через параметри</li>
-						<li class="fragment fade-in-then-semi-out">Описуються станом state, що зберігає дані властивостей</li>
+						<li class="fragment fade-in-then-semi-out">Можуть мати власний стан state — дані, що змінюються з часом</li>
 						<li class="fragment fade-in-then-semi-out">Містять props &amp; state</li>
 						<li class="fragment fade-in-then-semi-out">Функціональні та класові компоненти</li>
 					</ul>
