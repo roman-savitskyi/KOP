@@ -246,7 +246,9 @@ function App() {
 					<p class="ztu-orange">Властивість. Задання посилання на корінь ресурсу</p>
 					<pre><code class="javascript" data-line-numbers>createBrowserRouter(routes, {
   basename: "/app",
-});</code></pre>
+});
+
+// &lt;Link to="/lesson1"&gt; → href="/app/lesson1"</code></pre>
 				</section>
 
 				<!-- Outlet -->
@@ -454,11 +456,11 @@ path: "teams/:teamId/product/*",</code></pre>
 					<h2 class="ztu-blue">NAVLINK</h2>
 					<p class="ztu-orange">isActive та end</p>
 					<pre><code class="jsx" data-line-numbers="|3|4|8">&lt;NavLink
-  to="/"
-  end
+  to="/articles"
+  end /* без end — активний і на /articles/1 */
   className={({ isActive }) =&gt; (isActive ? "menu-active" : "")}
 &gt;
-  Home
+  Articles
 &lt;/NavLink&gt;
 &lt;NavLink to="/lesson1"&gt;Lesson1&lt;/NavLink&gt; {/* клас "active" за замовчуванням */}</code></pre>
 				</section>
@@ -646,7 +648,7 @@ const Articles = () =&gt; {
   const sort = searchParams.get("sort") ?? "asc"; // /articles?sort=desc
 
   const toggleSort = () =&gt;
-    setSearchParams({ sort: sort === "asc" ? "desc" : "asc" });
+    setSearchParams({ sort: sort === "asc" ? "desc" : "asc" }); // замінює ВЕСЬ query
 
   return &lt;button onClick={toggleSort}&gt;Сортування: {sort}&lt;/button&gt;;
 };</code></pre>
@@ -657,7 +659,8 @@ const Articles = () =&gt; {
 					<h2 class="ztu-blue">NAVIGATE</h2>
 					<p class="ztu-orange">Переадресація</p>
 					<pre><code class="jsx" data-line-numbers="|2">&lt;Route path="/lesson1" element={&lt;Lesson1 /&gt;} /&gt;
-&lt;Route path="/lesson9" element={&lt;Navigate to="/lesson1" /&gt;} /&gt;</code></pre>
+&lt;Route path="/lesson9" element={&lt;Navigate to="/lesson1" replace /&gt;} /&gt;
+// без replace: «Назад» → /lesson9 → знову редирект</code></pre>
 				</section>
 
 
@@ -718,7 +721,8 @@ navigate(location.state?.from ?? "/", { replace: true });</code></pre>
 					<h2 class="ztu-blue">ТЕСТУВАННЯ МАРШРУТІВ</h2>
 					<p class="ztu-orange">createMemoryRouter: історія в пам'яті, без браузера</p>
 					<pre><code class="jsx" data-line-numbers="|2|5-7|8-9">import { render, screen } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router";
+import { createMemoryRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
 
 test("показує сторінку статті за URL", async () =&gt; {
   const router = createMemoryRouter(routes, { // ті самі routes, що й у App
@@ -764,7 +768,7 @@ const Articles = lazy(() =&gt;
 					<h2 class="ztu-blue">ERROR BOUNDARY</h2>
 					<p class="ztu-orange">Обробка помилок завантаження lazy компонентів</p>
 					<ul class="ztu-list">
-						<li class="fragment fade-in">Ловить помилки рендеру дочірніх компонентів</li>
+						<li class="fragment fade-in">Ловить помилки рендеру, методів життєвого циклу та ефектів дочірніх компонентів</li>
 						<li class="fragment fade-in">Зокрема — збій завантаження chunk-а для lazy</li>
 						<li class="fragment fade-in">Лише класовий компонент (або бібліотека react-error-boundary)</li>
 						<li class="fragment fade-in">Не ловить помилки в обробниках подій та async-коді</li>
