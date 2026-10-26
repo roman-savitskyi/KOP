@@ -44,7 +44,40 @@ jobs:
           echo "Preview folder: $SLUG"footer-ztu-logo
 
       # 6. Деплоїмо dist папку у gh-pages/previews/<branch>
+      #    Кілька гілок можуть пушити в gh-pages одночасно → "cannot lock ref".
+      #    concurrency тут не підходить (тримає лише 1 очікувальний запуск, решту скасовує),
+      #    тому повторюємо деплой з випадковою паузою.
       - name: Deploy to GitHub Pages
+        id: deploy1
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: previews/${{ env.SLUG }}
+          enable_jekyll: false
+
+      - name: Wait before retry 2
+        if: steps.deploy1.outcome == 'failure'
+        run: sleep $((RANDOM % 30 + 10))
+
+      - name: Deploy to GitHub Pages (retry 2)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: previews/${{ env.SLUG }}
+          enable_jekyll: false
+
+      - name: Wait before retry 3
+        if: steps.deploy2.outcome == 'failure'
+        run: sleep $((RANDOM % 40 + 20))
+
+      - name: Deploy to GitHub Pages (retry 3)
+        if: steps.deploy2.outcome == 'failure'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
