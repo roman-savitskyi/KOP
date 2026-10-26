@@ -10,3 +10,5 @@ tmp/**
 node_modules/
 .sass-cache
 dist/
+# Банк запитань Moodle (містить відповіді — не комітимо)
+moodle/
