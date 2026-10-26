@@ -69,7 +69,7 @@ export function Form() {
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Єдине джерело правди</li>
 						<li class="fragment fade-in-then-semi-out">Зберігають дані в стейті</li>
-						<li class="fragment fade-in-then-semi-out">Єдиний спосіб роботи</li>
+						<li class="fragment fade-in-then-semi-out">React — єдине джерело значення поля</li>
 						<li class="fragment fade-in-then-semi-out">Зміна стану ЛИШЕ через onChange</li>
 					</ul>
 				</section>
@@ -199,7 +199,7 @@ export function FormUncontrol() {
   );
 }
 
-// Для форми з 10 полями = 10 ре-рендерів на кожну зміну!</code></pre>
+// Форма з 10 полями: кожен символ ре-рендерить усю форму (усі 10 полів)!</code></pre>
 				</section>
 
 				<section>
@@ -625,11 +625,11 @@ export function App() {
       {fields.map((field, index) => (
         &lt;div key={field.id}&gt;
           &lt;input {...register(`items.${index}.name`)} /&gt;
-          &lt;button onClick={() => remove(index)}&gt;Видалити&lt;/button&gt;
+          &lt;button type="button" onClick={() => remove(index)}&gt;Видалити&lt;/button&gt;
         &lt;/div&gt;
       ))}
 
-      &lt;button onClick={() => append({ name: '' })}&gt;
+      &lt;button type="button" onClick={() => append({ name: '' })}&gt;
         Додати поле
       &lt;/button&gt;
     &lt;/form&gt;
