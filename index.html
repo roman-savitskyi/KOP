@@ -172,7 +172,7 @@ const listItems = numbers.map((number) =>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Стабільна ідентичність</li>
 						<li class="fragment fade-in-then-semi-out">Ключ унікальний в межах списку</li>
-						<li class="fragment fade-in-then-semi-out">Ключі є рядковими</li>
+						<li class="fragment fade-in-then-semi-out">Ключі — рядки або числа (числа React приводить до рядка)</li>
 						<li class="fragment fade-in-then-semi-out">Ключ застосовується для елементів масиву, а не до тегів</li>
 					</ul>
 				</section>
@@ -225,7 +225,7 @@ products.map((product) =&gt;
 					<h2 class="ztu-blue">БАНДЛІНГ</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Webpack</li>
-						<li class="fragment fade-in-then-semi-out">Rollup</li>
+						<li class="fragment fade-in-then-semi-out">Rollup / Rolldown</li>
 						<li class="fragment fade-in-then-semi-out">Parcel</li>
 						<li class="fragment fade-in-then-semi-out">Vite</li>
 					</ul>
@@ -273,7 +273,7 @@ products.map((product) =&gt;
 								<li class="">Швидкий старт (ESM)</li>
 								<li class="">Zero-config</li>
 								<li class="">Миттєвий HMR</li>
-								<li class="">Rollup під капотом</li>
+								<li class="">Rolldown під капотом (Vite 8)</li>
 							</ul>
 						</div>
 					</div>
@@ -284,8 +284,8 @@ products.map((product) =&gt;
 					<h2 class="ztu-blue">VITE</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">ESM в Dev режимі</li>
-						<li class="fragment fade-in-then-semi-out">esbuild для TypeScript</li>
-						<li class="fragment fade-in-then-semi-out">Rollup для Production</li>
+						<li class="fragment fade-in-then-semi-out">Oxc для TypeScript / JSX (до Vite 8 — esbuild)</li>
+						<li class="fragment fade-in-then-semi-out">Rolldown для Production (до Vite 8 — Rollup)</li>
 						<li class="fragment fade-in-then-semi-out">Плагіни сумісні з Rollup</li>
 					</ul>
 				</section>
@@ -354,7 +354,7 @@ import 'react-toastify/dist/ReactToastify.css';</code></pre>
 					<h3 class="ztu-orange">Динамічний імпорт: підтримка</h3>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">import() — частина стандарту ES2020</li>
-						<li class="fragment fade-in-then-semi-out">Vite, webpack 5, Rollup підтримують його без плагінів</li>
+						<li class="fragment fade-in-then-semi-out">Vite, webpack 5, Rollup, Rolldown підтримують його без плагінів</li>
 						<li class="fragment fade-in-then-semi-out">Бандлер виносить модуль в окремий chunk</li>
 					</ul>
 				</section>
@@ -405,9 +405,9 @@ export { default as Calculator } from './Calculator';</code></pre>
 					<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
 						<div>
 							<h3 class="ztu-orange">CommonJS (Node.js)</h3>
-							<pre><code class="javascript" style="font-size: 0.7em;">// Export
-module.exports = { add };
-exports.PI = 3.14;
+							<pre><code class="javascript" style="font-size: 0.7em;">// Export (обрати ОДИН спосіб)
+module.exports = { add, PI: 3.14 };
+// або: exports.add = add; exports.PI = 3.14;
 
 // Import
 const { add } = require('./math');
