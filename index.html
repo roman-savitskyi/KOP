@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>React Hooks - Лекція 4</title>
+		<title>React Hooks - Лекція 5</title>
 
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/ztu.css">
@@ -20,7 +20,7 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 5</h1>
 					<p class="ztu-orange">HOOKS</p>
 				</section>
 
@@ -324,7 +324,7 @@ const fullName = first + ' ' + last;</code></pre>
     return () => conn.close();
   }, [roomId]); // theme НЕ у залежностях → без зайвих перепідключень
 }</code></pre>
-					<p class="fragment fade-in ztu-orange">«Бачить» останні props/state, але сам не перезапускає ефект. Поки експериментальний.</p>
+					<p class="fragment fade-in ztu-orange">«Бачить» останні props/state, але сам не перезапускає ефект. Стабільний з React 19.2.</p>
 				</section>
 
 				<section>
@@ -387,7 +387,7 @@ export function Ref() {
 					<h2 class="ztu-blue">USEMEMO</h2>
 					<p class="ztu-orange">Синтаксис</p>
 					<pre><code class="javascript">const memoValue = useMemo(() => {
-  expensiveOperationHere(data, value)
+  return expensiveOperationHere(data, value);
 }, [data, value]);</code></pre>
 				</section>
 
@@ -496,7 +496,7 @@ const expensiveResult = useMemo(() => heavyCalculation(data), [data]);</code></p
 					<h2 class="ztu-blue">USECALLBACK</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Мемоїзація функцій між рендерами</li>
-						<li class="fragment fade-in-then-semi-out">Запобігає непотрібним ререндерам дочірніх компонентів</li>
+						<li class="fragment fade-in-then-semi-out">Разом із React.memo запобігає зайвим ререндерам дочірніх</li>
 						<li class="fragment fade-in-then-semi-out">Оптимізує передачу callbacks як props</li>
 						<li class="fragment fade-in-then-semi-out">useCallback(fn, deps) === useMemo(() => fn, deps)</li>
 					</ul>
@@ -970,7 +970,7 @@ if (isLoggedIn) {
 
 				<!-- Кінець -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 5</h1>
 					<p class="ztu-orange">HOOKS</p>
 				</section>
 
