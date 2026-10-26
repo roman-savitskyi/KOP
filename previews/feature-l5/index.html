@@ -644,7 +644,7 @@ function Counter() {
 				<section>
 					<h2 class="ztu-blue">USELAYOUTEFFECT</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Синхронний useEffect після DOM мутацій</li>
+						<li class="fragment fade-in-then-semi-out">Виконується синхронно після DOM-мутацій</li>
 						<li class="fragment fade-in-then-semi-out">Виконується перед браузерним paint</li>
 						<li class="fragment fade-in-then-semi-out">Для вимірювань DOM елементів</li>
 						<li class="fragment fade-in-then-semi-out">Запобігає візуальному flickering</li>
@@ -773,8 +773,9 @@ function useLocalStorage(key, initialValue) {
 
   const setValue = (value) => {
     try {
-      setStoredValue(value);
-      window.localStorage.setItem(key, JSON.stringify(value));
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
       console.log(error);
     }
@@ -840,16 +841,16 @@ function App() {
 				<section>
 					<h2 class="ztu-blue">USETRANSITION</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Позначає оновлення як несрочне (transition)</li>
+						<li class="fragment fade-in-then-semi-out">Позначає оновлення як нетермінове (transition)</li>
 						<li class="fragment fade-in-then-semi-out">UI лишається чуйним під час дорогого ре-рендера</li>
 						<li class="fragment fade-in-then-semi-out"><code>isPending</code> — показати індикатор завантаження</li>
 					</ul>
 					<pre><code class="javascript" data-line-numbers="|1|4|5-7|">const [isPending, startTransition] = useTransition();
 
 function onChange(e) {
-  setQuery(e.target.value);              // срочно: поле вводу
+  setQuery(e.target.value);              // терміново: поле вводу
   startTransition(() => {
-    setResults(filter(e.target.value));  // несрочно: важкий список
+    setResults(filter(e.target.value));  // нетерміново: важкий список
   });
 }</code></pre>
 				</section>
