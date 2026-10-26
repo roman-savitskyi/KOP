@@ -42,7 +42,7 @@
 					<pre><code class="javascript" data-line-numbers="3|15-21|18|11-13|20|6-9">import { useState } from 'react';
 
 export function Form() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState('');
 
   const handleSubmit = (event) => {
     console.log('submit value', value);
@@ -209,7 +209,7 @@ export function FormUncontrol() {
 
   if (!firstName) newErrors.firstName = "Обов'язкове поле";
   if (!email) newErrors.email = "Обов'язкове поле";
-  else if (!/\S+@\S+/.test(email)) newErrors.email = "Невірний email";
+  else if (!/\S+@\S+/.test(email)) newErrors.email = "Некоректний email";
 
   if (Object.keys(newErrors).length > 0) {
     setErrors(newErrors);
@@ -316,7 +316,7 @@ export function ReactHookForm() {
   {...register("email", {
     pattern: {
       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-      message: "Невірний формат email"
+      message: "Некоректний формат email"
     }
   })}
 /&gt;</code></pre>
@@ -373,7 +373,7 @@ export function ReactHookForm() {
 					<p class="ztu-orange">З повідомленням</p>
 					<pre><code class="javascript" data-line-numbers="1-4|6-10|8">&lt;input {...register("email", {
   required: "Email обов'язковий",
-  pattern: { value: /^\S+@\S+$/i, message: "Невірний email" }
+  pattern: { value: /^\S+@\S+$/i, message: "Некоректний email" }
 })} /&gt;
 
 {errors.email && (
@@ -762,7 +762,7 @@ const schema = yup.object({
   firstName: yup.string().required("Ім'я обов'язкове"),
   age: yup.number().positive().integer().required(),
   email: yup.string()
-    .email("Невірний формат email")
+    .email("Некоректний формат email")
     .required("Email обов'язковий"),
 }).required();</code></pre>
 				</section>
@@ -834,7 +834,7 @@ export function App() {
     .required("Ім'я обов'язкове")
     .min(2, "Мінімум 2 символи"),
   email: yup.string()
-    .email("Невірний email")
+    .email("Некоректний email")
     .required("Email обов'язковий"),
   password: yup.string()
     .min(8, "Мінімум 8 символів")
