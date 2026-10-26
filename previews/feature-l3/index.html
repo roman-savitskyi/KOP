@@ -219,7 +219,7 @@ const [color, setColor] = useState(() =&gt; getInitialColor());
 const [color, setColor] = useState(getInitialColor());</code></pre>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Передаємо <strong>функцію</strong>, а не її виклик</li>
-						<li class="fragment fade-in-then-semi-out">React викличе її лише один раз — при монтуванні</li>
+						<li class="fragment fade-in-then-semi-out">React викличе її один раз на кожне монтування компонента</li>
 						<li class="fragment fade-in-then-semi-out">Корисно для дорогих початкових обчислень</li>
 					</ul>
 				</section>
@@ -251,7 +251,7 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 
 				<!-- Props / Events: фази -->
 				<section>
-					<h2 class="ztu-blue">ПОТІК ПОДІЙ (PROPS / EVENTS)</h2>
+					<h2 class="ztu-blue">ПОТІК ПОДІЙ (EVENTS)</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Capture Phase (1) — від Window вниз до цілі</li>
 						<li class="fragment fade-in-then-semi-out">Target Phase (2) — сам елемент-ціль</li>
@@ -300,7 +300,7 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 					<h2 class="ztu-blue">ОСОБЛИВОСТІ PROPS</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Лише для читання (read-only)</li>
-						<li class="fragment fade-in-then-semi-out">Працюють як чисті функції</li>
+						<li class="fragment fade-in-then-semi-out">Компонент — чиста функція від props: ті самі props → той самий результат</li>
 					</ul>
 				</section>
 
