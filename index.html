@@ -142,7 +142,7 @@ function Dashboard() {
       &lt;p&gt;Count: {count}&lt;/p&gt;
       &lt;button onClick={() => setCount(count + 1)}&gt;+1&lt;/button&gt;
 
-      &lt;!-- Функціональне оновлення --&gt;
+      {/* Функціональне оновлення */}
       &lt;button onClick={() => setCount(prev => prev + 1)}&gt;
         +1 (functional)
       &lt;/button&gt;
@@ -483,7 +483,7 @@ function Dropdown() {
 				<section>
 					<h2 class="ztu-blue">Портали</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Версія після 16.3</li>
+						<li class="fragment fade-in-then-semi-out">Доступні з React 16.0 (createPortal)</li>
 						<li class="fragment fade-in-then-semi-out">Можливість рендерити за межами кореневого елемента</li>
 						<li class="fragment fade-in-then-semi-out">Працює, як звичайний реакт елемент</li>
 						<li class="fragment fade-in-then-semi-out">Події спливають згідно з React деревом, а не DOM</li>
@@ -528,7 +528,7 @@ export function Portal(props) {
 
   return open ? createPortal(
     &lt;div className="modal-background" onClick={onClose}&gt;
-      &lt;div className="modal-content"&gt;
+      &lt;div className="modal-content" onClick={(e) => e.stopPropagation()}&gt;
         {props.children}
       &lt;/div&gt;
     &lt;/div&gt;,
