@@ -161,7 +161,7 @@ export function Price(props) {
 				<section>
 					<h2 class="ztu-blue">ВНУТРІШНІЙ СТАН</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">Лише стан (state) спричиняє ре-рендер</li>
+						<li class="fragment fade-in-then-semi-out">Зміна state через сеттер спричиняє ре-рендер компонента</li>
 						<li class="fragment fade-in-then-semi-out">State має використовуватись під час рендеру сторінки</li>
 						<li class="fragment fade-in-then-semi-out">Props не змінюється, на відміну від state</li>
 					</ul>
@@ -229,7 +229,7 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 					<h2 class="ztu-blue">ОСОБЛИВОСТІ STATE</h2>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Не потрібно присвоювати значення напряму</li>
-						<li class="fragment fade-in-then-semi-out">Не потрібно змінювати стан в асинхронних функціях</li>
+						<li class="fragment fade-in-then-semi-out">Новий стан видно лише в наступному рендері, а не одразу після setState</li>
 						<li class="fragment fade-in-then-semi-out">React групує виклики setState (batching)</li>
 					</ul>
 				</section>
@@ -431,7 +431,7 @@ const [color, setColor] = useState(getInitialColor());</code></pre>
 					<ul class="ztu-list">
 						<li class="fragment fade-in-then-semi-out">Кросбраузерна обгортка над нативною подією</li>
 						<li class="fragment fade-in-then-semi-out">nativeEvent</li>
-						<li class="fragment fade-in-then-semi-out">Пул подій, persist</li>
+						<li class="fragment fade-in-then-semi-out">Пулу подій немає з React 17 — event.persist() більше не потрібен</li>
 					</ul>
 					<p class="ztu-orange fragment fade-in-then-semi-out">react.dev/reference/react-dom/components/common</p>
 				</section>
