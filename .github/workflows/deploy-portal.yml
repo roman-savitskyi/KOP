@@ -57,8 +57,25 @@ jobs:
           node landing/build.mjs --previews _ghp/previews --out out/index.html
           cp -r landing/assets out/assets
 
-      # 5. Публікуємо ТІЛЬКИ корінь (index.html + assets); previews/ зберігаємо
+      # 5. Публікуємо ТІЛЬКИ корінь (index.html + assets); previews/ зберігаємо.
+      #    Деплої прев'ю пушать у gh-pages паралельно → при конфлікті повторюємо.
       - name: Deploy portal to gh-pages root
+        id: deploy1
+        continue-on-error: true
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          destination_dir: .
+          keep_files: true
+          enable_jekyll: false
+
+      - name: Wait before retry
+        if: steps.deploy1.outcome == 'failure'
+        run: sleep $((RANDOM % 30 + 10))
+
+      - name: Deploy portal to gh-pages root (retry)
+        if: steps.deploy1.outcome == 'failure'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
