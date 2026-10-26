@@ -20,7 +20,7 @@
 			<div class="slides">
 				<!-- Title Slide -->
 				<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
 					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
 				</section>
 
@@ -52,9 +52,9 @@
   let message;
 
   if (id) {
-    message = &lt;title tag="p"&gt;{id}&lt;/title&gt;;
+    message = &lt;Title tag="p"&gt;{id}&lt;/Title&gt;;
   } else {
-    message = &lt;title tag="p"&gt;The ID is not exist&lt;/title&gt;;
+    message = &lt;Title tag="p"&gt;The ID is not exist&lt;/Title&gt;;
   }
 
   return (
@@ -214,8 +214,8 @@ products.map((product) =&gt;
 				<section>
 					<h2 class="ztu-blue">ВІРТУАЛІЗОВАНИЙ СПИСОК</h2>
 					<ul class="ztu-list">
-						<li class="fragment fade-in-then-semi-out">MutationObserver</li>
-						<li class="fragment fade-in-then-semi-out">Активна робота з VirtualDOM</li>
+						<li class="fragment fade-in-then-semi-out">Windowing: у DOM лише видимі рядки (+ невеликий запас)</li>
+						<li class="fragment fade-in-then-semi-out">Позиція скролу визначає, які елементи рендерити</li>
 						<li class="fragment fade-in-then-semi-out">Велике покращення швидкодії продукту</li>
 					</ul>
 				</section>
@@ -348,11 +348,15 @@ import 'react-toastify/dist/ReactToastify.css';</code></pre>
 });</code></pre>
 				</section>
 
-				<!-- Динамічний імпорт babel -->
+				<!-- Динамічний імпорт: підтримка -->
 				<section>
 					<h2 class="ztu-blue">IMPORT</h2>
-					<h3 class="ztu-orange">Динамічний імпорт babel</h3>
-					<pre><code class="bash">npm install babel-plugin-syntax-dynamic-import</code></pre>
+					<h3 class="ztu-orange">Динамічний імпорт: підтримка</h3>
+					<ul class="ztu-list">
+						<li class="fragment fade-in-then-semi-out">import() — частина стандарту ES2020</li>
+						<li class="fragment fade-in-then-semi-out">Vite, webpack 5, Rollup підтримують його без плагінів</li>
+						<li class="fragment fade-in-then-semi-out">Бандлер виносить модуль в окремий chunk</li>
+					</ul>
 				</section>
 
 				<!-- Export -->
@@ -475,8 +479,9 @@ console.log(add(2, 3));
 				<section>
 					<h2 class="ztu-blue">TREE SHAKING</h2>
 					<h3 class="ztu-orange">Що заважає Tree Shaking?</h3>
-					<pre><code class="javascript" data-line-numbers="1-2|3-4|5-6|">// ❌ Погано - імпорт всього модуля
+					<pre><code class="javascript" data-line-numbers="1-3|4-5|6-7|">// ❌ Погано - динамічний доступ до namespace
 import * as utils from './utils';
+utils[fnName](2, 3); // бандлер не знає, що саме потрібно
 
 // ❌ Погано - side effects
 import './utils'; // виконує код при імпорті
@@ -544,7 +549,7 @@ function App() {
 }</code></pre>
 				</section>
 	<section>
-					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 3</h1>
+					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 4</h1>
 					<p class="ztu-orange">LIFE CYCLE, EXPORT, IMPORT, CONDITIONAL RENDER, LISTS, KEYS</p>
 				</section>
 
