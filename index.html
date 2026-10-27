@@ -11,6 +11,55 @@
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
+
+		<style>
+			.reveal .cols { display: flex; gap: 32px; align-items: flex-start; text-align: left; }
+			.reveal .cols > div { flex: 1; min-width: 0; }
+			.reveal .cols pre { width: 100%; }
+			.reveal .cols h3 { font-size: 0.8em; }
+			.reveal .cols .ztu-list { font-size: 0.8em; }
+			.reveal .small-table { font-size: 0.65em; }
+			.reveal .compare-table { font-size: 0.5em; }
+			.reveal .compare-table td:first-child { font-weight: bold; white-space: nowrap; }
+			.reveal .small-note { font-size: 0.5em; opacity: .6; }
+			.reveal section.dense h2 { margin-bottom: 8px; }
+			.reveal section.dense > p { font-size: 0.7em; margin: 8px 0; }
+			.reveal section.dense pre { font-size: 0.48em; margin: 10px auto; }
+			.reveal section.dense pre code { max-height: 470px; }
+			.reveal section.dense .ztu-list { font-size: 0.66em; }
+			.reveal section.dense .cols pre { font-size: 0.44em; }
+			.reveal section.dense .cols .ztu-list { font-size: 0.62em; }
+			.reveal .cols-narrow > div:first-child { flex: 0.6; }
+			.reveal section.dense .cols p { font-size: 0.65em; }
+
+			/* живий приклад ProductCard */
+			.reveal .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 12px; }
+			.reveal .demo-card {
+				position: relative; padding: 16px; border-radius: 12px; text-align: left;
+				background: #ffffff; color: #1f2937; border-top: 4px solid var(--accent);
+				box-shadow: 0 1px 4px rgb(0 0 0 / .12); transition: transform .2s, box-shadow .2s;
+			}
+			.reveal .demo-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent);
+			}
+			.reveal .demo-card--dark { background: #111827; color: #f9fafb; }
+			.reveal .demo-badge {
+				position: absolute; top: 12px; left: 12px; padding: 2px 10px;
+				border-radius: 999px; color: #fff; font-size: 0.4em; font-weight: bold;
+			}
+			.reveal .demo-badge--sale { background: #dc2626; }
+			.reveal .demo-badge--new { background: #16a34a; }
+			.reveal .demo-img { font-size: 1.6em; line-height: 1.2; text-align: center; padding: 6px 0; }
+			.reveal .demo-card .demo-title { font-size: 0.7em; margin: 0 0 4px; color: inherit; text-transform: none; }
+			.reveal .demo-price { font-size: 0.6em; margin: 0 0 12px; }
+			.reveal .demo-price s { opacity: .5; margin-right: 6px; }
+			.reveal .demo-buy {
+				width: 100%; padding: 8px; border: 0; border-radius: 8px; font-size: 0.45em;
+				background: var(--accent); color: #fff; cursor: pointer;
+			}
+			.reveal .demo-buy:disabled { opacity: .5; cursor: not-allowed; }
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -22,6 +71,749 @@
 				<section>
 					<h1 class="ztu-blue">Компонентно орієнтоване програмування. ЛЕКЦІЯ 9</h1>
 					<p class="ztu-orange">CSS У REACT: МОДУЛІ, ПРЕПРОЦЕСОРИ, CSS-IN-JS, TAILWIND</p>
+				</section>
+
+				<!-- Problem -->
+				<section>
+					<h2 class="ztu-blue">ПРОБЛЕМА</h2>
+					<p class="ztu-orange">CSS глобальний, а компоненти — локальні</p>
+					<ul class="ztu-list"><li class="fragment fade-in">Компонент = розмітка + логіка + <strong>стилі</strong></li><li class="fragment fade-in">JSX і JS ізольовані модулями: <code>import</code> / <code>export</code></li><li class="fragment fade-in">CSS — <strong>один глобальний простір імен</strong> на всю сторінку</li><li class="fragment fade-in">Два компоненти з класом <code>.title</code> → конфлікт</li></ul>
+					<p class="fragment fade-in ztu-orange">Головне питання лекції: як прив'язати стилі до компонента?</p>
+				</section>
+
+				<!-- Map of approaches -->
+				<section>
+					<h2 class="ztu-blue">МАПА ПІДХОДІВ</h2>
+					<table class="small-table"><thead><tr><th>Підхід</th><th>Ідея</th></tr></thead><tbody><tr class="fragment fade-in"><td>Plain CSS</td><td>Звичайні .css файли + домовленості (БЕМ)</td></tr><tr class="fragment fade-in"><td>Inline</td><td>Обʼєкт стилів у пропсі <code>style</code></td></tr><tr class="fragment fade-in"><td>CSS Modules</td><td>Унікальні імена класів генерує збирач</td></tr><tr class="fragment fade-in"><td>Sass / сучасний CSS</td><td>Змінні, вкладеність, міксини</td></tr><tr class="fragment fade-in"><td>CSS-in-JS</td><td>Стилі пишуться в JS поруч із компонентом</td></tr><tr class="fragment fade-in"><td>Tailwind CSS</td><td>Utility-класи прямо в розмітці</td></tr><tr class="fragment fade-in"><td>UI-бібліотеки</td><td>Готові стилізовані компоненти</td></tr></tbody></table>
+				</section>
+
+				<!-- Running example: demo -->
+				<section>
+					<h2 class="ztu-blue">НАСКРІЗНИЙ ПРИКЛАД</h2>
+					<p class="ztu-orange">Реалізуємо однаковий компонент кожним підходом</p>
+					<div class="demo-grid">
+						<article class="demo-card" style="--accent: #2563eb;">
+							<span class="demo-badge demo-badge--sale">Знижка</span>
+							<div class="demo-img">🎧</div>
+							<h3 class="demo-title">Навушники</h3>
+							<p class="demo-price"><s>2 499 ₴</s> <strong>1 899 ₴</strong></p>
+							<button class="demo-buy">Купити</button>
+						</article>
+						<article class="demo-card" style="--accent: #16a34a;">
+							<span class="demo-badge demo-badge--new">Новинка</span>
+							<div class="demo-img">⌚</div>
+							<h3 class="demo-title">Годинник</h3>
+							<p class="demo-price"><strong>4 299 ₴</strong></p>
+							<button class="demo-buy">Купити</button>
+						</article>
+						<article class="demo-card demo-card--dark" style="--accent: #f59e0b;">
+							<div class="demo-img">⌨️</div>
+							<h3 class="demo-title">Клавіатура</h3>
+							<p class="demo-price"><strong>3 150 ₴</strong></p>
+							<button class="demo-buy" disabled>Немає в наявності</button>
+						</article>
+					</div>
+					<p class="small-note">Наведіть курсор на картку</p>
+				</section>
+
+				<!-- Running example: requirements -->
+				<section class="dense">
+					<h2 class="ztu-blue">PRODUCTCARD: ВИМОГИ</h2>
+					<div class="cols"><div><ul class="ztu-list"><li class="fragment fade-in">Бейдж: <code>sale</code> / <code>new</code></li><li class="fragment fade-in"><code>:hover</code> — підйом і тінь</li><li class="fragment fade-in">Кнопка <code>disabled</code>, якщо товару немає</li><li class="fragment fade-in">Колір акценту з пропсу <code>accent</code></li><li class="fragment fade-in">Сітка: 3 колонки → 1 на мобільному</li><li class="fragment fade-in">Світла і темна тема</li></ul></div><div><pre><code class="jsx" data-line-numbers>export function ProductCard({
+  title, price, oldPrice,
+  badge, image, inStock, accent,
+}) {
+  return (
+    &lt;article&gt;
+      {badge &amp;&amp; &lt;span&gt;{badge}&lt;/span&gt;}
+      &lt;img src={image} alt={title} /&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;p&gt;
+        {oldPrice &amp;&amp; &lt;s&gt;{oldPrice} ₴&lt;/s&gt;}
+        &lt;strong&gt;{price} ₴&lt;/strong&gt;
+      &lt;/p&gt;
+      &lt;button disabled={!inStock}&gt;Купити&lt;/button&gt;
+    &lt;/article&gt;
+  );
+}</code></pre></div></div>
+				</section>
+
+				<!-- Recap: cascade -->
+				<section class="dense">
+					<h2 class="ztu-blue">КАСКАД І СПЕЦИФІЧНІСТЬ</h2>
+					<p class="fragment fade-in">Хто перемагає: <code>!important</code> → <code>@layer</code> → <strong>специфічність</strong> → порядок у коді</p>
+					<table class="small-table fragment fade-in"><thead><tr><th>Селектор</th><th>Вага</th></tr></thead><tbody><tr><td><code>style="..."</code> (inline)</td><td>1-0-0-0</td></tr><tr><td><code>#id</code></td><td>0-1-0-0</td></tr><tr><td><code>.class</code>, <code>:hover</code>, <code>[attr]</code></td><td>0-0-1-0</td></tr><tr><td><code>h3</code>, <code>::before</code></td><td>0-0-0-1</td></tr></tbody></table>
+					<div class="fragment fade-in"><pre><code class="css" data-line-numbers>.card .title { color: blue; } /* 0-0-2-0 — перемагає */
+.title       { color: red;  } /* 0-0-1-0 — програє, хоч і нижче */</code></pre></div>
+				</section>
+
+				<!-- Recap: CSS variables -->
+				<section class="dense">
+					<h2 class="ztu-blue">CSS-ЗМІННІ</h2>
+					<p class="ztu-orange">Custom properties — змінні, які розуміє браузер</p>
+					<div class="cols"><div><pre><code class="css" data-line-numbers="|1-5|7-10|12-16">:root {
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+  --accent: #2563eb;
+}
+
+[data-theme="dark"] {
+  --color-bg: #111827;
+  --color-text: #f9fafb;
+}
+
+.card {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-top: 4px solid var(--accent);
+}</code></pre></div><div><ul class="ztu-list"><li class="fragment fade-in">Успадковуються вниз по DOM-дереву</li><li class="fragment fade-in">Живуть у runtime: можна змінити з JS або в <code>@media</code></li><li class="fragment fade-in">Основа тем у <strong>будь-якому</strong> підході цієї лекції</li></ul></div></div>
+				</section>
+
+				<!-- Plain CSS: global -->
+				<section class="dense">
+					<h2 class="ztu-blue">PLAIN CSS: ГЛОБАЛЬНІ СТИЛІ</h2>
+					<p class="ztu-orange">Файл стилів імпортується як модуль</p>
+					<pre><code class="jsx" data-line-numbers="|3">// src/main.jsx
+import { createRoot } from 'react-dom/client';
+import './index.css'; // reset, шрифти, змінні теми
+import { App } from './App';
+
+createRoot(document.getElementById('root')).render(&lt;App /&gt;);</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Підключаються один раз у точці входу</li><li class="fragment fade-in">Діють на весь застосунок: reset, типографіка, <code>:root</code>-змінні</li></ul>
+				</section>
+
+				<!-- Plain CSS: component -->
+				<section class="dense">
+					<h2 class="ztu-blue">PLAIN CSS: СТИЛІ КОМПОНЕНТА</h2>
+					<div class="cols cols-narrow"><div><pre><code class="plaintext">src/components/ProductCard/
+├─ ProductCard.jsx
+├─ ProductCard.css
+└─ index.js</code></pre><p class="fragment fade-in ztu-orange">Тека з назвою компонента: розмітка і стилі поруч</p></div><div><pre><code class="jsx" data-line-numbers="|1|7|9-10|14-16">import './ProductCard.css';
+
+export function ProductCard({
+  title, badge, inStock,
+}) {
+  return (
+    &lt;article className="product-card"&gt;
+      {badge &amp;&amp; (
+        &lt;span className={`product-card__badge
+          product-card__badge--${badge}`}&gt;
+          {badge}
+        &lt;/span&gt;
+      )}
+      &lt;h3 className="product-card__title"&gt;{title}&lt;/h3&gt;
+      &lt;button className="product-card__buy"
+              disabled={!inStock}&gt;Купити&lt;/button&gt;
+    &lt;/article&gt;
+  );
+}</code></pre></div></div>
+					<p class="fragment fade-in ztu-red">У JSX — <code>className</code>, а не <code>class</code></p>
+				</section>
+
+				<!-- Plain CSS: styles -->
+				<section class="dense">
+					<h2 class="ztu-blue">PLAIN CSS: PRODUCTCARD.CSS</h2>
+					<pre><code class="css" data-line-numbers="|1-8|10-11|13|15-18">.product-card {
+  border-radius: 12px;
+  transition: transform .2s, box-shadow .2s;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / .15);
+}
+
+.product-card__badge--sale { background: #dc2626; }
+.product-card__badge--new  { background: #16a34a; }
+
+.product-card__buy:disabled { opacity: .5; cursor: not-allowed; }
+
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 640px) {
+  .product-grid { grid-template-columns: 1fr; }
+}</code></pre>
+					<p class="fragment fade-in ztu-orange">Звичайний CSS: доступні всі можливості — стани, медіазапити, псевдоелементи</p>
+				</section>
+
+				<!-- Plain CSS: no isolation -->
+				<section class="dense">
+					<h2 class="ztu-blue">ЧОМУ IMPORT НЕ ІЗОЛЮЄ СТИЛІ</h2>
+					<div class="cols"><div><pre><code class="css" data-line-numbers>/* ProductCard.css */
+.title { font-size: 18px; }</code></pre></div><div><pre><code class="css" data-line-numbers>/* Header.css */
+.title { font-size: 32px; color: navy; }</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in">Vite просто вставляє вміст файлу в <code>&lt;style&gt;</code> у <code>&lt;head&gt;</code></li><li class="fragment fade-in">Обидва правила діють на <strong>всі</strong> <code>.title</code> на сторінці</li><li class="fragment fade-in">Перемагає той файл, що підключився пізніше — залежить від порядку імпортів</li><li class="fragment fade-in">Стилі не зникають після unmount компонента</li></ul>
+				</section>
+
+				<!-- BEM -->
+				<section class="dense">
+					<h2 class="ztu-blue">БЕМ: ІЗОЛЯЦІЯ ДОМОВЛЕНІСТЮ</h2>
+					<p class="ztu-orange">Блок, Елемент, Модифікатор</p>
+					<pre><code class="plaintext">.product-card                  ← Блок
+.product-card__title           ← Блок__Елемент
+.product-card__badge--sale     ← Блок__Елемент--Модифікатор</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Імʼя блоку = імʼя компонента → конфлікти малоймовірні</li><li class="fragment fade-in">Низька й однакова специфічність (один клас)</li><li class="fragment fade-in">Але це <strong>домовленість</strong>: інструмент її не перевіряє</li></ul>
+				</section>
+
+				<!-- Plain CSS: theme -->
+				<section class="dense">
+					<h2 class="ztu-blue">PLAIN CSS: ТЕМА</h2>
+					<pre><code class="jsx" data-line-numbers="|2|4-6|9">export function ThemeToggle() {
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() =&gt; {
+    document.documentElement.dataset.theme = theme; // &lt;html data-theme="dark"&gt;
+  }, [theme]);
+
+  return (
+    &lt;button onClick={() =&gt; setTheme((t) =&gt; (t === 'light' ? 'dark' : 'light'))}&gt;
+      Тема
+    &lt;/button&gt;
+  );
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Змінні в <code>:root</code> і <code>[data-theme="dark"]</code> — слайд «CSS-змінні»</li><li class="fragment fade-in">React лише перемикає атрибут, кольори перераховує браузер</li><li class="fragment fade-in">Системна тема: <code>@media (prefers-color-scheme: dark)</code></li></ul>
+				</section>
+
+				<!-- Plain CSS: pros & cons -->
+				<section>
+					<h2 class="ztu-blue">PLAIN CSS: ПІДСУМОК</h2>
+					<div class="cols"><div><h3 class="ztu-green">ПЕРЕВАГИ</h3><ul class="ztu-list"><li class="fragment fade-in">Просто, нічого не треба вивчати</li><li class="fragment fade-in">Не потрібна конфігурація</li><li class="fragment fade-in">Усі можливості CSS</li><li class="fragment fade-in">0 KB JS</li></ul></div><div><h3 class="ztu-red">НЕДОЛІКИ</h3><ul class="ztu-list"><li class="fragment fade-in">Класи глобальні, а не локальні</li><li class="fragment fade-in">Потрібні методології типу БЕМ</li><li class="fragment fade-in">Перебивання стилів між компонентами</li><li class="fragment fade-in">Важко знайти зайвий CSS</li></ul></div></div>
+				</section>
+
+				<!-- Inline: syntax -->
+				<section class="dense">
+					<h2 class="ztu-blue">INLINE-СТИЛІ</h2>
+					<p class="ztu-orange">Обʼєкт стилів у пропсі style</p>
+					<pre><code class="jsx" data-line-numbers="|1-5|2|4|9|10">const cardStyle = {
+  borderRadius: 12,          // число → 12px
+  padding: '16px 20px',
+  backgroundColor: '#fff',   // camelCase замість background-color
+};
+
+export function ProductCard({ title, accent }) {
+  return (
+    &lt;article style={cardStyle}&gt;
+      &lt;h3 style={{ color: accent }}&gt;{title}&lt;/h3&gt;
+    &lt;/article&gt;
+  );
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>style</code> приймає <strong>обʼєкт</strong>, а не рядок</li><li class="fragment fade-in"><code>{{ }}</code> — це вираз JSX, всередині якого обʼєкт</li><li class="fragment fade-in">Значення легко брати з пропсів і стану</li></ul>
+				</section>
+
+				<!-- Inline: limitations -->
+				<section class="dense">
+					<h2 class="ztu-blue">ДЕ INLINE ЛАМАЄТЬСЯ</h2>
+					<p class="ztu-orange">Спробуємо зробити ProductCard тільки inline</p>
+					<div class="cols"><div><ul class="ztu-list"><li class="fragment fade-in"><code>:hover</code>, <code>:disabled</code> — неможливо</li><li class="fragment fade-in"><code>@media</code> — неможливо</li><li class="fragment fade-in"><code>::before</code>, анімації <code>@keyframes</code> — неможливо</li><li class="fragment fade-in">Найвища специфічність — перебити лише <code>!important</code></li><li class="fragment fade-in">Перевикористання — тільки копіюванням обʼєкта</li></ul></div><div class="fragment fade-in"><pre><code class="jsx" data-line-numbers>// «hover» через стан — анти-патерн
+const [hover, setHover] = useState(false);
+
+&lt;article
+  style={{
+    ...cardStyle,
+    transform: hover ? 'translateY(-4px)' : 'none',
+  }}
+  onMouseEnter={() =&gt; setHover(true)}
+  onMouseLeave={() =&gt; setHover(false)}
+&gt;</code></pre></div></div>
+				</section>
+
+				<!-- Inline: CSS variable -->
+				<section class="dense">
+					<h2 class="ztu-blue">ДИНАМІКА ЧЕРЕЗ CSS-ЗМІННУ</h2>
+					<p class="ztu-orange">Найкраще з двох світів</p>
+					<pre><code class="jsx" data-line-numbers="1">&lt;article className="product-card" style={{ '--accent': accent }}&gt;</code></pre>
+					<pre><code class="css" data-line-numbers="|2|5|7-9">.product-card {
+  border-top: 4px solid var(--accent, #2563eb);
+}
+.product-card__buy {
+  background: var(--accent, #2563eb);
+}
+.product-card:hover {
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 30%, transparent);
+}</code></pre>
+					<p class="fragment fade-in ztu-orange">Inline передає лише <strong>значення</strong>; правила, стани і медіазапити — у CSS</p>
+					<p class="fragment fade-in ztu-green">Працює з будь-яким підходом: CSS Modules, Sass, Tailwind</p>
+				</section>
+
+				<!-- Inline: pros & cons -->
+				<section>
+					<h2 class="ztu-blue">INLINE: ПІДСУМОК</h2>
+					<div class="cols"><div><h3 class="ztu-green">ПЕРЕВАГИ</h3><ul class="ztu-list"><li class="fragment fade-in">Швидко</li><li class="fragment fade-in">Можливо динамічно конфігурувати</li><li class="fragment fade-in">Ізоляція «з коробки»</li></ul></div><div><h3 class="ztu-red">НЕДОЛІКИ</h3><ul class="ztu-list"><li class="fragment fade-in">Немає станів, <code>@media</code>, псевдоелементів</li><li class="fragment fade-in">Неможливо перебити стилі</li><li class="fragment fade-in">Неможливе перевикористання стилів</li><li class="fragment fade-in">Запис camelCase</li></ul></div></div>
+				</section>
+
+				<!-- CSS Modules: basics -->
+				<section class="dense">
+					<h2 class="ztu-blue">CSS MODULES</h2>
+					<p class="ztu-orange">Вирішення проблеми глобальних імен</p>
+					<div class="cols"><div><pre><code class="css" data-line-numbers="|1|9|11-13">/* ProductCard.module.css */
+.card {
+  border-radius: 12px;
+  border-top: 4px solid var(--accent);
+  transition: transform .2s;
+}
+.card:hover { transform: translateY(-4px); }
+
+.title { font-size: 18px; }
+
+.badge { border-radius: 999px; color: white; }
+.sale  { background: #dc2626; }
+.new   { background: #16a34a; }</code></pre></div><div><pre><code class="jsx" data-line-numbers="|1|6|9">import styles from './ProductCard.module.css';
+
+export function ProductCard({ title, accent }) {
+  return (
+    &lt;article
+      className={styles.card}
+      style={{ '--accent': accent }}
+    &gt;
+      &lt;h3 className={styles.title}&gt;{title}&lt;/h3&gt;
+    &lt;/article&gt;
+  );
+}</code></pre></div></div>
+					<p class="fragment fade-in ztu-orange">Суфікс <code>.module.css</code> — і все. Vite підтримує з коробки</p>
+				</section>
+
+				<!-- CSS Modules: output -->
+				<section class="dense">
+					<h2 class="ztu-blue">CSS MODULES: ЩО ГЕНЕРУЄТЬСЯ</h2>
+					<div class="cols"><div><pre><code class="js" data-line-numbers>console.log(styles);
+// {
+//   card:  '_card_1nq8w_1',
+//   title: '_title_1nq8w_9',
+//   badge: '_badge_1nq8w_11',
+//   sale:  '_sale_1nq8w_12',
+// }</code></pre></div><div><pre><code class="html" data-line-numbers>&lt;article class="_card_1nq8w_1"&gt;
+  &lt;h3 class="_title_1nq8w_9"&gt;
+    Навушники
+  &lt;/h3&gt;
+&lt;/article&gt;</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>styles</code> — звичайний обʼєкт: імʼя класу → унікальне імʼя</li><li class="fragment fade-in"><code>.title</code> у <code>Header.module.css</code> отримає інший хеш</li><li class="fragment fade-in">Формат імені налаштовується: <code>css.modules.generateScopedName</code></li></ul>
+				</section>
+
+				<!-- CSS Modules: clsx -->
+				<section class="dense">
+					<h2 class="ztu-blue">CSS MODULES + CLSX</h2>
+					<p class="ztu-orange">Кілька класів і умовні класи</p>
+					<pre><code class="bash" data-line-numbers>npm i clsx</code></pre>
+					<pre><code class="jsx" data-line-numbers="|1|6|8">import clsx from 'clsx';
+import styles from './ProductCard.module.css';
+
+export function ProductCard({ title, badge, inStock }) {
+  return (
+    &lt;article className={clsx(styles.card, !inStock &amp;&amp; styles.outOfStock)}&gt;
+      {badge &amp;&amp; (
+        &lt;span className={clsx(styles.badge, styles[badge])}&gt;{badge}&lt;/span&gt;
+      )}
+      &lt;h3 className={styles.title}&gt;{title}&lt;/h3&gt;
+    &lt;/article&gt;
+  );
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>clsx</code> склеює класи і відкидає <code>false</code>/<code>undefined</code></li><li class="fragment fade-in"><code>styles[badge]</code> — варіант за значенням пропсу</li></ul>
+				</section>
+
+				<!-- CSS Modules: composes & global -->
+				<section class="dense">
+					<h2 class="ztu-blue">COMPOSES І :GLOBAL</h2>
+					<pre><code class="css" data-line-numbers="|2-5|8-11|9|14-16">/* shared.module.css */
+.surface {
+  border-radius: 12px;
+  background: var(--color-bg);
+}
+
+/* ProductCard.module.css */
+.card {
+  composes: surface from './shared.module.css';
+  padding: 16px;
+}
+
+/* вийти з локальної області: селектор не хешується */
+:global([data-theme="dark"]) .card {
+  box-shadow: none;
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>composes</code> — перевикористання: <code>styles.card</code> містить обидва класи</li><li class="fragment fade-in"><code>:global(...)</code> — для звʼязку з глобальними класами та атрибутами</li></ul>
+				</section>
+
+				<!-- CSS Modules: pros & cons -->
+				<section>
+					<h2 class="ztu-blue">CSS MODULES: ПІДСУМОК</h2>
+					<div class="cols"><div><h3 class="ztu-green">ПЕРЕВАГИ</h3><ul class="ztu-list"><li class="fragment fade-in">Унікальні імена</li><li class="fragment fade-in">Непотрібна система типу БЕМ</li><li class="fragment fade-in">Звичайний CSS: стани, <code>@media</code></li><li class="fragment fade-in">Легко знаходити CSS, що не використовується</li><li class="fragment fade-in">0 KB JS, без налаштувань у Vite</li></ul></div><div><h3 class="ztu-red">НЕДОЛІКИ</h3><ul class="ztu-list"><li class="fragment fade-in">Динаміка — лише через класи або CSS-змінні</li><li class="fragment fade-in"><code>styles.x</code> трохи багатослівно</li><li class="fragment fade-in">Спільні токени (кольори, відступи) — все одно глобальні</li></ul></div></div>
+				</section>
+
+				<!-- Preprocessors -->
+				<section>
+					<h2 class="ztu-blue">ПРЕПРОЦЕСОРИ</h2>
+					<p>CSS препроцесор — це надбудова над CSS, яка додає додаткові можливості за допомогою синтаксичних конструкцій</p>
+					<ul class="ztu-list"><li class="fragment fade-in"><strong>SCSS</strong> — синтаксис як у CSS</li><li class="fragment fade-in"><strong>Sass</strong> — без дужок і крапок з комою</li><li class="fragment fade-in"><strong>Less</strong> — колись основа Bootstrap 3</li><li class="fragment fade-in"><strong>Stylus</strong></li></ul>
+					<p class="fragment fade-in ztu-orange">Компілюються у звичайний CSS під час збірки — браузер про них не знає</p>
+				</section>
+
+				<!-- SCSS -->
+				<section class="dense">
+					<h2 class="ztu-blue">SCSS</h2>
+					<pre><code class="bash" data-line-numbers>npm i -D sass-embedded</code></pre>
+					<pre><code class="scss" data-line-numbers="|1-2|4-7|10|11|13|15">$radius: 12px;
+$shadow: 0 8px 24px rgba(0, 0, 0, .15);
+
+@mixin lift($dy: -4px) {
+  transition: transform .2s, box-shadow .2s;
+  &amp;:hover { transform: translateY($dy); box-shadow: $shadow; }
+}
+
+.card {
+  border-radius: $radius;
+  @include lift;
+
+  .title { font-size: 18px; }
+
+  @media (max-width: 640px) { padding: 12px; }
+}</code></pre>
+					<p class="fragment fade-in ztu-orange">Змінні, міксини, вкладеність. <code>.module.scss</code> = SCSS + CSS Modules</p>
+				</section>
+
+				<!-- Modern CSS -->
+				<section class="dense">
+					<h2 class="ztu-blue">ТЕ САМЕ НА НАТИВНОМУ CSS</h2>
+					<p class="ztu-orange">Більшість можливостей Sass уже є в браузері</p>
+					<pre><code class="css" data-line-numbers="|2-3|6-9|11|13">.card {
+  --radius: 12px;
+  border-radius: var(--radius);
+  transition: transform .2s, box-shadow .2s;
+
+  &amp;:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgb(0 0 0 / .15);
+  }
+
+  &amp; .title { font-size: 18px; }
+
+  @media (max-width: 640px) { padding: 12px; }
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Вкладеність (nesting) — у всіх сучасних браузерах з 2023 року</li><li class="fragment fade-in">CSS-змінні замість <code>$змінних</code></li><li class="fragment fade-in">Без препроцесора та додаткової залежності</li></ul>
+				</section>
+
+				<!-- $var vs --var -->
+				<section>
+					<h2 class="ztu-blue">$ЗМІННА vs --ЗМІННА</h2>
+					<table class="small-table"><thead><tr><th></th><th>Sass <code>$radius</code></th><th>CSS <code>--radius</code></th></tr></thead><tbody><tr class="fragment fade-in"><td>Коли обчислюється</td><td>Під час збірки</td><td>У браузері, в runtime</td></tr><tr class="fragment fade-in"><td>Змінити з JS / React</td><td>❌</td><td>✅ <code>style={{ '--radius': … }}</code></td></tr><tr class="fragment fade-in"><td>Успадковується по DOM</td><td>❌</td><td>✅</td></tr><tr class="fragment fade-in"><td>Різні значення для теми / <code>@media</code></td><td>❌</td><td>✅</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Для тем і динаміки — тільки CSS-змінні</p>
+				</section>
+
+				<!-- @layer -->
+				<section class="dense">
+					<h2 class="ztu-blue">@LAYER: КЕРУВАННЯ КАСКАДОМ</h2>
+					<p class="ztu-orange">Хто перемагає — визначає порядок шарів, а не специфічність</p>
+					<pre><code class="css" data-line-numbers="|1|6-8|9-11">@layer reset, base, components, utilities;
+
+@layer reset {
+  * { margin: 0; box-sizing: border-box; }
+}
+@layer components {
+  .card .title { color: var(--color-text); }  /* 0-0-2-0 */
+}
+@layer utilities {
+  .text-accent { color: var(--accent); }      /* 0-0-1-0 — перемагає! */
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Порядок шарів важливіший за специфічність</li><li class="fragment fade-in">Стилі бібліотек можна покласти в нижній шар — і легко перебити</li><li class="fragment fade-in">Саме так влаштований Tailwind CSS v4</li></ul>
+				</section>
+
+				<!-- When Sass -->
+				<section>
+					<h2 class="ztu-blue">КОЛИ SASS ЩЕ ПОТРІБЕН</h2>
+					<ul class="ztu-list"><li class="fragment fade-in">Міксини з параметрами</li><li class="fragment fade-in">Цикли <code>@each</code> / <code>@for</code> — генерація набору класів</li><li class="fragment fade-in">Функції та модулі (<code>@use</code>)</li><li class="fragment fade-in">Існуючі проєкти, кастомізація Bootstrap</li></ul>
+					<p class="fragment fade-in ztu-green">Для нового проєкту часто достатньо нативного CSS + CSS Modules</p>
+				</section>
+
+				<!-- CSS-in-JS: styled-components -->
+				<section class="dense">
+					<h2 class="ztu-blue">STYLED-COMPONENTS</h2>
+					<p class="ztu-red">⚠️ Підхід втрачає популярність, але трапляється в багатьох існуючих проєктах</p>
+					<div class="cols"><div><pre><code class="bash" data-line-numbers>npm i styled-components</code></pre><pre><code class="jsx" data-line-numbers="|3|5|8|10">import styled from 'styled-components';
+
+const Card = styled.article`
+  border-radius: 12px;
+  border-top: 4px solid ${(p) =&gt; p.$accent};
+  transition: transform .2s;
+
+  &amp;:hover { transform: translateY(-4px); }
+
+  @media (max-width: 640px) { padding: 12px; }
+`;</code></pre></div><div><pre><code class="jsx" data-line-numbers="|1-3|7-9">const Title = styled.h3`
+  font-size: 18px;
+`;
+
+export function ProductCard({ title, accent }) {
+  return (
+    &lt;Card $accent={accent}&gt;
+      &lt;Title&gt;{title}&lt;/Title&gt;
+    &lt;/Card&gt;
+  );
+}</code></pre></div></div>
+				</section>
+
+				<!-- CSS-in-JS: props & extension -->
+				<section class="dense">
+					<h2 class="ztu-blue">ПРОПСИ І РОЗШИРЕННЯ</h2>
+					<div class="cols"><div><pre><code class="jsx" data-line-numbers="|5-6|9">const Badge = styled.span`
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: white;
+  background: ${({ $variant }) =&gt;
+    $variant === 'sale' ? '#dc2626' : '#16a34a'};
+`;
+
+&lt;Badge $variant={badge}&gt;{badge}&lt;/Badge&gt;</code></pre></div><div><pre><code class="jsx" data-line-numbers="|1-5|7-11">const BuyButton = styled.button`
+  padding: 8px 16px;
+  background: #2563eb;
+  color: white;
+`;
+
+const OutlineButton = styled(BuyButton)`
+  background: transparent;
+  color: #2563eb;
+  border: 2px solid currentColor;
+`;</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in">Стилі залежать від даних: функція від пропсів</li><li class="fragment fade-in"><code>$variant</code> — transient prop: не потрапляє в DOM</li><li class="fragment fade-in"><code>styled(X)</code> — новий компонент, що розширює стилі X</li></ul>
+				</section>
+
+				<!-- CSS-in-JS: mistake -->
+				<section class="dense">
+					<h2 class="ztu-blue">ПОМИЛКА: STYLED У RENDER</h2>
+					<div class="cols"><div><pre><code class="jsx" data-line-numbers>// ❌ новий компонент на кожен рендер
+function ProductCard({ title }) {
+  const Title = styled.h3`
+    font-size: 18px;
+  `;
+  return &lt;Title&gt;{title}&lt;/Title&gt;;
+}</code></pre></div><div><pre><code class="jsx" data-line-numbers>// ✅ оголошення на рівні модуля
+const Title = styled.h3`
+  font-size: 18px;
+`;
+
+function ProductCard({ title }) {
+  return &lt;Title&gt;{title}&lt;/Title&gt;;
+}</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in">Кожен рендер — <strong>новий тип</strong> компонента</li><li class="fragment fade-in">React розмонтовує старий елемент і монтує новий</li><li class="fragment fade-in">Втрачається стан і фокус усередині, скидаються анімації</li><li class="fragment fade-in">Те саме правило, що й для роутера: створювати поза компонентом</li></ul>
+				</section>
+
+				<!-- CSS-in-JS: theme -->
+				<section class="dense">
+					<h2 class="ztu-blue">CSS-IN-JS: THEMEPROVIDER</h2>
+					<pre><code class="jsx" data-line-numbers="|3-4|6-9|14-16">import styled, { ThemeProvider } from 'styled-components';
+
+const light = { bg: '#ffffff', text: '#1f2937' };
+const dark = { bg: '#111827', text: '#f9fafb' };
+
+const Card = styled.article`
+  background: ${({ theme }) =&gt; theme.bg};
+  color: ${({ theme }) =&gt; theme.text};
+`;
+
+export function App() {
+  const [isDark, setIsDark] = useState(false);
+  return (
+    &lt;ThemeProvider theme={isDark ? dark : light}&gt;
+      &lt;ProductGrid /&gt;
+    &lt;/ThemeProvider&gt;
+  );
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Під капотом — React Context (наступна лекція)</li><li class="fragment fade-in">Зміна теми → перерендер і перегенерація стилів у JS</li><li class="fragment fade-in">З CSS-змінними той самий результат дає браузер, без JS</li></ul>
+				</section>
+
+				<!-- CSS-in-JS: pros & cons -->
+				<section>
+					<h2 class="ztu-blue">CSS-IN-JS: ПІДСУМОК</h2>
+					<div class="cols"><div><h3 class="ztu-green">ПЕРЕВАГИ</h3><ul class="ztu-list"><li class="fragment fade-in">Контроль CSS з JS</li><li class="fragment fade-in">Відсутність конфлікту імен</li><li class="fragment fade-in">Стилі залежать від пропсів</li><li class="fragment fade-in">Стилі видаляються разом із компонентом</li></ul></div><div><h3 class="ztu-red">НЕДОЛІКИ</h3><ul class="ztu-list"><li class="fragment fade-in">Швидкодія: стилі генеруються під час рендера</li><li class="fragment fade-in">Збільшення кількості JS (бібліотека в бандлі)</li><li class="fragment fade-in">Синтаксис: CSS у рядку, потрібен плагін для підсвітки</li><li class="fragment fade-in">Складніший SSR</li></ul></div></div>
+				</section>
+
+				<!-- CSS-in-JS in 2026 -->
+				<section class="dense">
+					<h2 class="ztu-blue">CSS-IN-JS У 2026 РОЦІ</h2>
+					<div class="cols"><div><ul class="ztu-list"><li class="fragment fade-in"><strong>styled-components</strong> з 2025 року в режимі підтримки (maintenance): лише виправлення</li><li class="fragment fade-in"><strong>Emotion</strong> — та сама runtime-модель і ті самі обмеження</li><li class="fragment fade-in">Runtime CSS-in-JS не працює з React Server Components</li><li class="fragment fade-in"><strong>Zero-runtime</strong>: vanilla-extract, Panda CSS, Linaria — пишемо в JS/TS, на виході статичний CSS</li></ul></div><div class="fragment fade-in"><pre><code class="ts" data-line-numbers>// ProductCard.css.ts (vanilla-extract)
+import { style } from '@vanilla-extract/css';
+
+export const card = style({
+  borderRadius: 12,
+  ':hover': {
+    transform: 'translateY(-4px)',
+  },
+});
+// → звичайний .css файл під час збірки</code></pre></div></div>
+					<p class="fragment fade-in ztu-red">Знати — щоб підтримувати існуючі проєкти. Для нового — не обирати runtime CSS-in-JS</p>
+				</section>
+
+				<!-- Tailwind: utility-first -->
+				<section class="dense">
+					<h2 class="ztu-blue">TAILWIND CSS: UTILITY-FIRST</h2>
+					<p class="ztu-orange">Не пишемо CSS — збираємо стилі з готових класів</p>
+					<pre><code class="jsx" data-line-numbers="|3-4|4|5-6|12-14">export function ProductCard({ title, price, oldPrice, inStock }) {
+  return (
+    &lt;article className="relative rounded-xl bg-white p-4 shadow-sm transition
+                        hover:-translate-y-1 hover:shadow-lg"&gt;
+      &lt;span className="absolute left-3 top-3 rounded-full bg-red-600 px-2
+                       text-xs text-white"&gt;Знижка&lt;/span&gt;
+      &lt;h3 className="mt-2 text-lg font-semibold"&gt;{title}&lt;/h3&gt;
+      &lt;p className="mt-1"&gt;
+        {oldPrice &amp;&amp; &lt;s className="mr-2 text-gray-400"&gt;{oldPrice} ₴&lt;/s&gt;}
+        &lt;strong className="text-xl"&gt;{price} ₴&lt;/strong&gt;
+      &lt;/p&gt;
+      &lt;button className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-white
+                         disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!inStock}&gt;Купити&lt;/button&gt;
+    &lt;/article&gt;
+  );
+}</code></pre>
+					<p class="fragment fade-in ztu-orange">Один клас = одна властивість: <code>p-4</code> → <code>padding: 1rem</code></p>
+				</section>
+
+				<!-- Tailwind: setup -->
+				<section class="dense">
+					<h2 class="ztu-blue">TAILWIND CSS V4: ВСТАНОВЛЕННЯ</h2>
+					<pre><code class="bash" data-line-numbers>npm i -D tailwindcss @tailwindcss/vite</code></pre>
+					<div class="cols"><div><pre><code class="js" data-line-numbers="|4|7">// vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});</code></pre></div><div><pre><code class="css" data-line-numbers="|2|4-7|8-9">/* src/index.css */
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #2563eb;
+  --radius-card: 12px;
+}
+/* → bg-brand, text-brand,
+     rounded-card */</code></pre></div></div>
+					<p class="fragment fade-in ztu-orange">У v4 <code>tailwind.config.js</code> не потрібен — налаштування живуть у CSS</p>
+				</section>
+
+				<!-- Tailwind: states, responsive, theme -->
+				<section class="dense">
+					<h2 class="ztu-blue">TAILWIND: АДАПТИВНІСТЬ І ТЕМА</h2>
+					<pre><code class="jsx" data-line-numbers="|1|5">&lt;div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"&gt;
+  {products.map((p) =&gt; &lt;ProductCard key={p.id} {...p} /&gt;)}
+&lt;/div&gt;
+
+&lt;article className="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-50"&gt;</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Mobile-first: без префікса — для всіх, <code>md:</code> — від 768px</li><li class="fragment fade-in"><code>hover:</code>, <code>focus:</code>, <code>disabled:</code> — стани</li><li class="fragment fade-in"><code>dark:</code> — за замовчуванням <code>prefers-color-scheme</code></li></ul>
+					<div class="fragment fade-in"><pre><code class="css" data-line-numbers>/* перемикати тему класом .dark на &lt;html&gt; */
+@custom-variant dark (&amp;:where(.dark, .dark *));</code></pre></div>
+				</section>
+
+				<!-- Tailwind: dynamic -->
+				<section class="dense">
+					<h2 class="ztu-blue">TAILWIND: ДИНАМІЧНІ КЛАСИ</h2>
+					<pre><code class="jsx" data-line-numbers="|1-2|4-6|8-9">// ❌ Tailwind не бачить класів, зібраних у runtime
+&lt;span className={`bg-${color}-600`} /&gt;
+
+// ✅ повні назви класів є в коді
+const badgeColors = { sale: 'bg-red-600', new: 'bg-green-600' };
+&lt;span className={clsx('rounded-full px-2 text-white', badgeColors[badge])} /&gt;
+
+// ✅ довільне значення з пропсів — через CSS-змінну
+&lt;article style={{ '--accent': accent }} className="border-t-4 border-(--accent)"&gt;</code></pre>
+					<p class="fragment fade-in ztu-orange">Tailwind сканує вихідний код і генерує тільки ті класи, які знайшов як цілі рядки</p>
+				</section>
+
+				<!-- Tailwind: reuse -->
+				<section class="dense">
+					<h2 class="ztu-blue">TAILWIND: ПЕРЕВИКОРИСТАННЯ</h2>
+					<div class="cols"><div><pre><code class="css" data-line-numbers>/* ❌ повертає нас до звичайного CSS */
+.btn {
+  @apply rounded-lg bg-blue-600
+         px-4 py-2 text-white;
+}</code></pre></div><div><pre><code class="jsx" data-line-numbers>// ✅ одиниця перевикористання — компонент
+export function Button({ className, ...props }) {
+  return (
+    &lt;button
+      className={clsx('rounded-lg bg-blue-600 px-4 py-2 text-white',
+                      className)}
+      {...props}
+    /&gt;
+  );
+}</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in">Повторювані класи → React-компонент, а не <code>@apply</code></li><li class="fragment fade-in"><code>@apply</code> — лише для чужої розмітки (наприклад, Markdown)</li></ul>
+				</section>
+
+				<!-- Tailwind: pros & cons -->
+				<section>
+					<h2 class="ztu-blue">TAILWIND: ПІДСУМОК</h2>
+					<div class="cols"><div><h3 class="ztu-green">ПЕРЕВАГИ</h3><ul class="ztu-list"><li class="fragment fade-in">Швидко, не треба вигадувати імена</li><li class="fragment fade-in">Немає мертвого CSS: генерується лише використане</li><li class="fragment fade-in">Обмежена шкала: узгоджені відступи й кольори</li><li class="fragment fade-in">0 KB JS</li></ul></div><div><h3 class="ztu-red">НЕДОЛІКИ</h3><ul class="ztu-list"><li class="fragment fade-in">«Шумна» розмітка</li><li class="fragment fade-in">Треба вивчити нотацію</li><li class="fragment fade-in">Динамічні значення — через CSS-змінні</li><li class="fragment fade-in">Складні селектори й анімації незручні</li></ul></div></div>
+				</section>
+
+				<!-- UI libs: categories -->
+				<section>
+					<h2 class="ztu-blue">UI-БІБЛІОТЕКИ: ТРИ КАТЕГОРІЇ</h2>
+					<p class="ztu-orange">Не писати кожен компонент з нуля</p>
+					<table class="small-table"><thead><tr><th>Категорія</th><th>Приклади</th><th>Що отримуємо</th></tr></thead><tbody><tr class="fragment fade-in"><td>Готові кіти</td><td>MUI, Mantine, Ant Design</td><td>Компоненти з готовим дизайном і темою</td></tr><tr class="fragment fade-in"><td>Headless</td><td>Radix UI, React Aria, Base UI</td><td>Поведінка і доступність, без стилів</td></tr><tr class="fragment fade-in"><td>Copy-paste</td><td>shadcn/ui</td><td>Код компонентів копіюється у ваш проєкт</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Діалоги, випадні списки, datepicker — не варто писати самому: доступність складна</p>
+				</section>
+
+				<!-- UI libs: MUI -->
+				<section class="dense">
+					<h2 class="ztu-blue">UI-БІБЛІОТЕКИ: MUI</h2>
+					<pre><code class="bash" data-line-numbers>npm i @mui/material @emotion/react @emotion/styled</code></pre>
+					<pre><code class="jsx" data-line-numbers="|1-3|7|9|15">import {
+  Card, CardContent, CardActions, Typography, Button, Chip,
+} from '@mui/material';
+
+export function ProductCard({ title, price, badge, inStock }) {
+  return (
+    &lt;Card sx={{ borderRadius: 3, '&amp;:hover': { boxShadow: 6 } }}&gt;
+      &lt;CardContent&gt;
+        {badge &amp;&amp; &lt;Chip label={badge} color={badge === 'sale' ? 'error' : 'success'} /&gt;}
+        &lt;Typography variant="h6"&gt;{title}&lt;/Typography&gt;
+        &lt;Typography variant="h5" color="primary"&gt;{price} ₴&lt;/Typography&gt;
+      &lt;/CardContent&gt;
+      &lt;CardActions&gt;
+        &lt;Button variant="contained" fullWidth disabled={!inStock}&gt;Купити&lt;/Button&gt;
+      &lt;/CardActions&gt;
+    &lt;/Card&gt;
+  );
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>sx</code> — стилі через проп; тема — <code>createTheme</code> + <code>ThemeProvider</code></li><li class="fragment fade-in">Під капотом Emotion — runtime CSS-in-JS з його обмеженнями</li></ul>
+				</section>
+
+				<!-- UI libs: shadcn/ui -->
+				<section class="dense">
+					<h2 class="ztu-blue">UI-БІБЛІОТЕКИ: SHADCN/UI</h2>
+					<div class="cols"><div><pre><code class="bash" data-line-numbers>npx shadcn@latest init
+npx shadcn@latest add card button badge</code></pre><pre><code class="plaintext">src/components/ui/
+├─ card.jsx    ← ваш код,
+├─ button.jsx    можна редагувати
+└─ badge.jsx</code></pre></div><div><pre><code class="jsx" data-line-numbers>&lt;Card className="transition hover:-translate-y-1"&gt;
+  &lt;CardHeader&gt;
+    {badge &amp;&amp; &lt;Badge variant="destructive"&gt;
+      Знижка
+    &lt;/Badge&gt;}
+    &lt;CardTitle&gt;{title}&lt;/CardTitle&gt;
+  &lt;/CardHeader&gt;
+  &lt;CardContent className="text-xl font-bold"&gt;
+    {price} ₴
+  &lt;/CardContent&gt;
+  &lt;CardFooter&gt;
+    &lt;Button className="w-full" disabled={!inStock}&gt;
+      Купити
+    &lt;/Button&gt;
+  &lt;/CardFooter&gt;
+&lt;/Card&gt;</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in">Не залежність з npm, а код у вашому репозиторії</li><li class="fragment fade-in">Radix — доступність (фокус, клавіатура, ARIA), Tailwind — стилі</li><li class="fragment fade-in">Тема — CSS-змінні: <code>--primary</code>, <code>--card</code>, …</li></ul>
+				</section>
+
+				<!-- UI libs: how to choose -->
+				<section>
+					<h2 class="ztu-blue">UI-БІБЛІОТЕКИ: ЯК ОБРАТИ</h2>
+					<div class="cols"><div><ul class="ztu-list"><li class="fragment fade-in">Адмінка, внутрішній інструмент, треба швидко → <strong>MUI / Mantine / Ant Design</strong></li><li class="fragment fade-in">Власний дизайн, потрібен повний контроль → <strong>shadcn/ui</strong> або headless + свої стилі</li></ul></div><div><h3 class="ztu-red fragment fade-in">КОЛИ ЗАВАЖАЄ</h3><ul class="ztu-list"><li class="fragment fade-in">Дизайн сильно відрізняється → боротьба з перевизначенням стилів</li><li class="fragment fade-in">Розмір бандлу</li><li class="fragment fade-in">Мажорні оновлення ламають API</li></ul></div></div>
+				</section>
+
+				<!-- Comparison -->
+				<section>
+					<h2 class="ztu-blue">ПОРІВНЯННЯ ПІДХОДІВ</h2>
+					<table class="compare-table"><thead><tr><th></th><th>Ізоляція</th><th>:hover / @media</th><th>Динаміка</th><th>Тема</th><th>Runtime JS</th><th>Налаштування</th></tr></thead><tbody><tr class="fragment fade-in"><td>Plain CSS</td><td>❌ (БЕМ)</td><td>✅</td><td>CSS-змінні</td><td>CSS-змінні</td><td>0</td><td>—</td></tr><tr class="fragment fade-in"><td>Inline</td><td>✅</td><td>❌</td><td>✅</td><td>⚠️</td><td>⚠️</td><td>—</td></tr><tr class="fragment fade-in"><td>CSS Modules</td><td>✅</td><td>✅</td><td>класи, CSS-змінні</td><td>CSS-змінні</td><td>0</td><td>з коробки</td></tr><tr class="fragment fade-in"><td>Sass</td><td>з Modules ✅</td><td>✅</td><td>❌ $var</td><td>CSS-змінні</td><td>0</td><td>sass-embedded</td></tr><tr class="fragment fade-in"><td>CSS-in-JS</td><td>✅</td><td>✅</td><td>✅ пропси</td><td>ThemeProvider</td><td>⚠️ runtime</td><td>бібліотека</td></tr><tr class="fragment fade-in"><td>Tailwind</td><td>✅</td><td>✅</td><td>CSS-змінні</td><td><code>dark:</code></td><td>0</td><td>плагін Vite</td></tr></tbody></table>
+				</section>
+
+				<!-- What to choose -->
+				<section>
+					<h2 class="ztu-blue">ЩО ВИБРАТИ?</h2>
+					<ul class="ztu-list"><li class="fragment fade-in">Навчальний / невеликий проєкт → <strong>CSS Modules + CSS-змінні</strong></li><li class="fragment fade-in">Команда, дизайн-система, швидкий темп → <strong>Tailwind</strong> (+ shadcn/ui)</li><li class="fragment fade-in">Адмінка → <strong>MUI / Mantine</strong></li><li class="fragment fade-in">Існуючий проєкт → те, що вже є; не змішувати 3 підходи</li><li class="fragment fade-in">CSS-in-JS у новому проєкті → тільки zero-runtime</li><li class="fragment fade-in">Inline → лише для передачі динамічних значень (<code>--accent</code>)</li></ul>
 				</section>
 
 				<!-- Questions -->
