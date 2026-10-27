@@ -96,10 +96,20 @@
       "desc_en": "Routing in React, React Router v7."
     },
     {
-      "slug": "feature-l10",
+      "slug": "feature-l8",
       "group": "lectures",
       "order": 9,
       "badge": "Лекція 9",
+      "title": "CSS у React",
+      "title_en": "CSS in React",
+      "desc": "Plain CSS і БЕМ, inline-стилі, CSS Modules, Sass і сучасний CSS, CSS-in-JS, Tailwind CSS, UI-бібліотеки.",
+      "desc_en": "Plain CSS and BEM, inline styles, CSS Modules, Sass and modern CSS, CSS-in-JS, Tailwind CSS, UI libraries."
+    },
+    {
+      "slug": "feature-l10",
+      "group": "lectures",
+      "order": 10,
+      "badge": "Лекція 10",
       "title": "React Context",
       "title_en": "React Context",
       "desc": "Проблема prop drilling, React Context, createContext.",
@@ -108,8 +118,8 @@
     {
       "slug": "feature-l11",
       "group": "lectures",
-      "order": 10,
-      "badge": "Лекція 10",
+      "order": 11,
+      "badge": "Лекція 11",
       "title": "Redux та менеджери стану",
       "title_en": "Redux and state managers",
       "desc": "Яку проблему вирішує Redux, менеджери стану, порівняння.",
