@@ -110,20 +110,20 @@
       "group": "lectures",
       "order": 10,
       "badge": "Лекція 10",
-      "title": "Context та менеджери стану",
-      "title_en": "Context and state managers",
-      "desc": "Де живе стан, Context у глибину і продуктивність, Context + useReducer, огляд підходів: Flux, store-хуки, observable, атоми, сигнали.",
-      "desc_en": "Where state lives, Context in depth and performance, Context + useReducer, an overview of approaches: Flux, store hooks, observables, atoms, signals."
+      "title": "React Context",
+      "title_en": "React Context",
+      "desc": "Де живе стан, композиція, Context у глибину і продуктивність, Context + useReducer, порівняння сховищ стану.",
+      "desc_en": "Where state lives, composition, Context in depth and performance, Context + useReducer, a comparison of state stores."
     },
     {
       "slug": "feature-l11",
       "group": "lectures",
       "order": 11,
       "badge": "Лекція 11",
-      "title": "Redux та менеджери стану",
-      "title_en": "Redux and state managers",
-      "desc": "Яку проблему вирішує Redux, менеджери стану, порівняння.",
-      "desc_en": "The problem Redux solves, state managers, and a comparison."
+      "title": "Менеджери стану та Redux",
+      "title_en": "State managers and Redux",
+      "desc": "Підходи: Flux, store-хуки, observable, атоми, сигнали; що обрати; Redux і Redux Toolkit.",
+      "desc_en": "Approaches: Flux, store hooks, observables, atoms, signals; what to choose; Redux and Redux Toolkit."
     }
   ]
 }
