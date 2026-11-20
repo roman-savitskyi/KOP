@@ -4,13 +4,33 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>КОП</title>
+		<title>Менеджери стану та Redux - Лекція 11</title>
 
 		<link rel="stylesheet" href="reveal.css">
 		<link rel="stylesheet" href="theme/ztu.css">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
+		<style>
+			.reveal .cols { display: flex; gap: 32px; align-items: flex-start; text-align: left; }
+			.reveal .cols > div { flex: 1; min-width: 0; }
+			.reveal .cols pre { width: 100%; }
+			.reveal .cols h3 { font-size: 0.8em; }
+			.reveal .cols .ztu-list { font-size: 0.8em; }
+			.reveal .small-table { font-size: 0.65em; }
+			.reveal .compare-table { font-size: 0.5em; }
+			.reveal .compare-table td:first-child { font-weight: bold; white-space: nowrap; }
+			.reveal .small-note { font-size: 0.5em; opacity: .6; }
+			.reveal section.dense h2 { margin-bottom: 8px; }
+			.reveal section.dense > p { font-size: 0.7em; margin: 8px 0; }
+			.reveal section.dense pre { font-size: 0.48em; margin: 10px auto; }
+			.reveal section.dense pre code { max-height: 470px; }
+			.reveal section.dense .ztu-list { font-size: 0.66em; }
+			.reveal section.dense .cols pre { font-size: 0.44em; }
+			.reveal section.dense .cols .ztu-list { font-size: 0.62em; }
+			.reveal .cols-narrow > div:first-child { flex: 0.6; }
+			.reveal section.dense .cols p { font-size: 0.65em; }
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -21,72 +41,275 @@
 				<!-- Title Slide -->
 				<section>
 					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 11</h1>
-					<p class="ztu-orange">REDUX, REDUX TOOLKIT</p>
+					<p class="ztu-orange">МЕНЕДЖЕРИ СТАНУ. REDUX, REDUX TOOLKIT</p>
+				</section>
+
+				<!-- Approaches -->
+				<section>
+					<h2 class="ztu-blue">ПІДХОДИ ДО КЕРУВАННЯ СТАНОМ</h2>
+					<p class="ztu-orange">Бібліотек багато — ідей кілька</p>
+					<table class="small-table"><thead><tr><th>Підхід</th><th>Ідея</th><th>React</th><th>Vue / інші</th></tr></thead><tbody><tr class="fragment fade-in"><td>Flux, один store</td><td>Дія → reducer → новий стан</td><td>Redux Toolkit</td><td>Vuex</td></tr><tr class="fragment fade-in"><td>Store як хук</td><td>Невеликі store з даними і функціями</td><td>Zustand</td><td>Pinia</td></tr><tr class="fragment fade-in"><td>Observable</td><td>Мутуємо обʼєкт, бібліотека відстежує читання</td><td>MobX</td><td>MobX</td></tr><tr class="fragment fade-in"><td>Атомарний</td><td>Стан з дрібних атомів, похідні атоми</td><td>Jotai, Recoil</td><td>—</td></tr><tr class="fragment fade-in"><td>Сигнали</td><td>Реактивне значення з автоматичними залежностями</td><td>—</td><td>Vue, Solid, Svelte 5, Preact</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Курс про КОП: дивимось на ідеї, які повторюються у фреймворках</p>
+				</section>
+
+				<!-- Flux idea -->
+				<section class="dense">
+					<h2 class="ztu-blue">FLUX: ОДИН STORE</h2>
+					<pre><code class="plaintext">   ┌──────── dispatch(action) ────────┐
+   │                                  ▼
+┌──────┐                      ┌──────────────┐
+│  UI  │                      │   Reducer    │
+└──────┘                      │ (state, act) │
+   ▲                          └──────┬───────┘
+   │                                 ▼
+   └──── підписка (selector) ── ┌─────────┐
+                                │  Store  │
+                                └─────────┘</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Один store — єдине джерело правди</li><li class="fragment fade-in">Стан змінюється <strong>лише</strong> через дії</li><li class="fragment fade-in">Reducer — чиста функція → передбачуваність, історія змін (time-travel)</li></ul>
+				</section>
+
+				<!-- Redux Toolkit -->
+				<section class="dense">
+					<h2 class="ztu-blue">REDUX TOOLKIT (REACT)</h2>
+					<pre><code class="js" data-line-numbers="|1-9|11-12|15|16">const cartSlice = createSlice({
+  name: 'cart',
+  initialState: [],
+  reducers: {
+    added(state, action) {
+      state.push(action.payload); // Immer: «мутація» → новий стан
+    },
+  },
+});
+
+export const { added } = cartSlice.actions;
+export const store = configureStore({ reducer: { cart: cartSlice.reducer } });
+
+// у компоненті
+const count = useSelector((s) =&gt; s.cart.length); // підписка лише на count
+dispatch(added(product));</code></pre>
+					<p class="fragment fade-in ztu-orange">Детально — далі в цій лекції</p>
+				</section>
+
+				<!-- Vuex -->
+				<section class="dense">
+					<h2 class="ztu-blue">VUEX (VUE)</h2>
+					<pre><code class="js" data-line-numbers="|2|3-5|6-10|11-16">const store = createStore({
+  state: () =&gt; ({ items: [] }),
+  getters: {
+    count: (state) =&gt; state.items.length,
+  },
+  mutations: {
+    ADD(state, product) {
+      state.items.push(product); // лише синхронно
+    },
+  },
+  actions: {
+    async addById({ commit }, id) {
+      const product = await api.getProduct(id);
+      commit('ADD', product);
+    },
+  },
+});</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Та сама ідея Flux, але стан реактивний — мутуємо напряму</li><li class="fragment fade-in">Mutations (синхронні) окремо від actions (асинхронні)</li><li class="fragment fade-in">Зараз у режимі підтримки: офіційна рекомендація для Vue — Pinia</li></ul>
+				</section>
+
+				<!-- Store as hook -->
+				<section>
+					<h2 class="ztu-blue">STORE ЯК ХУК</h2>
+					<ul class="ztu-list"><li class="fragment fade-in">Без провайдерів, action types і switch</li><li class="fragment fade-in">Store — це функція або хук: дані + методи разом</li><li class="fragment fade-in">Кілька маленьких store за доменами: кошик, користувач, фільтри</li><li class="fragment fade-in">Вибіркова підписка через селектори</li></ul>
+					<p class="fragment fade-in ztu-orange">Відповідь на «забагато boilerplate» у Redux та Vuex</p>
+				</section>
+
+				<!-- Zustand -->
+				<section class="dense">
+					<h2 class="ztu-blue">ZUSTAND (REACT)</h2>
+					<pre><code class="jsx" data-line-numbers="|3-7|10-13|15-18">import { create } from 'zustand';
+
+export const useCartStore = create((set) =&gt; ({
+  items: [],
+  add: (product) =&gt; set((s) =&gt; ({ items: [...s.items, product] })),
+  clear: () =&gt; set({ items: [] }),
+}));
+
+// компоненти — без Provider
+function CartBadge() {
+  const count = useCartStore((s) =&gt; s.items.length); // селектор
+  return &lt;span className="badge"&gt;{count}&lt;/span&gt;;
+}
+
+function ProductCard({ product }) {
+  const add = useCartStore((s) =&gt; s.add); // не ререндериться при зміні items
+  return &lt;button onClick={() =&gt; add(product)}&gt;Купити&lt;/button&gt;;
+}</code></pre>
+					<p class="fragment fade-in ztu-orange">Детально — далі в цій лекції</p>
+				</section>
+
+				<!-- Pinia -->
+				<section class="dense">
+					<h2 class="ztu-blue">PINIA (VUE)</h2>
+					<div class="cols cols-wide"><div><pre><code class="js" data-line-numbers="|5-6|7-10|12-14">// stores/cart.js
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+
+export const useCartStore =
+  defineStore('cart', () =&gt; {
+  const items = ref([]);
+  const count = computed(
+    () =&gt; items.value.length
+  );
+
+  function add(product) {
+    items.value.push(product); // просто мутуємо
+  }
+
+  return { items, count, add };
+});</code></pre></div><div><pre><code class="html" data-line-numbers>&lt;!-- CartBadge.vue --&gt;
+&lt;script setup&gt;
+import { useCartStore } from '@/stores/cart';
+const cart = useCartStore();
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;span class="badge"&gt;{{ cart.count }}&lt;/span&gt;
+&lt;/template&gt;</code></pre></div></div>
+					<p class="fragment fade-in ztu-orange">Zustand і Pinia — одна ідея, різні моделі реактивності</p>
+				</section>
+
+				<!-- MobX -->
+				<section class="dense">
+					<h2 class="ztu-blue">OBSERVABLE: MOBX</h2>
+					<p class="ztu-orange">Стан, який сам повідомляє про зміни</p>
+					<pre><code class="jsx" data-line-numbers="|4-10|8|9|13">import { makeAutoObservable } from 'mobx';
+import { observer } from 'mobx-react-lite';
+
+class CartStore {
+  items = [];
+  constructor() { makeAutoObservable(this); }
+
+  get count() { return this.items.length; }  // computed
+  add(product) { this.items.push(product); } // action
+}
+export const cart = new CartStore();
+
+const CartBadge = observer(() =&gt; &lt;span className="badge"&gt;{cart.count}&lt;/span&gt;);</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Мутуємо обʼєкт напряму, як у звичайному ООП</li><li class="fragment fade-in"><code>observer</code> запамʼятовує, що компонент прочитав, і ререндерить лише при зміні цього</li><li class="fragment fade-in">Працює з React, Vue і без фреймворку</li></ul>
+				</section>
+
+				<!-- Jotai -->
+				<section class="dense">
+					<h2 class="ztu-blue">АТОМАРНИЙ ПІДХІД: JOTAI</h2>
+					<p class="ztu-orange">Як useState, але спільний</p>
+					<pre><code class="jsx" data-line-numbers="|3|4|5-6|8-10|12-15">import { atom, useAtomValue, useSetAtom } from 'jotai';
+
+const itemsAtom = atom([]);
+const countAtom = atom((get) =&gt; get(itemsAtom).length); // похідний
+const addAtom = atom(null, (get, set, product) =&gt;
+  set(itemsAtom, [...get(itemsAtom), product]));       // лише запис
+
+function CartBadge() {
+  return &lt;span className="badge"&gt;{useAtomValue(countAtom)}&lt;/span&gt;;
+}
+
+function ProductCard({ product }) {
+  const add = useSetAtom(addAtom);
+  return &lt;button onClick={() =&gt; add(product)}&gt;Купити&lt;/button&gt;;
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Замість одного великого store — дрібні атоми (bottom-up)</li><li class="fragment fade-in">Компонент підписується на конкретний атом</li></ul>
+				</section>
+
+				<!-- Recoil lesson -->
+				<section>
+					<h2 class="ztu-blue">RECOIL: УРОК ПРО ВИБІР БІБЛІОТЕКИ</h2>
+					<ul class="ztu-list"><li class="fragment fade-in">Recoil від Meta (2020) популяризував атомарний підхід</li><li class="fragment fade-in">Так і не вийшов зі статусу experimental</li><li class="fragment fade-in">На початку 2025 року репозиторій архівовано</li><li class="fragment fade-in">Ідеї живуть далі в Jotai</li></ul>
+					<p class="fragment fade-in ztu-red">Перед вибором бібліотеки: хто підтримує, як часто релізи, яка спільнота</p>
+					<p class="fragment fade-in ztu-green">Бізнес-логіку тримати так, щоб бібліотеку можна було замінити</p>
+				</section>
+
+				<!-- Signals idea -->
+				<section class="dense">
+					<h2 class="ztu-blue">СИГНАЛИ</h2>
+					<p class="ztu-orange">Реактивність на рівні значення, а не компонента</p>
+					<div class="cols"><div><ul class="ztu-list"><li class="fragment fade-in"><strong>Сигнал</strong> = значення + список тих, хто його читає</li><li class="fragment fade-in">Читання → автоматична підписка</li><li class="fragment fade-in">Зміна → оновлюються лише залежні обчислення і шматки DOM</li><li class="fragment fade-in">Fine-grained reactivity</li></ul></div><div><pre><code class="plaintext">React:
+  setState → ререндер компонента
+           → ререндер дітей
+           → порівняння Virtual DOM
+           → оновлення DOM
+
+Сигнали:
+  count.value++ → оновлення
+                  одного текстового
+                  вузла в DOM</code></pre></div></div>
+					<p class="fragment fade-in ztu-orange">Тренд останніх років: Vue, Solid, Svelte 5, Preact, Qwik</p>
+				</section>
+
+				<!-- Signals primitives -->
+				<section class="dense">
+					<h2 class="ztu-blue">СИГНАЛИ: ТРИ ПРИМІТИВИ</h2>
+					<pre><code class="js" data-line-numbers="|3|4|6-8|10">import { signal, computed, effect } from '@preact/signals';
+
+const items = signal([]);
+const count = computed(() =&gt; items.value.length);
+
+effect(() =&gt; {
+  document.title = `Кошик (${count.value})`; // перезапуститься при зміні count
+});
+
+items.value = [...items.value, product]; // → оновляться count і effect</code></pre>
+					<table class="small-table"><thead><tr><th>Примітив</th><th>Що робить</th></tr></thead><tbody><tr class="fragment fade-in"><td><code>signal</code></td><td>Зберігає значення, повідомляє про зміни</td></tr><tr class="fragment fade-in"><td><code>computed</code></td><td>Похідне значення, кешується, перераховується лише за потреби</td></tr><tr class="fragment fade-in"><td><code>effect</code></td><td>Побічна дія, перезапускається при зміні залежностей</td></tr></tbody></table>
+				</section>
+
+				<!-- Signals in frameworks -->
+				<section class="dense">
+					<h2 class="ztu-blue">СИГНАЛИ У ФРЕЙМВОРКАХ</h2>
+					<div class="cols"><div><pre><code class="js" data-line-numbers>// Vue — ref і computed
+// це сигнали
+const items = ref([]);
+const count = computed(
+  () =&gt; items.value.length
+);</code></pre></div><div><pre><code class="jsx" data-line-numbers>// Solid — компонент
+// виконується ОДИН раз
+function CartBadge() {
+  const [items] =
+    createSignal([]);
+  return (
+    &lt;b&gt;{items().length}&lt;/b&gt;
+  );
+}</code></pre></div><div><pre><code class="html" data-line-numbers>&lt;!-- Svelte 5 — руни --&gt;
+&lt;script&gt;
+  let items = $state([]);
+  let count = $derived(
+    items.length
+  );
+&lt;/script&gt;
+&lt;span&gt;{count}&lt;/span&gt;</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in">Різний синтаксис — та сама ідея</li><li class="fragment fade-in">У Solid немає ререндерів компонента: оновлюється лише <code>{items().length}</code></li></ul>
+				</section>
+
+				<!-- Signals, React, TC39 -->
+				<section class="dense">
+					<h2 class="ztu-blue">СИГНАЛИ, REACT І СТАНДАРТ</h2>
+					<div class="cols"><div><ul class="ztu-list"><li class="fragment fade-in">React свідомо <strong>не має</strong> сигналів: модель «ререндер + Virtual DOM»</li><li class="fragment fade-in">Оптимізацію бере на себе React Compiler</li><li class="fragment fade-in">Сигнали можна підключити (<code>@preact/signals-react</code>), але це йде проти моделі React</li><li class="fragment fade-in">TC39 Signals — пропозиція додати сигнали в сам JavaScript (рання стадія)</li></ul></div><div><pre><code class="js" data-line-numbers>// TC39 Signals (polyfill)
+const count = new Signal.State(0);
+const double = new Signal.Computed(
+  () =&gt; count.get() * 2
+);
+
+count.set(5);
+double.get(); // 10</code></pre></div></div>
+					<p class="fragment fade-in ztu-orange">Мета стандарту: спільне ядро реактивності для всіх фреймворків</p>
+				</section>
+
+				<!-- What to choose -->
+				<section>
+					<h2 class="ztu-blue">ЩО ОБРАТИ?</h2>
+					<ul class="ztu-list"><li class="fragment fade-in">Тема, мова, користувач → <strong>Context</strong></li><li class="fragment fade-in">Кошик, фільтри в середньому застосунку → <strong>Zustand</strong> (React) / <strong>Pinia</strong> (Vue)</li><li class="fragment fade-in">Великий застосунок, команда, складні потоки даних → <strong>Redux Toolkit</strong></li><li class="fragment fade-in">Багато дрібних незалежних шматків стану → <strong>Jotai</strong></li><li class="fragment fade-in">Дані з сервера → не в store: <strong>TanStack Query</strong>, RTK Query, <code>loader</code></li></ul>
+					<p class="fragment fade-in ztu-red">Головне — не тягнути весь стан у глобальне сховище</p>
 				</section>
 
 				<!-- Яку проблему вирішує Redux -->
 				<section>
 					<h2 class="ztu-blue">ЯКУ ПРОБЛЕМУ ВИРІШУЄ REDUX?</h2>
 					<img src="https://redux.js.org/assets/images/one-way-data-flow-04fe46332c1ccb3497ecb04b94e55b97.png" alt="Redux Problem" style="max-width: 80%; height: auto;" />
-				</section>
-
-				<!-- Менеджери стану -->
-				<section>
-					<h2 class="ztu-blue">МЕНЕДЖЕРИ СТАНУ</h2>
-					<ul class="ztu-list">
-						<li>Redux</li>
-						<li>MobX</li>
-						<li>Recoil</li>
-						<li>Context API</li>
-						<li>Zustand</li>
-					</ul>
-				</section>
-
-				<!-- Порівняння менеджерів стану -->
-				<section>
-					<h2 class="ztu-blue">ПОРІВНЯННЯ</h2>
-					<table style="font-size: 0.65em; width: 100%;">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Redux</th>
-								<th>MobX</th>
-								<th>Context API</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><strong>Підхід</strong></td>
-								<td>Іммутабельний</td>
-								<td>Мутабельний</td>
-								<td>Вбудований в React</td>
-							</tr>
-							<tr>
-								<td><strong>Boilerplate</strong></td>
-								<td>Багато (без RTK)</td>
-								<td>Мінімальний</td>
-								<td>Мінімальний</td>
-							</tr>
-							<tr>
-								<td><strong>Крива навчання</strong></td>
-								<td>Складна</td>
-								<td>Помірна</td>
-								<td>Проста</td>
-							</tr>
-							<tr>
-								<td><strong>DevTools</strong></td>
-								<td>Відмінні</td>
-								<td>Добрі</td>
-								<td>Базові</td>
-							</tr>
-							<tr>
-								<td><strong>Використання</strong></td>
-								<td>Великі проєкти</td>
-								<td>Середні проєкти</td>
-								<td>Малі проєкти</td>
-							</tr>
-						</tbody>
-					</table>
 				</section>
 
 				<!-- Коли використовувати Redux -->
@@ -1034,7 +1257,7 @@ const [addUser] = useAddUserMutation()</code></pre>
 				<!-- Final slide -->
 				<section>
 					<h1 class="ztu-blue">FRONTEND. REACT. ЛЕКЦІЯ 11</h1>
-					<p class="ztu-orange">REDUX, REDUX TOOLKIT</p>
+					<p class="ztu-orange">МЕНЕДЖЕРИ СТАНУ. REDUX, REDUX TOOLKIT</p>
 				</section>
 
 			</div>
