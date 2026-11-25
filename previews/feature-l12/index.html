@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="uk">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Redux Toolkit, RTK Query, Zustand - Лекція 12</title>
+
+		<link rel="stylesheet" href="reveal.css">
+		<link rel="stylesheet" href="theme/ztu.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/high-contrast.css">
+
+		<style>
+			.reveal .cols { display: flex; gap: 32px; align-items: flex-start; text-align: left; }
+			.reveal .cols > div { flex: 1; min-width: 0; }
+			.reveal .cols pre { width: 100%; }
+			.reveal .cols h3 { font-size: 0.8em; }
+			.reveal .cols .ztu-list { font-size: 0.8em; }
+			.reveal .small-table { font-size: 0.65em; }
+			.reveal .compare-table { font-size: 0.5em; }
+			.reveal .compare-table td:first-child { font-weight: bold; white-space: nowrap; }
+			.reveal .small-note { font-size: 0.5em; opacity: .6; }
+			.reveal section.dense h2 { margin-bottom: 8px; }
+			.reveal section.dense > p { font-size: 0.7em; margin: 8px 0; }
+			.reveal section.dense pre { font-size: 0.48em; margin: 10px auto; }
+			.reveal section.dense pre code { max-height: 470px; }
+			.reveal section.dense .ztu-list { font-size: 0.66em; }
+			.reveal section.dense .cols pre { font-size: 0.44em; }
+			.reveal section.dense .cols .ztu-list { font-size: 0.62em; }
+			.reveal .cols-narrow > div:first-child { flex: 0.6; }
+			.reveal section.dense .cols p { font-size: 0.65em; }
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="footer-ztu-logo"></div>
+			<div class="footer-conference-logo"></div>
+			<div class="footer-beerjs-logo"></div>
+			<div class="slides">
+				<!-- Title Slide -->
+				<section>
+					<h1 class="ztu-blue">Компонентно орієнтоване програмування. ЛЕКЦІЯ 12</h1>
+					<p class="ztu-orange">REDUX TOOLKIT, RTK QUERY, ZUSTAND</p>
+				</section>
+
+				<!-- Redux Thunk -->
+				<section class="dense">
+					<h2 class="ztu-blue">REDUX THUNK</h2>
+					<pre><code class="bash">npm i redux-thunk</code></pre>
+					<pre><code class="javascript" data-line-numbers>export const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);</code></pre>
+				</section>
+
+				<!-- Асинхронна логіка -->
+				<section class="dense">
+					<h2 class="ztu-blue">АСИНХРОННА ЛОГІКА</h2>
+					<pre><code class="javascript" data-line-numbers>import { addUsersAction } from "../reducers/usersReducer"
+
+export const fetchUsers = () => {
+  return (dispatch) => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(json => dispatch(addUsersAction(json)))
+  }
+}</code></pre>
+				</section>
+
+				<!-- Async патерни - стани -->
+				<section class="dense">
+					<h2 class="ztu-blue">ПАТЕРНИ ASYNC ОПЕРАЦІЙ</h2>
+					<p class="ztu-orange">Три стани: loading / success / error</p>
+					<pre><code class="javascript" data-line-numbers>const initialState = {
+  users: [],
+  loading: false,
+  error: null
+};
+
+const usersReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'FETCH_USERS_REQUEST':
+      return { ...state, loading: true, error: null };
+    case 'FETCH_USERS_SUCCESS':
+      return { ...state, loading: false, users: action.payload };
+    case 'FETCH_USERS_FAILURE':
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};</code></pre>
+				</section>
+
+				<!-- Async патерни - action creator -->
+				<section class="dense">
+					<h2 class="ztu-blue">ASYNC ACTION CREATOR</h2>
+					<pre><code class="javascript" data-line-numbers>export const fetchUsers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: 'FETCH_USERS_REQUEST' });
+
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/users'
+      );
+      const data = await response.json();
+
+      dispatch({
+        type: 'FETCH_USERS_SUCCESS',
+        payload: data
+      });
+    } catch (error) {
+      dispatch({
+        type: 'FETCH_USERS_FAILURE',
+        payload: error.message
+      });
+    }
+  };
+};</code></pre>
+				</section>
+
+				<!-- Використання в компоненті -->
+				<section class="dense">
+					<h2 class="ztu-blue">ВИКОРИСТАННЯ В КОМПОНЕНТІ</h2>
+					<pre><code class="javascript" data-line-numbers>const UsersList = () => {
+  const dispatch = useDispatch();
+  const { users, loading, error } = useSelector(state => state.users);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  if (loading) return &lt;div&gt;Завантаження...&lt;/div&gt;;
+  if (error) return &lt;div&gt;Помилка: {error}&lt;/div&gt;;
+
+  return (
+    &lt;ul&gt;
+      {users.map(user => &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+};</code></pre>
+				</section>
+
+				<!-- Recap: plain Redux cost -->
+				<section class="dense">
+					<h2 class="ztu-blue">СКІЛЬКИ ЦЕ КОДУ?</h2>
+					<p class="ztu-orange">Redux + thunk працює, але шаблонного коду багато</p>
+					<pre><code class="plaintext">Завантажити товари на «чистому» Redux:
+
+  3 константи         FETCH_REQUEST / SUCCESS / FAILURE
+  3 action creators
+  3 case у reducer    + ручний spread стану
+  1 thunk             try / catch / dispatch × 3
+  store               createStore + applyMiddleware
+                      + composeWithDevTools
+  компонент           useEffect + dispatch + useSelector</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Багато шаблонного коду</li><li class="fragment fade-in">Легко помилитися з іммутабельністю</li><li class="fragment fade-in">Кеш, повторні запити, скасування — вручну</li></ul>
+					<p class="fragment fade-in ztu-orange">Redux Toolkit — офіційна відповідь на ці проблеми</p>
+				</section>
+
+				<!-- Redux Saga -->
+				<section class="dense">
+					<h2 class="ztu-blue">REDUX SAGA</h2>
+					<p class="ztu-orange">Для впізнавання в існуючих проєктах</p>
+					<div class="cols"><div><pre><code class="js" data-line-numbers>function* fetchProducts(action) {
+  try {
+    const data = yield call(api.getProducts,
+                            action.payload);
+    yield put({ type: 'products/loaded',
+                payload: data });
+  } catch (e) {
+    yield put({ type: 'products/failed',
+                error: e.message });
+  }
+}
+
+export function* rootSaga() {
+  yield takeLatest('products/requested',
+                   fetchProducts);
+}</code></pre></div><div><ul class="ztu-list"><li class="fragment fade-in">Middleware на генераторах (<code>function*</code>)</li><li class="fragment fade-in">Декларативні ефекти: <code>call</code>, <code>put</code>, <code>takeLatest</code></li><li class="fragment fade-in">Була популярна у 2016–2020</li><li class="fragment fade-in">Зараз: запити → <strong>RTK Query</strong>, реакція на дії → <strong>listener middleware</strong></li></ul></div></div>
+					<p class="fragment fade-in ztu-red">Трапляється в старих проєктах — варто впізнавати, але не обирати для нових</p>
+				</section>
+
+				<!-- RTK overview -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT</h2>
+					<p class="ztu-orange">Один пакет замість десятка</p>
+					<table class="small-table"><thead><tr><th>Інструмент</th><th>Для чого</th></tr></thead><tbody><tr class="fragment fade-in"><td><code>configureStore</code></td><td>Store з розумними налаштуваннями</td></tr><tr class="fragment fade-in"><td><code>createSlice</code></td><td>Reducer + action creators в одному місці</td></tr><tr class="fragment fade-in"><td><code>createAsyncThunk</code></td><td>Async-логіка з pending / fulfilled / rejected</td></tr><tr class="fragment fade-in"><td><code>createSelector</code></td><td>Мемоізовані селектори</td></tr><tr class="fragment fade-in"><td><code>createEntityAdapter</code></td><td>Нормалізовані колекції</td></tr><tr class="fragment fade-in"><td><code>createListenerMiddleware</code></td><td>Побічні дії у відповідь на actions</td></tr><tr class="fragment fade-in"><td>RTK Query</td><td>Запити до API, кеш, інвалідація</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Офіційно рекомендований спосіб писати Redux. <code>createStore</code> позначено як deprecated</p>
+				</section>
+
+				<!-- Install & structure -->
+				<section class="dense">
+					<h2 class="ztu-blue">ВСТАНОВЛЕННЯ І СТРУКТУРА</h2>
+					<pre><code class="bash" data-line-numbers>npm i @reduxjs/toolkit react-redux</code></pre>
+					<div class="cols"><div><pre><code class="plaintext">src/
+├─ app/
+│  └─ store.js
+├─ features/
+│  ├─ cart/
+│  │  ├─ cartSlice.js
+│  │  └─ CartBadge.jsx
+│  └─ products/
+│     ├─ productsSlice.js
+│     └─ ProductGrid.jsx
+└─ services/
+   └─ api.js        ← RTK Query</code></pre></div><div><ul class="ztu-list"><li class="fragment fade-in">Feature-based: усе про кошик — в одній теці</li><li class="fragment fade-in">Slice = стан + reducers + actions однієї фічі</li><li class="fragment fade-in">Замість тек <code>actions/</code>, <code>reducers/</code>, <code>constants/</code></li></ul></div></div>
+				</section>
+
+				<!-- configureStore -->
+				<section class="dense">
+					<h2 class="ztu-blue">CONFIGURESTORE</h2>
+					<div class="cols cols-wide"><div><pre><code class="js" data-line-numbers="|6-11|7-10">// app/store.js
+import { configureStore } from '@reduxjs/toolkit';
+import cartReducer from '../features/cart/cartSlice';
+import productsReducer from '../features/products/productsSlice';
+
+export const store = configureStore({
+  reducer: {
+    cart: cartReducer,
+    products: productsReducer,
+  },
+});</code></pre></div><div><pre><code class="jsx" data-line-numbers>// main.jsx
+import { Provider } from 'react-redux';
+import { store } from './app/store';
+
+root.render(
+  &lt;Provider store={store}&gt;
+    &lt;App /&gt;
+  &lt;/Provider&gt;
+);</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>combineReducers</code> — автоматично</li><li class="fragment fade-in">За замовчуванням: thunk і Redux DevTools</li><li class="fragment fade-in">У dev-режимі: перевірка мутацій стану і несеріалізованих значень</li></ul>
+				</section>
+
+				<!-- createSlice -->
+				<section class="dense">
+					<h2 class="ztu-blue">CREATESLICE: КОШИК</h2>
+					<pre><code class="js" data-line-numbers="|4-5|7-11|12-14|15-17|21-22">import { createSlice } from '@reduxjs/toolkit';
+
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState: { items: [] },
+  reducers: {
+    added(state, action) {
+      const item = state.items.find((i) =&gt; i.id === action.payload.id);
+      if (item) item.qty += 1;
+      else state.items.push({ ...action.payload, qty: 1 });
+    },
+    removed(state, action) {
+      state.items = state.items.filter((i) =&gt; i.id !== action.payload);
+    },
+    cleared() {
+      return { items: [] };
+    },
+  },
+});
+
+export const { added, removed, cleared } = cartSlice.actions;
+export default cartSlice.reducer;</code></pre>
+					<p class="fragment fade-in ztu-orange">Порівняйте з <code>cartReducer</code> зі <code>switch</code> з лекції 10</p>
+				</section>
+
+				<!-- What createSlice generates -->
+				<section class="dense">
+					<h2 class="ztu-blue">ЩО ГЕНЕРУЄ CREATESLICE</h2>
+					<pre><code class="js" data-line-numbers="|1-2|4|5|6">added({ id: 1, title: 'Навушники', price: 1899 });
+// → { type: 'cart/added', payload: { id: 1, title: 'Навушники', price: 1899 } }
+
+added.type;          // 'cart/added'
+added.match(action); // true, якщо action.type === 'cart/added'
+removed(1);          // → { type: 'cart/removed', payload: 1 }</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Тип дії = <code>name</code> + ключ у <code>reducers</code></li><li class="fragment fade-in">Аргумент action creator стає <code>payload</code></li><li class="fragment fade-in">Ні констант, ні <code>switch</code>, ні ручних action creators</li></ul>
+				</section>
+
+				<!-- Immer rules -->
+				<section class="dense">
+					<h2 class="ztu-blue">IMMER: ПРАВИЛА</h2>
+					<p class="ztu-orange">«Мутації», які насправді незмінні</p>
+					<pre><code class="js" data-line-numbers="|1-2|4-5|7-11|13-14">// ✅ мутуємо чернетку
+added(state, action) { state.items.push(action.payload); }
+
+// ✅ повертаємо новий стан
+cleared() { return { items: [] }; }
+
+// ❌ і мутуємо, і повертаємо
+removed(state, action) {
+  state.count -= 1;
+  return { ...state, items: [] };
+}
+
+// ❌ стрілка неявно повертає результат push
+added: (state, action) =&gt; state.items.push(action.payload),</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>state</code> — чернетка (Proxy). Immer будує новий незмінний обʼєкт</li><li class="fragment fade-in">Або мутувати, або повертати — не обидва</li><li class="fragment fade-in"><code>console.log(state)</code> показує Proxy → <code>console.log(current(state))</code></li></ul>
+				</section>
+
+				<!-- prepare -->
+				<section class="dense">
+					<h2 class="ztu-blue">PREPARE: ПІДГОТОВКА PAYLOAD</h2>
+					<p class="ztu-orange">Коментар до замовлення</p>
+					<pre><code class="js" data-line-numbers="|4|5-7|8-10|14">import { createSlice, nanoid } from '@reduxjs/toolkit';
+
+reducers: {
+  commentAdded: {
+    reducer(state, action) {
+      state.comments.push(action.payload);
+    },
+    prepare(text) {
+      return { payload: { id: nanoid(), text, createdAt: Date.now() } };
+    },
+  },
+},
+
+dispatch(commentAdded('Подарунок, загорніть, будь ласка'));</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Reducer має бути чистим: жодних <code>Math.random()</code> чи <code>Date.now()</code></li><li class="fragment fade-in">Випадкові id і дати — у <code>prepare</code></li></ul>
+				</section>
+
+				<!-- useSelector & useDispatch -->
+				<section class="dense">
+					<h2 class="ztu-blue">USESELECTOR І USEDISPATCH</h2>
+					<pre><code class="jsx" data-line-numbers="|4-7|9-13">import { useSelector, useDispatch } from 'react-redux';
+import { added } from './cartSlice';
+
+function ProductCard({ product }) {
+  const dispatch = useDispatch();
+  return &lt;button onClick={() =&gt; dispatch(added(product))}&gt;Купити&lt;/button&gt;;
+}
+
+function CartBadge() {
+  const count = useSelector((state) =&gt;
+    state.cart.items.reduce((sum, i) =&gt; sum + i.qty, 0));
+  return &lt;span className="badge"&gt;{count}&lt;/span&gt;;
+}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>useSelector</code> ререндерить компонент, лише якщо результат змінився (<code>===</code>)</li><li class="fragment fade-in">Саме цієї вибіркової підписки бракувало Context</li></ul>
+				</section>
+
+				<!-- Slice selectors -->
+				<section class="dense">
+					<h2 class="ztu-blue">СЕЛЕКТОРИ В SLICE</h2>
+					<p class="ztu-orange">RTK 2: селектори поруч зі станом</p>
+					<pre><code class="js" data-line-numbers="|5-8|11|14">const cartSlice = createSlice({
+  name: 'cart',
+  initialState: { items: [] },
+  reducers: { /* ... */ },
+  selectors: {
+    selectItems: (cart) =&gt; cart.items,
+    selectCount: (cart) =&gt; cart.items.reduce((sum, i) =&gt; sum + i.qty, 0),
+  },
+});
+
+export const { selectItems, selectCount } = cartSlice.selectors;
+
+// у компоненті — передаємо весь state, slice сам бере state.cart
+const count = useSelector(selectCount);</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Селектор описує, <strong>як</strong> читати дані — компоненти не знають форму стану</li><li class="fragment fade-in">Змінили структуру slice — правимо лише селектори</li></ul>
+				</section>
+
+				<!-- createSelector -->
+				<section class="dense">
+					<h2 class="ztu-blue">CREATESELECTOR: МЕМОІЗАЦІЯ</h2>
+					<pre><code class="js" data-line-numbers="|3-5|7-11|13-16">import { createSelector } from '@reduxjs/toolkit';
+
+// ❌ новий масив на кожен виклик → ререндер на будь-яку дію
+const selectExpensive = (state) =&gt;
+  state.cart.items.filter((i) =&gt; i.price &gt; 1000);
+
+// ✅ перераховується лише коли змінився items
+export const selectExpensiveItems = createSelector(
+  [selectItems],
+  (items) =&gt; items.filter((i) =&gt; i.price &gt; 1000),
+);
+
+export const selectTotal = createSelector(
+  [selectItems],
+  (items) =&gt; items.reduce((sum, i) =&gt; sum + i.price * i.qty, 0),
+);</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>filter</code> / <code>map</code> повертають новий масив → <code>===</code> завжди <code>false</code></li><li class="fragment fade-in">У dev-режимі React-Redux попереджає про такі селектори</li></ul>
+				</section>
+
+				<!-- createAsyncThunk -->
+				<section class="dense">
+					<h2 class="ztu-blue">CREATEASYNCTHUNK</h2>
+					<p class="ztu-orange">Thunk з життєвим циклом</p>
+					<pre><code class="js" data-line-numbers="|2|3|6|8|10-14">export const fetchProducts = createAsyncThunk(
+  'products/fetch',
+  async (category, { rejectWithValue, signal }) =&gt; {
+    const res = await fetch(
+      `https://dummyjson.com/products/category/${category}`, { signal });
+    if (!res.ok) return rejectWithValue(`HTTP ${res.status}`);
+    const data = await res.json();
+    return data.products; // → action.payload у fulfilled
+  },
+  {
+    // не запускати, якщо вже вантажиться
+    condition: (category, { getState }) =&gt;
+      getState().products.status !== 'loading',
+  },
+);</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Генерує три дії: <code>products/fetch/pending</code>, <code>/fulfilled</code>, <code>/rejected</code></li><li class="fragment fade-in"><code>rejectWithValue</code> — власний payload помилки</li><li class="fragment fade-in"><code>signal</code> — скасування запиту</li></ul>
+				</section>
+
+				<!-- extraReducers -->
+				<section class="dense">
+					<h2 class="ztu-blue">EXTRAREDUCERS</h2>
+					<pre><code class="js" data-line-numbers="|5|7-10|11-14|15-18">const productsSlice = createSlice({
+  name: 'products',
+  initialState: { items: [], status: 'idle', error: null },
+  reducers: {},
+  extraReducers: (builder) =&gt; {
+    builder
+      .addCase(fetchProducts.pending, (state) =&gt; {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) =&gt; {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state, action) =&gt; {
+        state.status = 'failed';
+        state.error = action.payload ?? action.error.message;
+      });
+  },
+});</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>reducers</code> — власні дії slice</li><li class="fragment fade-in"><code>extraReducers</code> — реакція на чужі дії: thunks, інші slices</li><li class="fragment fade-in"><code>addMatcher</code> — на групу дій, наприклад усі <code>rejected</code></li></ul>
+				</section>
+
+				<!-- Thunk in component -->
+				<section class="dense">
+					<h2 class="ztu-blue">THUNK У КОМПОНЕНТІ</h2>
+					<div class="cols"><div><pre><code class="jsx" data-line-numbers="|6-10|9|12-15">function ProductGrid({ category }) {
+  const dispatch = useDispatch();
+  const { items, status, error } =
+    useSelector((s) =&gt; s.products);
+
+  useEffect(() =&gt; {
+    const promise =
+      dispatch(fetchProducts(category));
+    return () =&gt; promise.abort();
+  }, [dispatch, category]);
+
+  if (status === 'loading') return &lt;Spinner /&gt;;
+  if (status === 'failed') return &lt;p&gt;{error}&lt;/p&gt;;
+  return items.map((p) =&gt;
+    &lt;ProductCard key={p.id} product={p} /&gt;);
+}</code></pre></div><div><pre><code class="jsx" data-line-numbers>// unwrap — результат або виняток
+async function handleCheckout() {
+  try {
+    await dispatch(checkout(cart)).unwrap();
+    toast('Замовлення оформлено');
+  } catch (err) {
+    toast(`Помилка: ${err}`);
+  }
+}</code></pre></div></div>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>dispatch(thunk)</code> повертає promise з <code>.abort()</code></li><li class="fragment fade-in"><code>.unwrap()</code> — щоб обробити результат у самому компоненті</li></ul>
+				</section>
+
+				<!-- createEntityAdapter -->
+				<section class="dense">
+					<h2 class="ztu-blue">CREATEENTITYADAPTER</h2>
+					<p class="ztu-orange">Нормалізація з лекції 11 — без ручної роботи</p>
+					<pre><code class="js" data-line-numbers="|1-3|5-6|11-14|16-19|23-24">const productsAdapter = createEntityAdapter({
+  sortComparer: (a, b) =&gt; a.title.localeCompare(b.title),
+});
+
+// { ids: [], entities: {}, status: 'idle' }
+const initialState = productsAdapter.getInitialState({ status: 'idle' });
+
+const productsSlice = createSlice({
+  name: 'products',
+  initialState,
+  reducers: {
+    productUpdated: productsAdapter.updateOne,
+    productRemoved: productsAdapter.removeOne,
+  },
+  extraReducers: (builder) =&gt; {
+    builder.addCase(fetchProducts.fulfilled, (state, action) =&gt; {
+      state.status = 'succeeded';
+      productsAdapter.setAll(state, action.payload);
+    });
+  },
+});
+
+export const { selectAll: selectProducts, selectById: selectProductById } =
+  productsAdapter.getSelectors((state) =&gt; state.products);</code></pre>
+				</section>
+
+				<!-- Listener middleware -->
+				<section class="dense">
+					<h2 class="ztu-blue">CREATELISTENERMIDDLEWARE</h2>
+					<p class="ztu-orange">Побічні дії у відповідь на actions</p>
+					<pre><code class="js" data-line-numbers="|3|6-11|7|8-10|14-17">import { createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+
+export const listener = createListenerMiddleware();
+
+// зберігати кошик після кожної зміни
+listener.startListening({
+  matcher: isAnyOf(added, removed, cleared),
+  effect: (action, api) =&gt; {
+    localStorage.setItem('cart', JSON.stringify(api.getState().cart.items));
+  },
+});
+
+// app/store.js
+configureStore({
+  reducer: { /* ... */ },
+  middleware: (getDefault) =&gt; getDefault().prepend(listener.middleware),
+});</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">«Коли сталася дія X — зробити Y»</li><li class="fragment fade-in"><code>api.delay</code>, <code>api.cancelActiveListeners</code>, <code>api.take</code> — debounce і скасування</li><li class="fragment fade-in">Закриває більшість задач, для яких раніше брали Saga</li></ul>
+				</section>
+
+				<!-- DevTools -->
+				<section>
+					<h2 class="ztu-blue">REDUX DEVTOOLS</h2>
+					<p class="ztu-orange">Розширення для Chrome і Firefox</p>
+					<ul class="ztu-list"><li class="fragment fade-in">Список усіх дій: <code>cart/added</code>, <code>products/fetch/pending</code>, …</li><li class="fragment fade-in">Стан після кожної дії та diff змін</li><li class="fragment fade-in">Time-travel: перемотати стан назад і вперед</li><li class="fragment fade-in">Trace: з якого рядка коду відправили дію</li><li class="fragment fade-in">RTK Query: видно кеш, запити і підписки</li></ul>
+					<p class="fragment fade-in ztu-green">Працює одразу після <code>configureStore</code>, без налаштувань</p>
+				</section>
+
+				<!-- Server state -->
+				<section>
+					<h2 class="ztu-blue">СЕРВЕРНИЙ СТАН</h2>
+					<p class="ztu-orange">Дані з сервера — це кеш, а не «наш» стан</p>
+					<table class="small-table"><thead><tr><th></th><th>Клієнтський стан</th><th>Серверний стан</th></tr></thead><tbody><tr class="fragment fade-in"><td>Приклад</td><td>Кошик, тема, відкрита модалка</td><td>Товари, профіль, замовлення</td></tr><tr class="fragment fade-in"><td>Власник</td><td>Наш застосунок</td><td>Сервер — у нас лише копія</td></tr><tr class="fragment fade-in"><td>Може застаріти</td><td>Ні</td><td>Так, будь-якої миті</td></tr><tr class="fragment fade-in"><td>Потрібно</td><td>Зберігати і змінювати</td><td>Кеш, дедуплікація, повторні запити, інвалідація</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Писати це thunk-ами — сотні рядків у кожному проєкті. RTK Query робить це за нас</p>
+				</section>
+
+				<!-- createApi -->
+				<section class="dense">
+					<h2 class="ztu-blue">RTK QUERY: CREATEAPI</h2>
+					<pre><code class="js" data-line-numbers="|6|8|9-12|11|16-20|24">// services/api.js
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+export const api = createApi({
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://dummyjson.com' }),
+  tagTypes: ['Product'],
+  endpoints: (build) =&gt; ({
+    getProducts: build.query({
+      query: (category) =&gt; `/products/category/${category}`,
+      transformResponse: (res) =&gt; res.products,
+    }),
+    getProduct: build.query({
+      query: (id) =&gt; `/products/${id}`,
+    }),
+    updateProduct: build.mutation({
+      query: ({ id, ...patch }) =&gt; ({
+        url: `/products/${id}`, method: 'PATCH', body: patch,
+      }),
+    }),
+  }),
+});
+
+export const { useGetProductsQuery, useGetProductQuery, useUpdateProductMutation } = api;</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Один <code>createApi</code> на базовий URL</li><li class="fragment fade-in">Хуки генеруються з імен: <code>getProducts</code> → <code>useGetProductsQuery</code></li></ul>
+				</section>
+
+				<!-- RTK Query store -->
+				<section class="dense">
+					<h2 class="ztu-blue">RTK QUERY: ПІДКЛЮЧЕННЯ</h2>
+					<pre><code class="js" data-line-numbers="|8|10|13">import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { api } from '../services/api';
+
+export const store = configureStore({
+  reducer: {
+    cart: cartReducer,
+    [api.reducerPath]: api.reducer,
+  },
+  middleware: (getDefault) =&gt; getDefault().concat(api.middleware),
+});
+
+setupListeners(store.dispatch); // refetchOnFocus, refetchOnReconnect</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Кеш живе у Redux store — його видно в DevTools</li><li class="fragment fade-in">Middleware керує запитами, підписками і часом життя кешу</li></ul>
+				</section>
+
+				<!-- Query hook -->
+				<section class="dense">
+					<h2 class="ztu-blue">RTK QUERY: QUERY-ХУК</h2>
+					<pre><code class="jsx" data-line-numbers="|2-3|5|6|9">function ProductGrid({ category }) {
+  const { data: products = [], isLoading, isFetching, isError, error } =
+    useGetProductsQuery(category);
+
+  if (isLoading) return &lt;Spinner /&gt;;               // перше завантаження
+  if (isError) return &lt;p&gt;Помилка: {error.status}&lt;/p&gt;;
+
+  return (
+    &lt;div className={isFetching ? 'grid grid--dim' : 'grid'}&gt;
+      {products.map((p) =&gt; &lt;ProductCard key={p.id} product={p} /&gt;)}
+    &lt;/div&gt;
+  );
+}</code></pre>
+					<table class="small-table"><thead><tr><th></th><th>Коли <code>true</code></th></tr></thead><tbody><tr class="fragment fade-in"><td><code>isLoading</code></td><td>Перший запит, даних ще немає</td></tr><tr class="fragment fade-in"><td><code>isFetching</code></td><td>Будь-який запит у процесі, зокрема оновлення</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Без <code>useEffect</code>, <code>dispatch</code> і окремого slice</p>
+				</section>
+
+				<!-- Cache -->
+				<section class="dense">
+					<h2 class="ztu-blue">RTK QUERY: КЕШ</h2>
+					<p class="ztu-orange">Дедуплікація і час життя</p>
+					<pre><code class="jsx" data-line-numbers="1-2">&lt;ProductGrid category="laptops" /&gt;
+&lt;ProductCount category="laptops" /&gt; {/* той самий запит → один HTTP-запит */}</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Ключ кешу = endpoint + аргументи</li><li class="fragment fade-in">Кілька компонентів з тими самими аргументами — один запит, спільні дані</li><li class="fragment fade-in">Дані живуть, поки є підписники, і ще <code>keepUnusedDataFor</code> (60 с)</li><li class="fragment fade-in">Повернулися на сторінку за 60 с — дані з кешу миттєво, без спінера</li></ul>
+					<pre><code class="js" data-line-numbers="1">createApi({ /* ... */ keepUnusedDataFor: 300 }); // 5 хвилин</code></pre>
+				</section>
+
+				<!-- Hook options -->
+				<section class="dense">
+					<h2 class="ztu-blue">RTK QUERY: ОПЦІЇ ХУКА</h2>
+					<pre><code class="jsx" data-line-numbers="|1-2|4-5|7-8|10-13">// не запускати, поки немає id
+useGetProductQuery(id, { skip: !id });
+
+// оновлювати кожні 30 с
+useGetProductsQuery('smartphones', { pollingInterval: 30_000 });
+
+// перезапитувати при кожному монтуванні
+useGetProductsQuery(category, { refetchOnMountOrArgChange: true });
+
+// підписатися лише на частину даних — менше ререндерів
+const { product } = useGetProductsQuery(category, {
+  selectFromResult: ({ data }) =&gt; ({ product: data?.find((p) =&gt; p.id === id) }),
+});</code></pre>
+				</section>
+
+				<!-- Lazy & prefetch -->
+				<section class="dense">
+					<h2 class="ztu-blue">LAZY QUERY І PREFETCH</h2>
+					<pre><code class="jsx" data-line-numbers="|3-5|7-11">// endpoint: searchProducts: build.query({ query: (q) =&gt; `/products/search?q=${q}` })
+
+// запит за кліком, а не при рендері
+const [search, { data, isFetching }] = useLazySearchProductsQuery();
+&lt;button onClick={() =&gt; search(query)}&gt;Шукати&lt;/button&gt;
+
+// підвантажити наперед, поки користувач наводить курсор
+const prefetch = usePrefetch('getProduct');
+&lt;Link to={`/products/${p.id}`} onMouseEnter={() =&gt; prefetch(p.id)}&gt;
+  {p.title}
+&lt;/Link&gt;</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>useLazy…Query</code> — для пошуку, форм, кнопок «Завантажити ще»</li><li class="fragment fade-in"><code>usePrefetch</code> — сторінка товару відкривається миттєво</li></ul>
+				</section>
+
+				<!-- Mutations -->
+				<section class="dense">
+					<h2 class="ztu-blue">RTK QUERY: МУТАЦІЇ</h2>
+					<pre><code class="jsx" data-line-numbers="|2|6|13">function PriceEditor({ product }) {
+  const [updateProduct, { isLoading }] = useUpdateProductMutation();
+
+  const save = async (price) =&gt; {
+    try {
+      await updateProduct({ id: product.id, price }).unwrap();
+      toast('Збережено');
+    } catch (err) {
+      toast(`Помилка: ${err.status}`);
+    }
+  };
+
+  return &lt;PriceForm onSubmit={save} disabled={isLoading} /&gt;;
+}</code></pre>
+					<p class="fragment fade-in ztu-red">Проблема: після збереження список товарів показує стару ціну. Як оновити кеш?</p>
+				</section>
+
+				<!-- Tags -->
+				<section class="dense">
+					<h2 class="ztu-blue">ТЕГИ: ІНВАЛІДАЦІЯ КЕШУ</h2>
+					<pre><code class="js" data-line-numbers="|4-7|11|15">getProducts: build.query({
+  query: (category) =&gt; `/products/category/${category}`,
+  transformResponse: (res) =&gt; res.products,
+  providesTags: (products = []) =&gt; [
+    ...products.map(({ id }) =&gt; ({ type: 'Product', id })),
+    { type: 'Product', id: 'LIST' },
+  ],
+}),
+updateProduct: build.mutation({
+  query: ({ id, ...patch }) =&gt; ({ url: `/products/${id}`, method: 'PATCH', body: patch }),
+  invalidatesTags: (result, error, { id }) =&gt; [{ type: 'Product', id }],
+}),
+addProduct: build.mutation({
+  query: (body) =&gt; ({ url: '/products/add', method: 'POST', body }),
+  invalidatesTags: [{ type: 'Product', id: 'LIST' }],
+}),</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Query <strong>надає</strong> теги, mutation їх <strong>інвалідує</strong></li><li class="fragment fade-in">RTK Query сам перезапитує всі query з інвалідованими тегами</li></ul>
+				</section>
+
+				<!-- Tags diagram -->
+				<section class="dense">
+					<h2 class="ztu-blue">ТЕГИ: ЯК ЦЕ ПРАЦЮЄ</h2>
+					<pre><code class="plaintext">getProducts('laptops')   → надає  [Product:1, Product:2, Product:LIST]
+getProduct(2)            → надає  [Product:2]
+
+updateProduct({ id: 2 }) → інвалідує [Product:2]
+                              │
+                              ▼
+          перезапит getProducts('laptops') і getProduct(2)
+
+addProduct({...})        → інвалідує [Product:LIST]
+                              │
+                              ▼
+          перезапит лише списків</code></pre>
+					<p class="fragment fade-in ztu-orange">Описуємо <strong>залежності</strong>, а не «що перезапитати після чого»</p>
+				</section>
+
+				<!-- Optimistic update -->
+				<section class="dense">
+					<h2 class="ztu-blue">ОПТИМІСТИЧНЕ ОНОВЛЕННЯ</h2>
+					<pre><code class="js" data-line-numbers="|4|5-10|11-12|13-15">updateProduct: build.mutation({
+  query: ({ id, ...patch }) =&gt; ({ url: `/products/${id}`, method: 'PATCH', body: patch }),
+  async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+    // 1. одразу змінюємо кеш
+    const patchResult = dispatch(
+      api.util.updateQueryData('getProduct', id, (draft) =&gt; {
+        Object.assign(draft, patch);
+      }),
+    );
+    try {
+      await queryFulfilled; // 2. чекаємо на сервер
+    } catch {
+      patchResult.undo();   // 3. помилка → відкат
+    }
+  },
+}),</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Інтерфейс оновлюється миттєво, не чекаючи сервера</li><li class="fragment fade-in">Та сама ідея, що й <code>useOptimistic</code> з лекції 5</li></ul>
+				</section>
+
+				<!-- injectEndpoints -->
+				<section class="dense">
+					<h2 class="ztu-blue">INJECTENDPOINTS</h2>
+					<p class="ztu-orange">Розбиття API за фічами</p>
+					<pre><code class="js" data-line-numbers="|2-6|5|9-15">// services/api.js — порожній «корінь»
+export const api = createApi({
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://dummyjson.com' }),
+  tagTypes: ['Product', 'Order'],
+  endpoints: () =&gt; ({}),
+});
+
+// features/products/productsApi.js
+export const productsApi = api.injectEndpoints({
+  endpoints: (build) =&gt; ({
+    getProducts: build.query({
+      query: (category) =&gt; `/products/category/${category}`,
+    }),
+  }),
+});
+export const { useGetProductsQuery } = productsApi;</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Endpoints лежать поруч зі своєю фічею</li><li class="fragment fade-in">З <code>React.lazy</code> (лекція 8) код endpoints вантажиться разом зі сторінкою</li></ul>
+				</section>
+
+				<!-- prepareHeaders -->
+				<section class="dense">
+					<h2 class="ztu-blue">АВТОРИЗАЦІЯ: PREPAREHEADERS</h2>
+					<pre><code class="js" data-line-numbers="|3-7|4|5">baseQuery: fetchBaseQuery({
+  baseUrl: '/api',
+  prepareHeaders: (headers, { getState }) =&gt; {
+    const token = getState().auth.token;
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    return headers;
+  },
+}),</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Токен береться зі store перед кожним запитом</li><li class="fragment fade-in">Для оновлення токена при 401 — власна обгортка над <code>baseQuery</code></li></ul>
+				</section>
+
+				<!-- Data fetching comparison -->
+				<section>
+					<h2 class="ztu-blue">RTK QUERY VS ІНШІ</h2>
+					<table class="small-table"><thead><tr><th></th><th>createAsyncThunk</th><th>RTK Query</th><th>TanStack Query</th></tr></thead><tbody><tr class="fragment fade-in"><td>Кешування</td><td>Вручну</td><td>✅</td><td>✅</td></tr><tr class="fragment fade-in"><td>Дедуплікація</td><td>Вручну</td><td>✅</td><td>✅</td></tr><tr class="fragment fade-in"><td>Інвалідація</td><td>Вручну</td><td>Теги</td><td><code>queryKey</code></td></tr><tr class="fragment fade-in"><td>Оптимістичні оновлення</td><td>Вручну</td><td><code>updateQueryData</code></td><td><code>onMutate</code></td></tr><tr class="fragment fade-in"><td>Де живуть дані</td><td>Redux store</td><td>Redux store</td><td>Власний кеш</td></tr><tr class="fragment fade-in"><td>Потрібен Redux</td><td>Так</td><td>Так</td><td>Ні</td></tr></tbody></table>
+					<ul class="ztu-list"><li class="fragment fade-in">Дані з сервера → RTK Query (якщо вже є Redux) або TanStack Query</li><li class="fragment fade-in"><code>createAsyncThunk</code> — для async-логіки, яка не є простим запитом</li></ul>
+				</section>
+
+				<!-- Zustand intro -->
+				<section class="dense">
+					<h2 class="ztu-blue">ZUSTAND</h2>
+					<p class="ztu-orange">Та сама задача без церемоній</p>
+					<ul class="ztu-list"><li class="fragment fade-in">~1 KB, без <code>Provider</code></li><li class="fragment fade-in">Store — це хук: дані і дії разом</li><li class="fragment fade-in">Без action types, reducers і <code>switch</code></li><li class="fragment fade-in">Вибіркова підписка через селектори</li><li class="fragment fade-in">Працює і поза React</li></ul>
+					<pre><code class="bash" data-line-numbers>npm i zustand</code></pre>
+				</section>
+
+				<!-- Zustand store -->
+				<section class="dense">
+					<h2 class="ztu-blue">ZUSTAND: STORE КОШИКА</h2>
+					<pre><code class="js" data-line-numbers="|4|5|7-15|17-18|19">// stores/cartStore.js
+import { create } from 'zustand';
+
+export const useCartStore = create((set, get) =&gt; ({
+  items: [],
+
+  add: (product) =&gt;
+    set((state) =&gt; {
+      const item = state.items.find((i) =&gt; i.id === product.id);
+      return {
+        items: item
+          ? state.items.map((i) =&gt; (i.id === product.id ? { ...i, qty: i.qty + 1 } : i))
+          : [...state.items, { ...product, qty: 1 }],
+      };
+    }),
+
+  remove: (id) =&gt; set((state) =&gt; ({ items: state.items.filter((i) =&gt; i.id !== id) })),
+  clear: () =&gt; set({ items: [] }),
+  total: () =&gt; get().items.reduce((sum, i) =&gt; sum + i.price * i.qty, 0),
+}));</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in"><code>set</code> зливає (merge) верхній рівень стану</li><li class="fragment fade-in"><code>get</code> читає поточний стан усередині дій</li></ul>
+				</section>
+
+				<!-- Zustand selectors -->
+				<section class="dense">
+					<h2 class="ztu-blue">ZUSTAND: СЕЛЕКТОРИ</h2>
+					<pre><code class="jsx" data-line-numbers="|1-3|5-6|8-9|11-15">// ✅ підписка на одне значення
+const count = useCartStore((s) =&gt; s.items.length);
+const add = useCartStore((s) =&gt; s.add);
+
+// ❌ без селектора — ререндер на БУДЬ-ЯКУ зміну store
+const { items, add } = useCartStore();
+
+// ❌ новий обʼєкт на кожен виклик (у v5 — нескінченний цикл ререндерів)
+const { items, clear } = useCartStore((s) =&gt; ({ items: s.items, clear: s.clear }));
+
+// ✅ useShallow порівнює поля обʼєкта
+import { useShallow } from 'zustand/react/shallow';
+const { items, clear } = useCartStore(
+  useShallow((s) =&gt; ({ items: s.items, clear: s.clear })),
+);</code></pre>
+					<p class="fragment fade-in ztu-orange">Те саме правило, що й у <code>useSelector</code>: селектор має повертати стабільне значення</p>
+				</section>
+
+				<!-- Zustand async & outside React -->
+				<section class="dense">
+					<h2 class="ztu-blue">ZUSTAND: ASYNC І ПОЗА REACT</h2>
+					<pre><code class="js" data-line-numbers="|4-13|16|17">export const useProductsStore = create((set) =&gt; ({
+  products: [],
+  status: 'idle',
+  fetch: async (category) =&gt; {
+    set({ status: 'loading' });
+    try {
+      const res = await fetch(`https://dummyjson.com/products/category/${category}`);
+      const data = await res.json();
+      set({ products: data.products, status: 'succeeded' });
+    } catch {
+      set({ status: 'failed' });
+    }
+  },
+}));
+
+// поза компонентами: WebSocket, роутер, тести
+useCartStore.getState().clear();
+const unsubscribe = useCartStore.subscribe((state) =&gt; console.log(state.items));</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Async — звичайна функція, без thunk і middleware</li><li class="fragment fade-in">Для серверних даних краще TanStack Query — кеш і інвалідація там уже є</li></ul>
+				</section>
+
+				<!-- Zustand middleware -->
+				<section class="dense">
+					<h2 class="ztu-blue">ZUSTAND: MIDDLEWARE</h2>
+					<pre><code class="js" data-line-numbers="|6|7|8|10-14|16">import { create } from 'zustand';
+import { persist, devtools } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+
+export const useCartStore = create(
+  devtools(
+    persist(
+      immer((set) =&gt; ({
+        items: [],
+        add: (product) =&gt; set((state) =&gt; {
+          const item = state.items.find((i) =&gt; i.id === product.id);
+          if (item) item.qty += 1; // Immer: мутуємо, як у createSlice
+          else state.items.push({ ...product, qty: 1 });
+        }),
+      })),
+      { name: 'cart' }, // ключ у localStorage
+    ),
+  ),
+);</code></pre>
+					<table class="small-table"><thead><tr><th>Middleware</th><th>Що робить</th></tr></thead><tbody><tr class="fragment fade-in"><td><code>persist</code></td><td>Зберігає і відновлює стан (localStorage за замовчуванням)</td></tr><tr class="fragment fade-in"><td><code>devtools</code></td><td>Підключає Redux DevTools</td></tr><tr class="fragment fade-in"><td><code>immer</code></td><td>Мутаційний синтаксис (потрібен пакет <code>immer</code>)</td></tr></tbody></table>
+				</section>
+
+				<!-- RTK vs Zustand -->
+				<section>
+					<h2 class="ztu-blue">REDUX TOOLKIT VS ZUSTAND</h2>
+					<table class="small-table"><thead><tr><th></th><th>Redux Toolkit</th><th>Zustand</th></tr></thead><tbody><tr class="fragment fade-in"><td>Provider</td><td>Потрібен</td><td>Не потрібен</td></tr><tr class="fragment fade-in"><td>Структура</td><td>Slices, actions, reducers</td><td>Функції всередині store</td></tr><tr class="fragment fade-in"><td>Async</td><td><code>createAsyncThunk</code>, RTK Query</td><td>Звичайні async-функції</td></tr><tr class="fragment fade-in"><td>DevTools</td><td>Вбудовано</td><td>Через middleware</td></tr><tr class="fragment fade-in"><td>Серверні дані</td><td>RTK Query</td><td>TanStack Query</td></tr><tr class="fragment fade-in"><td>Правила</td><td>Суворі: один спосіб робити речі</td><td>Гнучкі: домовляється команда</td></tr><tr class="fragment fade-in"><td>Коли</td><td>Великі застосунки і команди</td><td>Малі й середні, швидкий старт</td></tr></tbody></table>
+					<p class="fragment fade-in ztu-orange">Обидва — нормальний вибір. Важливіше не тягнути весь стан у глобальне сховище</p>
+				</section>
+
+				<!-- Common mistakes -->
+				<section>
+					<h2 class="ztu-blue">ПОШИРЕНІ ПОМИЛКИ</h2>
+					<ul class="ztu-list"><li class="fragment fade-in">Мутувати стан поза <code>createSlice</code> / Immer</li><li class="fragment fade-in">Зберігати серверні дані в slice замість RTK Query</li><li class="fragment fade-in">Селектор повертає новий масив чи обʼєкт без <code>createSelector</code> / <code>useShallow</code></li><li class="fragment fade-in">Усе в глобальному store: поля форм, відкриті модалки</li><li class="fragment fade-in">Несеріалізовані значення в store: класи, Promise, функції</li><li class="fragment fade-in">Zustand без селектора — ререндер на кожну зміну</li></ul>
+				</section>
+
+				<!-- Testing -->
+				<section class="dense">
+					<h2 class="ztu-blue">ТЕСТУВАННЯ</h2>
+					<pre><code class="js" data-line-numbers="|4-9|11-15">// cartSlice.test.js (Vitest)
+import reducer, { added, selectTotal } from './cartSlice';
+
+test('додає товар і збільшує кількість', () =&gt; {
+  let state = reducer(undefined, { type: 'init' });
+  state = reducer(state, added({ id: 1, price: 100 }));
+  state = reducer(state, added({ id: 1, price: 100 }));
+  expect(state.items).toEqual([{ id: 1, price: 100, qty: 2 }]);
+});
+
+test('рахує суму кошика', () =&gt; {
+  const store = configureStore({ reducer: { cart: reducer } });
+  store.dispatch(added({ id: 1, price: 100 }));
+  expect(selectTotal(store.getState())).toBe(100);
+});</code></pre>
+					<ul class="ztu-list"><li class="fragment fade-in">Reducer — чиста функція: тестується без React</li><li class="fragment fade-in">RTK Query і thunks — мокаємо мережу (MSW), а не <code>dispatch</code></li><li class="fragment fade-in">Zustand: <code>useCartStore.getState()</code> прямо в тесті</li></ul>
+				</section>
+
+				<!-- Resources -->
+				<section>
+					<h2 class="ztu-blue">КОРИСНІ РЕСУРСИ</h2>
+					<ul class="ztu-list"><li><strong>Redux Essentials</strong> — офіційний туторіал: redux.js.org</li><li><strong>Redux Toolkit і RTK Query</strong>: redux-toolkit.js.org</li><li><strong>React Redux</strong>: react-redux.js.org</li><li><strong>Zustand</strong>: zustand.docs.pmnd.rs</li><li><strong>MSW</strong> — мок мережі для тестів: mswjs.io</li><li><strong>Redux DevTools</strong> — розширення для Chrome і Firefox</li></ul>
+				</section>
+
+				<!-- Questions -->
+				<section>
+					<h1>Дякую за увагу</h1>
+					<p  class="ztu-orange">Запитання</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			Reveal.initialize({
+				hash: true,
+				progress: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
