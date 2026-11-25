@@ -122,8 +122,18 @@
       "badge": "Лекція 11",
       "title": "Менеджери стану та Redux",
       "title_en": "State managers and Redux",
-      "desc": "Підходи: Flux, store-хуки, observable, атоми, сигнали; що обрати; Redux і Redux Toolkit.",
-      "desc_en": "Approaches: Flux, store hooks, observables, atoms, signals; what to choose; Redux and Redux Toolkit."
+      "desc": "Підходи: Flux, store-хуки, observable, атоми, сигнали; що обрати; Redux: store, actions, reducers, middleware.",
+      "desc_en": "Approaches: Flux, store hooks, observables, atoms, signals; what to choose; Redux: store, actions, reducers, middleware."
+    },
+    {
+      "slug": "feature-l12",
+      "group": "lectures",
+      "order": 12,
+      "badge": "Лекція 12",
+      "title": "Redux Toolkit, RTK Query, Zustand",
+      "title_en": "Redux Toolkit, RTK Query, Zustand",
+      "desc": "Redux Thunk, createSlice, селектори, createAsyncThunk, entity adapter, listener middleware, RTK Query (кеш, теги, оптимістичні оновлення), Zustand.",
+      "desc_en": "Redux Thunk, createSlice, selectors, createAsyncThunk, entity adapter, listener middleware, RTK Query (cache, tags, optimistic updates), Zustand."
     }
   ]
 }
